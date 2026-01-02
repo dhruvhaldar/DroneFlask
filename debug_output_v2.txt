@@ -1,0 +1,6 @@
+Attempting to compile simulation...
+package roboticstoolbox not loaded: not found, not a proper package, no blocks module
+package machinevisiontoolbox not loaded: not found, not a proper package, no blocks module
+
+Compiling:
+FAILED: block PilotInput output PilotInput has incorrect length: 4 instead of 1

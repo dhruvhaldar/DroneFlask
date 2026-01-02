@@ -2,7 +2,7 @@ import bdsim
 import numpy as np
 import math
 from bdsim.components import SourceBlock, SinkBlock, FunctionBlock
-from quadcopter_bdsim import power_system, rigid_body_dynamics, mixer
+from quadcopter_bdsim import power_system, rigid_body_dynamics
 
 # --- Interactive Control Blocks ---
 
@@ -15,11 +15,11 @@ class WebSource(SourceBlock):
         self.type = 'web_source'
         self.shared_state = shared_state # Dict or Object with .cmd
         
-    def output(self, t=None):
+    def output(self, t=None, *args):
         # Read conversion
         # Cmd: [Thrust(0-1), Roll(rad), Pitch(rad), YawRate(rad/s)]
         cmd = self.shared_state.get('cmd', [0,0,0,0])
-        return list(cmd)
+        return [np.array(cmd)]
 
 class WebSink(SinkBlock):
     """
@@ -30,7 +30,7 @@ class WebSink(SinkBlock):
         self.type = 'web_sink'
         self.q = output_queue
         
-    def step(self, state=None):
+    def step(self, state=None, *args):
         try:
             if state is not None:
                 if isinstance(state, (list, tuple)): state = np.array(state).flatten()
@@ -96,7 +96,8 @@ def flight_controller_interactive(cmd, state):
     tau_psi = kp_psi * (r_ref - r)
     
     # Pre-Mixer Format: [F, tau_phi, tau_theta, tau_psi]
-    return [F_total, tau_phi, tau_theta, tau_psi]
+    u = np.array([F_total, tau_phi, tau_theta, tau_psi])
+    return [np.concatenate((u, state))]
 
 
 def setup_web_simulation(shared_state, output_queue):

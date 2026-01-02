@@ -1,18 +1,18 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
-import eventlet
+
 import threading
 import queue
 import time
 import numpy as np
 
 # Patch for threading support
-eventlet.monkey_patch()
+
 
 from quadcopter_web import setup_web_simulation
 
 app = Flask(__name__)
-socketio = SocketIO(app, async_mode='eventlet')
+socketio = SocketIO(app, async_mode='threading')
 
 # --- Shared State ---
 # Controls from Client (Thread-safe dict)

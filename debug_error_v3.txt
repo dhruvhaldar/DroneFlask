@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\bdsim\blockdiagram.py", line 596, in schedule_evaluate
+    out = b.output(t, b.inputs, b._x)
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\bdsim\blocks\functions.py", line 650, in output
+    raise RuntimeError(
+        "Function returns wrong number of arguments: " + str(self)
+    )
+RuntimeError: Function returns wrong number of arguments: Controller
+Traceback (most recent call last):
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\bdsim\blockdiagram.py", line 475, in compile
+    self.schedule_evaluate(x, 0.0, sinks=False)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\bdsim\blockdiagram.py", line 616, in schedule_evaluate
+    raise RuntimeError from None
+RuntimeError
+Traceback (most recent call last):
+  File "E:\Misc\DroneFlask\debug_compile.py", line 8, in <module>
+    setup_web_simulation(state, q)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\Misc\DroneFlask\quadcopter_web.py", line 135, in setup_web_simulation
+    bd.compile()
+    ~~~~~~~~~~^^
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\bdsim\blockdiagram.py", line 486, in compile
+    raise RuntimeError("could not compile system")
+RuntimeError: could not compile system

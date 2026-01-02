@@ -1,0 +1,44 @@
+Attempting to compile simulation...
+package roboticstoolbox not loaded: not found, not a proper package, no blocks module
+package machinevisiontoolbox not loaded: not found, not a proper package, no blocks module
+
+Compiling:
+
+--Error at t=0.000000 when computing output of [function::Controller]
+
+
+Input[0] = [0 0 0 0]
+Input[1] = [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+
+
+From compile: unrecoverable error in value propagation: 
+
+Blocks::
+
++----+-------------+-----+------+--------+---------+------------+
+| id |        name | nin | nout | nstate | ndstate |    type    |
++----+-------------+-----+------+--------+---------+------------+
+|  0 |  Integrator |   1 |    1 |     12 |       0 | integrator |
+|  1 |  Controller |   2 |    1 |      0 |       0 | function   |
+|  2 | PowerSystem |   1 |    1 |      0 |       0 | function   |
+|  3 |    Dynamics |   1 |    1 |      0 |       0 | function   |
+|  4 |   WebStream |   1 |    0 |      0 |       0 | web_sink   |
+|  5 |  PilotInput |   0 |    1 |      0 |       0 | web_source |
++----+-------------+-----+------+--------+---------+------------+
+
+
+Wires::
+
++----+------+------+----------------------------------+----------------------+
+| id | from |  to  |           description            |         type         |
++----+------+------+----------------------------------+----------------------+
+|  0 | 5[0] | 1[0] | PilotInput[0] --> Controller[0]  | ndarray(4,).int64    |
+|  1 | 0[0] | 1[1] | Integrator[0] --> Controller[1]  | ndarray(12,).float64 |
+|  2 | 1[0] | 2[0] | Controller[0] --> PowerSystem[0] | ??                   |
+|  3 | 2[0] | 3[0] | PowerSystem[0] --> Dynamics[0]   | ??                   |
+|  4 | 3[0] | 0[0] | Dynamics[0] --> Integrator[0]    | ??                   |
+|  5 | 0[0] | 4[0] | Integrator[0] --> WebStream[0]   | ndarray(12,).float64 |
++----+------+------+----------------------------------+----------------------+
+
+** System has not been compiled, or had a compile time error
+FAILED: could not compile system
