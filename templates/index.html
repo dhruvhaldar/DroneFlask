@@ -198,6 +198,9 @@
         cmd.pitch = p; // Direct angle command
         cmd.yaw = y; // Yaw Rate command
 
+        cmd.yaw = y; // Yaw Rate command
+        
+        console.log("Emitting control:", cmd);
         socket.emit("control", cmd);
       }
 
