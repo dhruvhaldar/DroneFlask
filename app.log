@@ -1,0 +1,42 @@
+SIM: Worker started
+package roboticstoolbox not loaded: not found, not a proper package, no blocks module
+package machinevisiontoolbox not loaded: not found, not a proper package, no blocks module
+
+Compiling:
+Web Simulation Compiled.
+
+>>> Start simulation: T = 3600.0, dt = 0.01
+  Continuous state variables: 12
+     x0 =  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+  Discrete state variables:   0
+
+SERVER: Starting on http://127.0.0.1:5001
+Traceback (most recent call last):
+  File "E:\Misc\DroneFlask\app.py", line 99, in <module>
+    socketio.run(app, debug=True, use_reloader=False, port=5001)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\flask_socketio\__init__.py", line 718, in run
+    self.wsgi_server.serve_forever()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\gevent\baseserver.py", line 401, in serve_forever
+    self.start()
+    ~~~~~~~~~~^^
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\gevent\baseserver.py", line 339, in start
+    self.init_socket()
+    ~~~~~~~~~~~~~~~~^^
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\gevent\pywsgi.py", line 1672, in init_socket
+    StreamServer.init_socket(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\gevent\server.py", line 173, in init_socket
+    self.socket = self.get_listener(self.address, self.backlog, self.family)
+                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\gevent\server.py", line 185, in get_listener
+    return _tcp_listener(address, backlog=backlog, reuse_addr=cls.reuse_addr, family=family)
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\gevent\server.py", line 264, in _tcp_listener
+    sock.bind(address)
+    ~~~~~~~~~^^^^^^^^^
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\gevent\_socketcommon.py", line 543, in bind
+    return self._sock.bind(address)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+OSError: [WinError 10048] Only one usage of each socket address (protocol/network address/port) is normally permitted: ('127.0.0.1', 5001)
+EMIT: Worker started
