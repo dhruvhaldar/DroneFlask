@@ -3,6 +3,7 @@ import numpy as np
 import math
 from bdsim.components import SourceBlock, SinkBlock, FunctionBlock
 from quadcopter_bdsim import power_system, rigid_body_dynamics
+import time
 
 # --- Interactive Control Blocks ---
 
@@ -40,6 +41,16 @@ class WebSink(SinkBlock):
                 if self.q.full():
                     self.q.get_nowait()
                 self.q.put_nowait(state.tolist())
+            
+            # Throttle to Real-Time (approx)
+            # dt is 0.01 in app.py. Sleep to prevent running at 1000x speed
+            time.sleep(0.01)
+            
+            # Debug: Print State to see if it explodes
+            x, y, z = state[0], state[1], state[2]
+            if x > 100 or y > 100 or z > 100 or abs(x) > 100:
+                 print(f"CRITICAL: Drone drifting! Pos: {x:.2f}, {y:.2f}, {z:.2f}")
+            # print(f"State: {x:.2f}, {y:.2f}, {z:.2f}")
         except Exception:
             pass
 
