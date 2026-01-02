@@ -12,7 +12,7 @@ import numpy as np
 from quadcopter_web import setup_web_simulation
 
 app = Flask(__name__)
-socketio = SocketIO(app, async_mode='threading')
+socketio = SocketIO(app, async_mode='threading', cors_allowed_origins="*")
 
 # --- Shared State ---
 # Controls from Client (Thread-safe dict)
