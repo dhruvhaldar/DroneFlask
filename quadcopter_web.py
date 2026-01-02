@@ -1,0 +1,137 @@
+import bdsim
+import numpy as np
+import math
+from bdsim.components import SourceBlock, SinkBlock, FunctionBlock
+from quadcopter_bdsim import power_system, rigid_body_dynamics, mixer
+
+# --- Interactive Control Blocks ---
+
+class WebSource(SourceBlock):
+    """
+    Reads control commands [Thrust, Roll, Pitch, Yaw] from a shared object.
+    """
+    def __init__(self, shared_state, *inputs, **kwargs):
+        super().__init__(nin=0, nout=1, **kwargs)
+        self.type = 'web_source'
+        self.shared_state = shared_state # Dict or Object with .cmd
+        
+    def output(self, t=None):
+        # Read conversion
+        # Cmd: [Thrust(0-1), Roll(rad), Pitch(rad), YawRate(rad/s)]
+        cmd = self.shared_state.get('cmd', [0,0,0,0])
+        return list(cmd)
+
+class WebSink(SinkBlock):
+    """
+    Writes state [x, y, z, ... 12] to a shared queue for the web server.
+    """
+    def __init__(self, output_queue, *inputs, **kwargs):
+        super().__init__(nin=1, **kwargs)
+        self.type = 'web_sink'
+        self.q = output_queue
+        
+    def step(self, state=None):
+        try:
+            if state is not None:
+                if isinstance(state, (list, tuple)): state = np.array(state).flatten()
+                # Push state to queue (non-blocking, drop old if full?)
+                # For visualization, we want latest.
+                # If queue is full, maybe pop one?
+                if self.q.full():
+                    self.q.get_nowait()
+                self.q.put_nowait(state.tolist())
+        except Exception:
+            pass
+
+def flight_controller_interactive(cmd, state):
+    """
+    Stabilize Attitude based on Pilot Commands.
+    cmd: [Thrust_Ref, Roll_Ref, Pitch_Ref, Yaw_Ref] (From WebSource)
+    state: [x,y,z, vx,vy,vz, phi,theta,psi, p,q,r] (From Integrator)
+    
+    Output: [F_total, tau_x, tau_y, tau_z]
+    """
+    # Unpack Commmands
+    # Thrust is normalized 0-1? Or Force?
+    # Let's assume Pilot gives normalized Thrust 0-1
+    # Max Thrust approx 4 * kF * w_max^2. 
+    # w_max ~ 900 rad/s (from thesis?) 
+    # kF = 8.875e-6
+    # F_max = 4 * 8.875e-6 * 900^2 ~ 28 N. Mass ~ 1kg => 2.8g.
+    
+    F_max = 30.0 
+    T_ref = cmd[0] * F_max
+    phi_ref = cmd[1]
+    theta_ref = cmd[2]
+    r_ref = cmd[3] # Yaw Rate command usually
+    
+    # State
+    z = state[2]
+    vz = state[5]
+    phi = state[6]
+    theta = state[7]
+    psi = state[8]
+    p = state[9]
+    q = state[10]
+    r = state[11]
+    
+    # Gains (Tuned for ~1kg quad)
+    # Altitude (Manual Thrust, so P-gain on Vel? Or just pass through?)
+    # Usually manual mode passes Thrust directly.
+    F_total = T_ref
+    if F_total < 0: F_total = 0
+    
+    # Roll Control (Attitude)
+    kp_phi = 2.0
+    kd_phi = 0.5
+    tau_phi = kp_phi * (phi_ref - phi) + kd_phi * (0 - p)
+    
+    # Pitch Control (Attitude)
+    kp_theta = 2.0
+    kd_theta = 0.5
+    tau_theta = kp_theta * (theta_ref - theta) + kd_theta * (0 - q)
+    
+    # Yaw Control (Rate)
+    kp_psi = 1.0 # acts on rate error
+    tau_psi = kp_psi * (r_ref - r)
+    
+    # Pre-Mixer Format: [F, tau_phi, tau_theta, tau_psi]
+    return [F_total, tau_phi, tau_theta, tau_psi]
+
+
+def setup_web_simulation(shared_state, output_queue):
+    sim = bdsim.BDSim(animation=False)
+    bd = sim.blockdiagram()
+    
+    # Blocks
+    integrator = bd.INTEGRATOR(x0=np.zeros(12), name='Integrator')
+    
+    # Sources
+    web_input = WebSource(shared_state, name='PilotInput')
+    
+    # Controller (Interactive)
+    # Input 0: Command (from Web), Input 1: State (from Integrator)
+    controller = bd.FUNCTION(flight_controller_interactive, nin=2, nout=1, name='Controller')
+    
+    power = bd.FUNCTION(power_system, nin=1, nout=1, name='PowerSystem')
+    dynamics = bd.FUNCTION(rigid_body_dynamics, nin=1, nout=1, name='Dynamics')
+    
+    # Sinks
+    web_sink = WebSink(output_queue, name='WebStream')
+    bd.add_block(web_sink)
+    bd.add_block(web_input)
+    
+    # Wiring
+    # Controller uses PilotInput and State
+    controller[0] = web_input
+    controller[1] = integrator
+    
+    power[0] = controller
+    dynamics[0] = power
+    integrator[0] = dynamics
+    
+    web_sink[0] = integrator
+    
+    bd.compile()
+    print("Web Simulation Compiled.")
+    return sim, bd

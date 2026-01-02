@@ -1,0 +1,14 @@
+digraph G {
+    rankdir = "LR"
+
+	"Scope" [shape=Mrecord, rank="sink"]
+	"Visualizer" [shape=Mrecord, rank="sink"]
+
+	"Integrator" -> "Visualizer" []
+	"Integrator" -> "Controller" []
+	"Controller" -> "PowerSystem" []
+	"PowerSystem" -> "Dynamics" []
+	"Dynamics" -> "Integrator" []
+	"Integrator" -> "Selector" []
+	"Selector" -> "Scope" []
+}
