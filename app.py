@@ -91,5 +91,5 @@ if __name__ == '__main__':
     # Start Emitter
     socketio.start_background_task(background_emitter)
     
-    print("SERVER: Starting on http://127.0.0.1:5000")
-    socketio.run(app, debug=True, use_reloader=False)
+    print("SERVER: Starting on http://127.0.0.1:5001")
+    socketio.run(app, debug=True, use_reloader=False, port=5001)
