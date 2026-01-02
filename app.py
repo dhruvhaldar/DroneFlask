@@ -73,6 +73,7 @@ def test_connect():
 
 @socketio.on('control')
 def handle_control(json):
+    print(f"DEBUG: Server received control: {json}")
     # json: {'thrust': 0.5, 'roll': 0.1 ...}
     t = float(json.get('thrust', 0))
     r = float(json.get('roll', 0))
