@@ -1,0 +1,22 @@
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\bdsim\blockdiagram.py", line 1121, in step
+    b.step(t, b.inputs)
+    ~~~~~~^^^^^^^^^^^^^
+  File "E:\Misc\DroneFlask\quadcopter_web.py", line 35, in step
+    print(f"DEBUG: WebSink step. State len: {len(state) if state is not None else 'None'}")
+                                             ~~~^^^^^^^
+Traceback (most recent call last):
+  File "E:\Misc\DroneFlask\debug_run.py", line 14, in <module>
+    sim.run(bd, T=0.11, dt=0.01)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\bdsim\run_sim.py", line 591, in run
+    self.run_interval(bd, 0, T, x0, simstate=simstate)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\bdsim\run_sim.py", line 827, in run_interval
+    bd.step(integrator.t)
+    ~~~~~~~^^^^^^^^^^^^^^
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\bdsim\blockdiagram.py", line 1123, in step
+    self._error_handler("step", b)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "E:\Misc\DroneFlask\venv\Lib\site-packages\bdsim\blockdiagram.py", line 1069, in _error_handler
+    raise RuntimeError("Fatal failure") from None
+RuntimeError: Fatal failure

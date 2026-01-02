@@ -1,11 +1,11 @@
 digraph G {
     rankdir = "LR"
 
+	"time.0" [shape=record, rank="source"]
 	"Scope" [shape=Mrecord, rank="sink"]
-	"Visualizer" [shape=Mrecord, rank="sink"]
 
-	"Integrator" -> "Visualizer" []
 	"Integrator" -> "Controller" []
+	"time.0" -> "Controller" []
 	"Controller" -> "PowerSystem" []
 	"PowerSystem" -> "Dynamics" []
 	"Dynamics" -> "Integrator" []

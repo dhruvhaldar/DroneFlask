@@ -31,7 +31,10 @@ class WebSink(SinkBlock):
         self.type = 'web_sink'
         self.q = output_queue
         
-    def step(self, state=None, *args):
+    def step(self, t, inputs):
+        # Inputs is a list of input values
+        state = inputs[0]
+        
         try:
             if state is not None:
                 if isinstance(state, (list, tuple)): state = np.array(state).flatten()
@@ -45,12 +48,6 @@ class WebSink(SinkBlock):
             # Throttle to Real-Time (approx)
             # dt is 0.01 in app.py. Sleep to prevent running at 1000x speed
             time.sleep(0.01)
-            
-            # Debug: Print State to see if it explodes
-            x, y, z = state[0], state[1], state[2]
-            if x > 100 or y > 100 or z > 100 or abs(x) > 100:
-                 print(f"CRITICAL: Drone drifting! Pos: {x:.2f}, {y:.2f}, {z:.2f}")
-            # print(f"State: {x:.2f}, {y:.2f}, {z:.2f}")
         except Exception:
             pass
 
@@ -107,7 +104,30 @@ def flight_controller_interactive(cmd, state):
     tau_psi = kp_psi * (r_ref - r)
     
     # Pre-Mixer Format: [F, tau_phi, tau_theta, tau_psi]
-    u = np.array([F_total, tau_phi, tau_theta, tau_psi])
+    # u = np.array([F_total, tau_phi, tau_theta, tau_psi])
+    
+    # --- Mixer (Force/Torque -> Motor Speeds) ---
+    kF = 8.875e-6
+    kM = 1.203e-7
+    L = 0.25
+    
+    term_F = F_total / (4*kF)
+    term_phi = tau_phi / (2*L*kF)
+    term_theta = tau_theta / (2*L*kF)
+    term_psi = tau_psi / (4*kM)
+    
+    w1_sq = term_F - term_theta - term_psi
+    w2_sq = term_F - term_phi   + term_psi
+    w3_sq = term_F + term_theta - term_psi
+    w4_sq = term_F + term_phi   + term_psi
+    
+    w1 = math.sqrt(max(0.0, w1_sq))
+    w2 = math.sqrt(max(0.0, w2_sq))
+    w3 = math.sqrt(max(0.0, w3_sq))
+    w4 = math.sqrt(max(0.0, w4_sq))
+    
+    u = np.array([w1, w2, w3, w4])
+    
     return [np.concatenate((u, state))]
 
 
