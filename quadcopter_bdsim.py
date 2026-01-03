@@ -17,47 +17,73 @@ J_inv = np.linalg.inv(J)
 def quadcopter_dynamics(t, state, u):
     x, y, z, vx, vy, vz, phi, theta, psi, p, q, r = state
     w1, w2, w3, w4 = u
-    w_sq = np.array([w1**2, w2**2, w3**2, w4**2])
-    thrusts = kF * w_sq
-    F_total = np.sum(thrusts)
     
-    T1, T2, T3, T4 = thrusts[0], thrusts[1], thrusts[2], thrusts[3]
-    tau_1, tau_2, tau_3, tau_4 = kM * w_sq
+    # Square only once
+    w1_sq, w2_sq, w3_sq, w4_sq = w1*w1, w2*w2, w3*w3, w4*w4
+
+    # Thrusts
+    T1 = kF * w1_sq
+    T2 = kF * w2_sq
+    T3 = kF * w3_sq
+    T4 = kF * w4_sq
+
+    F_total = T1 + T2 + T3 + T4
+
+    # Torques
+    tau_1 = kM * w1_sq
+    tau_2 = kM * w2_sq
+    tau_3 = kM * w3_sq
+    tau_4 = kM * w4_sq
+
     tau_phi = L * (T4 - T2)
     tau_theta = L * (T3 - T1)
     tau_psi = (tau_2 + tau_4) - (tau_1 + tau_3)
     
+    # Trigonometry
     cpsi, spsi = np.cos(psi), np.sin(psi)
     ctheta, stheta = np.cos(theta), np.sin(theta)
     cphi, sphi = np.cos(phi), np.sin(phi)
     
-    R = np.array([
-        [cpsi*ctheta, cpsi*stheta*sphi - spsi*cphi, cpsi*stheta*cphi + spsi*sphi],
-        [spsi*ctheta, spsi*stheta*sphi + cpsi*cphi, spsi*stheta*cphi - cpsi*sphi],
-        [-stheta,     ctheta*sphi,                  ctheta*cphi]
-    ])
+    # Acceleration
+    # We only need the third column of R multiplied by F_total
+    R31 = cpsi*stheta*cphi + spsi*sphi
+    R32 = spsi*stheta*cphi - cpsi*sphi
+    R33 = ctheta*cphi
     
-    F_body = np.array([0, 0, F_total])
-    gravity_vec = np.array([0, 0, -MASS * GRAVITY])
+    accel_x = (F_total * R31) / MASS
+    accel_y = (F_total * R32) / MASS
+    accel_z = (F_total * R33 - MASS * GRAVITY) / MASS
     
     if z <= 0.0 and F_total < MASS*GRAVITY and vz < 0:
-        accel = np.zeros(3)
-        vz = 0
-        z = 0
-    else:
-        accel = (np.dot(R, F_body) + gravity_vec) / MASS
+        accel_x = 0.0
+        accel_y = 0.0
+        accel_z = 0.0
+        vz = 0.0
+        z = 0.0
     
-    omega = np.array([p, q, r])
-    torques = np.array([tau_phi, tau_theta, tau_psi])
-    omega_dot = np.dot(J_inv, torques - np.cross(omega, np.dot(J, omega)))
+    # Omega dot (angular acceleration)
+    # Using J_inv diagonal components directly for efficiency
+    p_dot = (tau_phi - q*r*(Izz - Iyy)) * J_inv[0,0]
+    q_dot = (tau_theta - p*r*(Ixx - Izz)) * J_inv[1,1]
+    r_dot = (tau_psi - p*q*(Iyy - Ixx)) * J_inv[2,2]
     
+    # Euler rates
     ttheta = np.tan(theta)
-    ctheta_inv = 1.0/np.cos(theta) if abs(np.cos(theta)) > 1e-3 else 0
-    phi_dot = p + (q*sphi + r*cphi)*ttheta
+    ctheta_val = np.cos(theta)
+
+    q_sphi_plus_r_cphi = q*sphi + r*cphi
+
+    phi_dot = p + q_sphi_plus_r_cphi * ttheta
     theta_dot = q*cphi - r*sphi
-    psi_dot = (q*sphi + r*cphi)*ctheta_inv
     
-    return np.concatenate(([vx, vy, vz], accel, [phi_dot, theta_dot, psi_dot], omega_dot))
+    if abs(ctheta_val) > 1e-3:
+        ctheta_inv = 1.0 / ctheta_val
+    else:
+        ctheta_inv = 0.0
+
+    psi_dot = q_sphi_plus_r_cphi * ctheta_inv
+
+    return np.array([vx, vy, vz, accel_x, accel_y, accel_z, phi_dot, theta_dot, psi_dot, p_dot, q_dot, r_dot])
 
 
 # --- Complex Block Definitions ---
