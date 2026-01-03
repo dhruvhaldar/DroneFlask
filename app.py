@@ -87,6 +87,14 @@ def handle_control(json):
     control_state['cmd'] = [t, r, p, y]
     # print(f"CMD: {control_state['cmd']}")
 
+@socketio.on('reset_sim')
+def handle_reset():
+    print("DEBUG: Reset Requested. Resetting State...")
+    # Ideally we restart the sim thread.
+    # For now, let's just zero the controls.
+    # A true reset is hard with bdsim's blocking run.
+    control_state['cmd'] = [0.0, 0.0, 0.0, 0.0]
+
 if __name__ == '__main__':
     # Start Simulation
     t_sim = threading.Thread(target=simulation_worker, daemon=True)
