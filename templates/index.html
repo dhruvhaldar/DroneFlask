@@ -82,12 +82,16 @@
           <span>Yaw:</span>
           <span id="val-psi" class="font-mono text-purple-300">0.00</span> rad
         </div>
+        <div class="flex justify-between border-t border-white/20 pt-2 mt-2">
+            <span>Throttle:</span>
+            <span id="val-thr" class="font-mono text-yellow-300">0</span>%
+          </div>
       </div>
 
       <!-- Controls Help -->
       <div class="self-center glass px-6 py-3 rounded-full mb-8 interactive">
         <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">W</kbd>
-        <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">S</kbd> Thrust
+        <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">S</kbd> Thrust (Hold/Tap)
         <span class="mx-2">|</span>
         <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">↑</kbd>
         <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">↓</kbd> Pitch
@@ -97,6 +101,9 @@
         <span class="mx-2">|</span>
         <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">A</kbd>
         <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">D</kbd> Yaw
+        <span class="mx-2">|</span>
+        <button id="btn-takeoff" class="bg-blue-600 hover:bg-blue-500 px-2 py-1 rounded text-xs ml-2 pointer-events-auto">Takeoff (40%)</button>
+        <button id="btn-reset" class="bg-red-600 hover:bg-red-500 px-2 py-1 rounded text-xs ml-2 pointer-events-auto">Kill Engines</button>
       </div>
     </div>
 
@@ -130,9 +137,7 @@
       });
 
       function updateHUD(s) {
-        document.getElementById("val-z").innerText = (-s.z).toFixed(2); // Sim Z is down? Usually NED. Let's check visualization.
-        // If NED: Z positive down. Altitude = -Z.
-        // visualizer checks.
+        document.getElementById("val-z").innerText = s.z.toFixed(2); // Sim Z is Up (based on Viz logic)
         document.getElementById("val-phi").innerText = s.phi.toFixed(3);
         document.getElementById("val-theta").innerText = s.theta.toFixed(3);
         document.getElementById("val-psi").innerText = s.psi.toFixed(3);
@@ -189,9 +194,12 @@
 
         // Thrust:
         // We need a persistent throttle variable
-        if (keys.w) throttle += 0.05;
-        if (keys.s) throttle -= 0.05;
+        if (keys.w) throttle += 0.02; // Smoother increase
+        if (keys.s) throttle -= 0.02;
         throttle = Math.max(0, Math.min(1, throttle));
+
+        // Update UI
+        document.getElementById('val-thr').innerText = Math.round(throttle * 100);
 
         cmd.thrust = throttle;
         cmd.roll = r;
@@ -205,6 +213,23 @@
       }
 
       let throttle = 0.0; // 0 to 1
+
+      // Takeoff Button
+      document.getElementById('btn-takeoff').addEventListener('click', () => {
+          throttle = 0.40; // Jump to 40%
+          updateCmd(); // Send immediately
+          // Force key focus back to body?
+          document.body.focus();
+      });
+
+      // Reset Button (Reloads page effectively for now, but really should reset sim)
+      document.getElementById('btn-reset').addEventListener('click', () => {
+         socket.emit('reset_sim');
+         // Also reset local state
+         throttle = 0.0;
+         droneState = { x: 0, y: 0, z: 0, phi: 0, theta: 0, psi: 0 };
+         updateCmd();
+      });
 
       // --- 3. Three.js Visualization ---
       const scene = new THREE.Scene();
