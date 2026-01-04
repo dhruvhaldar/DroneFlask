@@ -39,7 +39,7 @@
   </head>
   <body class="text-white">
     <!-- 3D Canvas -->
-    <div id="canvas-container"></div>
+    <div id="canvas-container" role="img" aria-label="3D Quadcopter Simulation View"></div>
 
     <!-- UI Overlay -->
     <div id="ui-layer" class="flex flex-col h-screen p-6 justify-between">
@@ -53,7 +53,7 @@
           DroneFlask
         </h1>
         <p class="text-xs text-gray-300 mt-1">
-          Status: <span id="status-text" class="text-green-400">Connected</span>
+          Status: <span id="status-text" class="text-green-400" role="status" aria-live="polite">Connected</span>
         </p>
       </div>
 
@@ -90,20 +90,20 @@
 
       <!-- Controls Help -->
       <div class="self-center glass px-6 py-3 rounded-full mb-8 interactive">
-        <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">W</kbd>
-        <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">S</kbd> Thrust (Hold/Tap)
+        <kbd id="key-w" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">W</kbd>
+        <kbd id="key-s" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">S</kbd> Thrust (Hold/Tap)
         <span class="mx-2">|</span>
-        <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">↑</kbd>
-        <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">↓</kbd> Pitch
+        <kbd id="key-up" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">↑</kbd>
+        <kbd id="key-down" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">↓</kbd> Pitch
         <span class="mx-2">|</span>
-        <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">←</kbd>
-        <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">→</kbd> Roll
+        <kbd id="key-left" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">←</kbd>
+        <kbd id="key-right" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">→</kbd> Roll
         <span class="mx-2">|</span>
-        <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">A</kbd>
-        <kbd class="bg-gray-700 px-2 py-1 rounded text-xs">D</kbd> Yaw
+        <kbd id="key-a" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">A</kbd>
+        <kbd id="key-d" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">D</kbd> Yaw
         <span class="mx-2">|</span>
-        <button id="btn-takeoff" class="bg-blue-600 hover:bg-blue-500 px-2 py-1 rounded text-xs ml-2 pointer-events-auto">Takeoff (40%)</button>
-        <button id="btn-reset" class="bg-red-600 hover:bg-red-500 px-2 py-1 rounded text-xs ml-2 pointer-events-auto">Kill Engines</button>
+        <button id="btn-takeoff" class="bg-blue-600 hover:bg-blue-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 transition-all duration-200 px-2 py-1 rounded text-xs ml-2 pointer-events-auto">Takeoff (40%)</button>
+        <button id="btn-reset" class="bg-red-600 hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 transition-all duration-200 px-2 py-1 rounded text-xs ml-2 pointer-events-auto">Kill Engines</button>
       </div>
     </div>
 
@@ -156,12 +156,30 @@
       };
       let cmd = { thrust: 0, roll: 0, pitch: 0, yaw: 0 }; // Normalized or Ref
 
+      function highlightKey(key, pressed) {
+        const keyMap = {
+          'w': 'key-w', 's': 'key-s', 'a': 'key-a', 'd': 'key-d',
+          'ArrowUp': 'key-up', 'ArrowDown': 'key-down',
+          'ArrowLeft': 'key-left', 'ArrowRight': 'key-right'
+        };
+        const id = keyMap[key];
+        if (id) {
+          const el = document.getElementById(id);
+          if (el) {
+             if (pressed) el.classList.add('bg-blue-600', 'text-white', 'scale-110');
+             else el.classList.remove('bg-blue-600', 'text-white', 'scale-110');
+          }
+        }
+      }
+
       window.addEventListener("keydown", (e) => {
         keys[e.key] = 1;
+        highlightKey(e.key, true);
         updateCmd();
       });
       window.addEventListener("keyup", (e) => {
         keys[e.key] = 0;
+        highlightKey(e.key, false);
         updateCmd();
       });
 
