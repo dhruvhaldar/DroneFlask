@@ -109,7 +109,31 @@ def test_thrust_control(page: Page):
     final_z = float(z_elem.inner_text())
     print(f"Final Z: {final_z}")
     
-    if final_z <= 0.1:
-         print("DEBUG: Drone failed to takeoff. Maybe try higher throttle?")
-    
     assert final_z > 0.1, f"Drone did not take off! Final Z: {final_z}"
+
+    # 7. Check Roll Control
+    print("Clicking Right Arrow (Roll)...")
+    # Simulate holding right arrow or clicking the button if mapped
+    # We mapped 'key-right' in index.html to 'ArrowRight' in keys object.
+    
+    # We need to HOLD it to see effect? logic: if(keys.ArrowRight) r = rollMax; 
+    # It sets a Target Roll. So one click (mousedown) sets keys=1. 
+    # But mouseup sets keys=0.
+    # So we need to mouse down and hold?
+    # Playwright click() is press+release.
+    # So Pulse command. 
+    # If we pulse, r goes to 0.5 then back to 0.
+    # The drone should twitch.
+    
+    # Let's drag? or down/wait/up.
+    page.locator("#key-right").dispatch_event("mousedown") 
+    page.wait_for_timeout(1000)
+    
+    # Check HUD for Roll mismatch
+    phi_elem = page.locator("#val-phi")
+    phi_val = float(phi_elem.inner_text())
+    print(f"Phi (Roll) during hold: {phi_val}")
+    
+    page.locator("#key-right").dispatch_event("mouseup")
+    
+    assert abs(phi_val) > 0.01, f"Drone did not roll! Phi: {phi_val}"
