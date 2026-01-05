@@ -172,7 +172,47 @@
         }
       }
 
+      function setupTouchControls() {
+        const keyMap = {
+          'key-w': 'w', 'key-s': 's',
+          'key-up': 'ArrowUp', 'key-down': 'ArrowDown',
+          'key-left': 'ArrowLeft', 'key-right': 'ArrowRight',
+          'key-a': 'a', 'key-d': 'd'
+        };
+
+        for (const [id, key] of Object.entries(keyMap)) {
+          const el = document.getElementById(id);
+          if (!el) continue;
+
+          const press = (e) => {
+            e.preventDefault(); // Prevent text selection/scrolling
+            keys[key] = 1;
+            highlightKey(key, true);
+            updateCmd();
+          };
+          const release = (e) => {
+            e.preventDefault();
+            keys[key] = 0;
+            highlightKey(key, false);
+            updateCmd();
+          };
+
+          el.addEventListener('mousedown', press);
+          el.addEventListener('mouseup', release);
+          el.addEventListener('mouseleave', release);
+          
+          // Touch support
+          el.addEventListener('touchstart', press);
+          el.addEventListener('touchend', release);
+        }
+      }
+      setupTouchControls();
+
+      // Prevent scrolling with arrows
       window.addEventListener("keydown", (e) => {
+        if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
+            e.preventDefault();
+        }
         keys[e.key] = 1;
         highlightKey(e.key, true);
         updateCmd();
@@ -224,7 +264,7 @@
         cmd.pitch = p; // Direct angle command
         cmd.yaw = y; // Yaw Rate command
 
-        cmd.yaw = y; // Yaw Rate command
+
         
         console.log("Emitting control:", cmd);
         socket.emit("control", cmd);

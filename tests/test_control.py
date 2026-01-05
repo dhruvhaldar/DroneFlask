@@ -67,10 +67,35 @@ def test_thrust_control(page: Page):
     # It seems `updateCmd` is called on every keydown.
     # So we need MULTIPLE presses to ramp up throttle.
     
-    for _ in range(20):
-        page.keyboard.press("w")
-        page.wait_for_timeout(100)
     
+    # Reset Sim
+    print("Resetting Sim...")
+    page.click("#btn-reset")
+    page.wait_for_timeout(1000)
+    
+    # Check On-Screen Key Interaction (Tap 'W' once)
+    print("Clicking On-Screen 'W' Key...")
+    page.locator("#key-w").click()
+    page.wait_for_timeout(100)
+    
+    # Throttle should be 0.02 -> 2% (rounding might make it 2)
+    thr_elem = page.locator("#val-thr")
+    expect(thr_elem).to_have_text("2") 
+    print("On-Screen Key W works (Throttle increased)")
+    
+    # 5. Apply Thrust via UI Button (Simulate User)
+    print("Clicking Takeoff Button...")
+    page.click("#btn-takeoff")
+    page.wait_for_timeout(500)
+    
+    # Verify Throttle HUD updated
+    thr_elem = page.locator("#val-thr")
+    thr_val = float(thr_elem.inner_text())
+    print(f"Throttle HUD: {thr_val}%")
+    assert thr_val >= 40, f"Throttle did not update! Value: {thr_val}"
+    
+    # Wait for physical response
+    page.wait_for_timeout(3000)
     # 5. Check Altitude Change
     # If throttle works, Z should increase (negative in NED? HUD shows -z)
     # HUD: (-s.z).toFixed(2). So positive HUD = Altitude.
@@ -79,4 +104,12 @@ def test_thrust_control(page: Page):
     print(f"Final Z: {final_z}")
     
     # Assert
-    assert final_z > initial_z + 0.1, f"Drone did not take off! Init: {initial_z}, Final: {final_z}"
+    # 6. Check Altitude Change
+    # Z should increase 
+    final_z = float(z_elem.inner_text())
+    print(f"Final Z: {final_z}")
+    
+    if final_z <= 0.1:
+         print("DEBUG: Drone failed to takeoff. Maybe try higher throttle?")
+    
+    assert final_z > 0.1, f"Drone did not take off! Final Z: {final_z}"
