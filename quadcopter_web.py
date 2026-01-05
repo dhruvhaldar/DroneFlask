@@ -20,9 +20,6 @@ class WebSource(SourceBlock):
         # Read conversion
         # Cmd: [Thrust(0-1), Roll(rad), Pitch(rad), YawRate(rad/s)]
         cmd = self.shared_state.get('cmd', [0,0,0,0])
-        # print(f"DEBUG: WebSource cmd: {cmd}") 
-        if cmd[0] > 0:
-             print(f"DEBUG: WebSource receiving thrust: {cmd}")
         return [np.array(cmd)]
 
 class WebSink(SinkBlock):

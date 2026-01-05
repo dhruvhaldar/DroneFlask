@@ -59,7 +59,8 @@ def background_emitter():
             # Throttle if needed? Sim runs at 100hz (dt=0.01).
             # emitting 100hz might be heavy.
             # But we want smoothness.
-            socketio.sleep(0.01) 
+            # Optimization: Throttle to ~30Hz (0.033s) to save bandwidth/CPU
+            socketio.sleep(0.033)
             
         except queue.Empty:
             pass # No data yet
