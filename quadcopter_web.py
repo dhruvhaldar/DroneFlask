@@ -1,6 +1,7 @@
 import bdsim
 import numpy as np
 import math
+import queue
 from bdsim.components import SourceBlock, SinkBlock, FunctionBlock
 from quadcopter_bdsim import power_system, rigid_body_dynamics
 import time
@@ -30,20 +31,29 @@ class WebSink(SinkBlock):
         super().__init__(nin=1, **kwargs)
         self.type = 'web_sink'
         self.q = output_queue
-        
+        self.counter = 0
+
     def step(self, t, inputs):
         # Inputs is a list of input values
         state = inputs[0]
         
         try:
-            if state is not None:
-                if isinstance(state, (list, tuple)): state = np.array(state).flatten()
-                # Push state to queue (non-blocking, drop old if full?)
-                # For visualization, we want latest.
-                # If queue is full, maybe pop one?
-                if self.q.full():
-                    self.q.get_nowait()
-                self.q.put_nowait(state.tolist())
+            # Optimization: Throttle queue updates to ~30Hz (sim runs at 100Hz)
+            # This reduces unnecessary list conversions and queue locking
+            self.counter += 1
+            if self.counter % 3 == 0:
+                if state is not None:
+                    if isinstance(state, (list, tuple)): state = np.array(state).flatten()
+                    # Push state to queue (non-blocking, drop old if full?)
+                    # For visualization, we want latest.
+                    # If queue is full, maybe pop one?
+                    try:
+                        if self.q.full():
+                            self.q.get_nowait()
+                    except queue.Empty:
+                        pass
+                    self.q.put_nowait(state.tolist())
+                self.counter = 0
             
             # Throttle to Real-Time (approx)
             # dt is 0.01 in app.py. Sleep to prevent running at 1000x speed
