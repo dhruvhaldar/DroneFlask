@@ -38,6 +38,9 @@
     </style>
   </head>
   <body class="text-white">
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2 pointer-events-none w-full max-w-sm px-4"></div>
+
     <!-- 3D Canvas -->
     <div id="canvas-container" role="img" aria-label="3D Quadcopter Simulation View"></div>
 
@@ -125,6 +128,13 @@
       socket.on("connect", () => {
         document.getElementById("status-text").innerText = "Online";
         document.getElementById("status-text").className = "text-green-400";
+        showToast("Connected to Drone Server", "success");
+      });
+
+      socket.on("disconnect", () => {
+         document.getElementById("status-text").innerText = "Offline";
+         document.getElementById("status-text").className = "text-red-400";
+         showToast("Disconnected from Server", "error");
       });
 
       socket.on("state", (msg) => {
@@ -287,7 +297,7 @@
       document.getElementById('btn-takeoff').addEventListener('click', () => {
           throttle = 0.40; // Jump to 40%
           updateCmd(); // Send immediately
-          // Force key focus back to body?
+          showToast("🚀 Initiating Takeoff Sequence (40% Thrust)", "info");
           document.body.focus();
       });
 
@@ -298,7 +308,36 @@
          throttle = 0.0;
          droneState = { x: 0, y: 0, z: 0, phi: 0, theta: 0, psi: 0 };
          updateCmd();
+         showToast("🛑 Engines Cut", "error");
       });
+
+      // --- Toast Notification System ---
+      function showToast(message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        const el = document.createElement('div');
+
+        // Colors
+        let colors = 'text-blue-200 border-blue-500/30 bg-blue-900/40';
+        if (type === 'success') colors = 'text-green-200 border-green-500/30 bg-green-900/40';
+        if (type === 'error') colors = 'text-red-200 border-red-500/30 bg-red-900/40';
+
+        el.className = `glass px-4 py-3 rounded-xl shadow-lg border backdrop-blur-md transform transition-all duration-300 translate-y-2 opacity-0 flex items-center gap-2 ${colors}`;
+        el.setAttribute('role', 'alert');
+        el.innerHTML = `<span class="text-lg">${type === 'error' ? '⚠️' : (type === 'success' ? '✅' : 'ℹ️')}</span> <span>${message}</span>`;
+
+        container.appendChild(el);
+
+        // Animate in
+        requestAnimationFrame(() => {
+            el.classList.remove('translate-y-2', 'opacity-0');
+        });
+
+        // Remove after 3s
+        setTimeout(() => {
+            el.classList.add('opacity-0', '-translate-y-2');
+            setTimeout(() => el.remove(), 300);
+        }, 3000);
+      }
 
       // --- 3. Three.js Visualization ---
       const scene = new THREE.Scene();
