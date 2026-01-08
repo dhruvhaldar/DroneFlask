@@ -43,16 +43,21 @@ class WebSink(SinkBlock):
             self.counter += 1
             if self.counter % 3 == 0:
                 if state is not None:
-                    if isinstance(state, (list, tuple)): state = np.array(state).flatten()
-                    # Push state to queue (non-blocking, drop old if full?)
-                    # For visualization, we want latest.
-                    # If queue is full, maybe pop one?
+                    # Optimize: Avoid unnecessary np.array creation if state is already list/tuple
+                    if hasattr(state, 'tolist'):
+                        data = state.tolist()
+                    else:
+                        data = list(state)
+
+                    # Push state to queue (non-blocking, drop old if full)
                     try:
-                        if self.q.full():
-                            self.q.get_nowait()
-                    except queue.Empty:
-                        pass
-                    self.q.put_nowait(state.tolist())
+                        self.q.put_nowait(data)
+                    except queue.Full:
+                        try:
+                            self.q.get_nowait() # Remove old
+                            self.q.put_nowait(data) # Try again
+                        except (queue.Empty, queue.Full):
+                            pass
                 self.counter = 0
             
             # Throttle to Real-Time (approx)
