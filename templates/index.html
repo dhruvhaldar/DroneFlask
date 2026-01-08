@@ -6,6 +6,29 @@
     <title>6DOF Quadcopter Control</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            keyframes: {
+              'fade-in-down': {
+                '0%': {
+                  opacity: '0',
+                  transform: 'translateY(-10px)'
+                },
+                '100%': {
+                  opacity: '1',
+                  transform: 'translateY(0)'
+                },
+              }
+            },
+            animation: {
+              'fade-in-down': 'fade-in-down 0.5s ease-out'
+            }
+          }
+        }
+      }
+    </script>
     <style>
       /* Custom Glassmorphism */
       .glass {
@@ -55,9 +78,15 @@
         >
           DroneFlask
         </h1>
-        <p class="text-xs text-gray-300 mt-1">
-          Status: <span id="status-text" class="text-green-400" role="status" aria-live="polite">Connected</span>
-        </p>
+        <div class="flex items-center gap-2 mt-1">
+            <span class="relative flex h-2 w-2">
+              <span id="status-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span id="status-dot" class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+            </span>
+            <p class="text-xs text-gray-300">
+              Status: <span id="status-text" class="text-green-400 font-medium" role="status" aria-live="polite">Connected</span>
+            </p>
+        </div>
       </div>
 
       <!-- Telemetry Panel -->
@@ -127,13 +156,17 @@
 
       socket.on("connect", () => {
         document.getElementById("status-text").innerText = "Online";
-        document.getElementById("status-text").className = "text-green-400";
+        document.getElementById("status-text").className = "text-green-400 font-medium";
+        document.getElementById("status-dot").className = "relative inline-flex rounded-full h-2 w-2 bg-green-500";
+        document.getElementById("status-ping").className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75";
         showToast("Connected to Drone Server", "success");
       });
 
       socket.on("disconnect", () => {
          document.getElementById("status-text").innerText = "Offline";
-         document.getElementById("status-text").className = "text-red-400";
+         document.getElementById("status-text").className = "text-red-400 font-medium";
+         document.getElementById("status-dot").className = "relative inline-flex rounded-full h-2 w-2 bg-red-500";
+         document.getElementById("status-ping").className = "hidden"; // Stop pinging when offline
          showToast("Disconnected from Server", "error");
       });
 
