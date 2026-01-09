@@ -203,6 +203,7 @@
         ArrowRight: 0,
       };
       let cmd = { thrust: 0, roll: 0, pitch: 0, yaw: 0 }; // Normalized or Ref
+      let lastCmdJson = ""; // Optimization: Track last sent command
 
       function highlightKey(key, pressed) {
         const keyMap = {
@@ -319,9 +320,12 @@
         cmd.yaw = y; // Yaw Rate command
 
 
-        
-        console.log("Emitting control:", cmd);
-        socket.emit("control", cmd);
+        // Optimization: Only emit if command changed to save bandwidth
+        const currentCmdJson = JSON.stringify(cmd);
+        if (currentCmdJson !== lastCmdJson) {
+            socket.emit("control", cmd);
+            lastCmdJson = currentCmdJson;
+        }
       }
 
       let throttle = 0.0; // 0 to 1
