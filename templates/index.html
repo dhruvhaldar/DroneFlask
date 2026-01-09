@@ -125,6 +125,18 @@
         </div>
       </div>
 
+      <!-- Camera Reset -->
+      <button
+        id="btn-cam-reset"
+        class="absolute bottom-6 right-6 glass p-3 rounded-full hover:bg-white/10 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 transition-all duration-200 interactive text-gray-300 hover:text-white"
+        aria-label="Reset Camera View"
+        title="Reset Camera (Home)"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
+        </svg>
+      </button>
+
       <!-- Controls Help -->
       <div class="self-center glass px-6 py-3 rounded-full mb-8 interactive">
         <kbd id="key-w" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">W</kbd>
@@ -261,6 +273,9 @@
         if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) {
             e.preventDefault();
         }
+        if (e.key === 'Home') {
+            document.getElementById('btn-cam-reset').click();
+        }
         keys[e.key] = 1;
         highlightKey(e.key, true);
         updateCmd();
@@ -342,6 +357,15 @@
          droneState = { x: 0, y: 0, z: 0, phi: 0, theta: 0, psi: 0 };
          updateCmd();
          showToast("🛑 Engines Cut", "error");
+      });
+
+      // Camera Reset
+      document.getElementById('btn-cam-reset').addEventListener('click', () => {
+          controls.reset();
+          camera.position.set(0, 2, 5); // Ensure default if controls.reset() doesn't do it all
+          controls.target.set(0, 0, 0); // Reset target
+          controls.update();
+          showToast("Camera View Reset", "info");
       });
 
       // --- Toast Notification System ---
