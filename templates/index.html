@@ -116,11 +116,11 @@
         </div>
         <div class="space-y-1 border-t border-white/20 pt-2 mt-2">
             <div class="flex justify-between items-center">
-                <span class="text-sm">Throttle:</span>
+                <span id="lbl-throttle" class="text-sm">Throttle:</span>
                 <span class="font-mono text-yellow-300 text-sm"><span id="val-thr">0</span>%</span>
             </div>
             <div class="w-full bg-gray-700 rounded-full h-1.5 overflow-hidden">
-                <div id="throttle-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="bg-gradient-to-r from-yellow-400 to-red-500 h-1.5 rounded-full transition-all duration-100 ease-out" style="width: 0%"></div>
+                <div id="throttle-bar" role="meter" aria-labelledby="lbl-throttle" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="bg-gradient-to-r from-yellow-400 to-red-500 h-1.5 rounded-full transition-all duration-100 ease-out" style="width: 0%"></div>
             </div>
         </div>
       </div>
@@ -139,17 +139,17 @@
 
       <!-- Controls Help -->
       <div class="self-center glass px-6 py-3 rounded-full mb-8 interactive">
-        <kbd id="key-w" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">W</kbd>
-        <kbd id="key-s" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">S</kbd> Thrust (Hold/Tap)
+        <kbd id="key-w" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Increase Thrust">W</kbd>
+        <kbd id="key-s" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Decrease Thrust">S</kbd> Thrust (Hold/Tap)
         <span class="mx-2">|</span>
-        <kbd id="key-up" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">↑</kbd>
-        <kbd id="key-down" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">↓</kbd> Pitch
+        <kbd id="key-up" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Pitch Down (Forward)">↑</kbd>
+        <kbd id="key-down" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Pitch Up (Backward)">↓</kbd> Pitch
         <span class="mx-2">|</span>
-        <kbd id="key-left" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">←</kbd>
-        <kbd id="key-right" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">→</kbd> Roll
+        <kbd id="key-left" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Roll Left">←</kbd>
+        <kbd id="key-right" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Roll Right">→</kbd> Roll
         <span class="mx-2">|</span>
-        <kbd id="key-a" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">A</kbd>
-        <kbd id="key-d" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs">D</kbd> Yaw
+        <kbd id="key-a" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Yaw Left">A</kbd>
+        <kbd id="key-d" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Yaw Right">D</kbd> Yaw
         <span class="mx-2">|</span>
         <button id="btn-takeoff" class="bg-blue-600 hover:bg-blue-500 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 transition-all duration-200 px-2 py-1 rounded text-xs ml-2 pointer-events-auto">Takeoff (40%)</button>
         <button id="btn-reset" class="bg-red-600 hover:bg-red-500 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 transition-all duration-200 px-2 py-1 rounded text-xs ml-2 pointer-events-auto">Kill Engines</button>
