@@ -98,21 +98,21 @@
         >
           Telemetry
         </h2>
-        <div class="flex justify-between">
+        <div class="flex justify-between items-center">
           <span>Alt (Z):</span>
-          <span id="val-z" class="font-mono text-blue-300">0.00</span> m
+          <span id="val-z" class="font-mono text-blue-300 cursor-pointer hover:bg-white/10 rounded px-1 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400" title="Click to copy" tabindex="0" role="button" aria-label="Copy Altitude">0.00</span> m
         </div>
-        <div class="flex justify-between">
+        <div class="flex justify-between items-center">
           <span>Roll:</span>
-          <span id="val-phi" class="font-mono text-purple-300">0.00</span> rad
+          <span id="val-phi" class="font-mono text-purple-300 cursor-pointer hover:bg-white/10 rounded px-1 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-400" title="Click to copy" tabindex="0" role="button" aria-label="Copy Roll">0.00</span> rad
         </div>
-        <div class="flex justify-between">
+        <div class="flex justify-between items-center">
           <span>Pitch:</span>
-          <span id="val-theta" class="font-mono text-purple-300">0.00</span> rad
+          <span id="val-theta" class="font-mono text-purple-300 cursor-pointer hover:bg-white/10 rounded px-1 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-400" title="Click to copy" tabindex="0" role="button" aria-label="Copy Pitch">0.00</span> rad
         </div>
-        <div class="flex justify-between">
+        <div class="flex justify-between items-center">
           <span>Yaw:</span>
-          <span id="val-psi" class="font-mono text-purple-300">0.00</span> rad
+          <span id="val-psi" class="font-mono text-purple-300 cursor-pointer hover:bg-white/10 rounded px-1 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-400" title="Click to copy" tabindex="0" role="button" aria-label="Copy Yaw">0.00</span> rad
         </div>
         <div class="space-y-1 border-t border-white/20 pt-2 mt-2">
             <div class="flex justify-between items-center">
@@ -241,6 +241,42 @@
           }
         }
       }
+
+      function setupCopyHandlers() {
+        const configs = [
+          { id: 'val-z', name: 'Altitude', color: 'text-blue-300' },
+          { id: 'val-phi', name: 'Roll', color: 'text-purple-300' },
+          { id: 'val-theta', name: 'Pitch', color: 'text-purple-300' },
+          { id: 'val-psi', name: 'Yaw', color: 'text-purple-300' }
+        ];
+
+        configs.forEach(({ id, name, color }) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+
+          const handleCopy = () => {
+            const val = el.innerText;
+            navigator.clipboard.writeText(val).then(() => {
+              showToast(`${name} copied!`, 'success');
+              el.classList.remove(color);
+              el.classList.add('text-green-400', 'font-bold');
+              setTimeout(() => {
+                  el.classList.remove('text-green-400', 'font-bold');
+                  el.classList.add(color);
+              }, 500);
+            }).catch(() => showToast('Failed to copy', 'error'));
+          };
+
+          el.addEventListener('click', handleCopy);
+          el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              handleCopy();
+            }
+          });
+        });
+      }
+      setupCopyHandlers();
 
       function setupTouchControls() {
         const keyMap = {
