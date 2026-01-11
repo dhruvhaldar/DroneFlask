@@ -60,7 +60,9 @@ def background_emitter():
             # emitting 100hz might be heavy.
             # But we want smoothness.
             # Optimization: Throttle to ~30Hz (0.033s) to save bandwidth/CPU
-            socketio.sleep(0.033)
+            # NOTE: WebSink in quadcopter_web.py already throttles production to ~30Hz.
+            # Removing redundant sleep here to prevent frame drops and reduce latency.
+            socketio.sleep(0)
             
         except queue.Empty:
             pass # No data yet
