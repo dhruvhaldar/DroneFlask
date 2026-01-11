@@ -196,11 +196,20 @@
         updateHUD(droneState);
       });
 
+      // Cache HUD elements to reduce DOM access
+      const hudElements = {
+        z: document.getElementById("val-z"),
+        phi: document.getElementById("val-phi"),
+        theta: document.getElementById("val-theta"),
+        psi: document.getElementById("val-psi"),
+      };
+
       function updateHUD(s) {
-        document.getElementById("val-z").innerText = s.z.toFixed(2); // Sim Z is Up (based on Viz logic)
-        document.getElementById("val-phi").innerText = s.phi.toFixed(3);
-        document.getElementById("val-theta").innerText = s.theta.toFixed(3);
-        document.getElementById("val-psi").innerText = s.psi.toFixed(3);
+        // Optimization: Use cached elements and textContent for better performance
+        hudElements.z.textContent = s.z.toFixed(2);
+        hudElements.phi.textContent = s.phi.toFixed(3);
+        hudElements.theta.textContent = s.theta.toFixed(3);
+        hudElements.psi.textContent = s.psi.toFixed(3);
       }
 
       // --- 2. Controls ---
