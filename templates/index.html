@@ -139,17 +139,17 @@
 
       <!-- Controls Help -->
       <div class="self-center glass px-6 py-3 rounded-full mb-8 interactive">
-        <kbd id="key-w" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Increase Thrust">W</kbd>
-        <kbd id="key-s" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Decrease Thrust">S</kbd> Thrust (Hold/Tap)
+        <kbd id="key-w" class="bg-gray-700 hover:bg-gray-600 cursor-pointer select-none transition-colors duration-100 px-2 py-1 rounded text-xs" title="Increase Thrust" role="button" tabindex="0" aria-label="Increase Thrust (W)">W</kbd>
+        <kbd id="key-s" class="bg-gray-700 hover:bg-gray-600 cursor-pointer select-none transition-colors duration-100 px-2 py-1 rounded text-xs" title="Decrease Thrust" role="button" tabindex="0" aria-label="Decrease Thrust (S)">S</kbd> Thrust (Hold/Tap)
         <span class="mx-2">|</span>
-        <kbd id="key-up" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Pitch Down (Forward)">↑</kbd>
-        <kbd id="key-down" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Pitch Up (Backward)">↓</kbd> Pitch
+        <kbd id="key-up" class="bg-gray-700 hover:bg-gray-600 cursor-pointer select-none transition-colors duration-100 px-2 py-1 rounded text-xs" title="Pitch Down (Forward)" role="button" tabindex="0" aria-label="Pitch Down (Up Arrow)">↑</kbd>
+        <kbd id="key-down" class="bg-gray-700 hover:bg-gray-600 cursor-pointer select-none transition-colors duration-100 px-2 py-1 rounded text-xs" title="Pitch Up (Backward)" role="button" tabindex="0" aria-label="Pitch Up (Down Arrow)">↓</kbd> Pitch
         <span class="mx-2">|</span>
-        <kbd id="key-left" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Roll Left">←</kbd>
-        <kbd id="key-right" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Roll Right">→</kbd> Roll
+        <kbd id="key-left" class="bg-gray-700 hover:bg-gray-600 cursor-pointer select-none transition-colors duration-100 px-2 py-1 rounded text-xs" title="Roll Left" role="button" tabindex="0" aria-label="Roll Left (Left Arrow)">←</kbd>
+        <kbd id="key-right" class="bg-gray-700 hover:bg-gray-600 cursor-pointer select-none transition-colors duration-100 px-2 py-1 rounded text-xs" title="Roll Right" role="button" tabindex="0" aria-label="Roll Right (Right Arrow)">→</kbd> Roll
         <span class="mx-2">|</span>
-        <kbd id="key-a" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Yaw Left">A</kbd>
-        <kbd id="key-d" class="bg-gray-700 transition-colors duration-100 px-2 py-1 rounded text-xs" title="Yaw Right">D</kbd> Yaw
+        <kbd id="key-a" class="bg-gray-700 hover:bg-gray-600 cursor-pointer select-none transition-colors duration-100 px-2 py-1 rounded text-xs" title="Yaw Left" role="button" tabindex="0" aria-label="Yaw Left (A)">A</kbd>
+        <kbd id="key-d" class="bg-gray-700 hover:bg-gray-600 cursor-pointer select-none transition-colors duration-100 px-2 py-1 rounded text-xs" title="Yaw Right" role="button" tabindex="0" aria-label="Yaw Right (D)">D</kbd> Yaw
         <span class="mx-2">|</span>
         <button id="btn-takeoff" class="bg-blue-600 hover:bg-blue-500 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 transition-all duration-200 px-2 py-1 rounded text-xs ml-2 pointer-events-auto">Takeoff (40%)</button>
         <button id="btn-reset" class="bg-red-600 hover:bg-red-500 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 transition-all duration-200 px-2 py-1 rounded text-xs ml-2 pointer-events-auto">Kill Engines</button>
@@ -310,6 +310,18 @@
           // Touch support
           el.addEventListener('touchstart', press);
           el.addEventListener('touchend', release);
+
+          // Keyboard support (Accessibility)
+          el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              press(e);
+            }
+          });
+          el.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              release(e);
+            }
+          });
         }
       }
       setupTouchControls();
