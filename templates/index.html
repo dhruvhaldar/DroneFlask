@@ -165,6 +165,7 @@
       // --- 1. Socket IO ---
       const socket = io();
       let droneState = { x: 0, y: 0, z: 0, phi: 0, theta: 0, psi: 0 };
+      let isStateDirty = false; // Bolt: Dirty flag to decouple network from render
 
       socket.on("connect", () => {
         document.getElementById("status-text").innerText = "Online";
@@ -193,7 +194,10 @@
         droneState.theta = d[7]; // Pitch (y axis rot)
         droneState.psi = d[8]; // Yaw (z axis rot)
 
-        updateHUD(droneState);
+        // Bolt Optimization: Decouple network events from DOM updates
+        // Don't call updateHUD directly. Mark state as dirty.
+        // updateHUD(droneState);
+        isStateDirty = true;
       });
 
       // Cache HUD elements to reduce DOM access
@@ -525,6 +529,12 @@
       // Animation Loop
       function animate() {
         requestAnimationFrame(animate);
+
+        // Bolt Optimization: Only update DOM if state changed, synced with render loop
+        if (isStateDirty) {
+          updateHUD(droneState);
+          isStateDirty = false;
+        }
 
         // Update Drone Transform using latest Server State
         // Coordinate System Mapping:
