@@ -190,9 +190,9 @@
         droneState.x = d[0];
         droneState.y = d[1];
         droneState.z = d[2];
-        droneState.phi = d[6]; // Roll (x axis rot)
-        droneState.theta = d[7]; // Pitch (y axis rot)
-        droneState.psi = d[8]; // Yaw (z axis rot)
+        droneState.phi = d[3]; // Roll (x axis rot)
+        droneState.theta = d[4]; // Pitch (y axis rot)
+        droneState.psi = d[5]; // Yaw (z axis rot)
 
         // Bolt Optimization: Decouple network events from DOM updates
         // Don't call updateHUD directly. Mark state as dirty.
