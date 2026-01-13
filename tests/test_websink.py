@@ -20,7 +20,8 @@ class TestWebSinkOptimization(unittest.TestCase):
         self.assertFalse(q.empty())
         data = q.get()
         self.assertIsInstance(data, list)
-        self.assertEqual(len(data), 12)
+        # Optimized: Expect 6 elements (Pos + Angles)
+        self.assertEqual(len(data), 6)
         self.assertEqual(data[0], 0.0)
 
     def test_step_with_list(self):
@@ -37,7 +38,8 @@ class TestWebSinkOptimization(unittest.TestCase):
         self.assertFalse(q.empty())
         data = q.get()
         self.assertIsInstance(data, list)
-        self.assertEqual(len(data), 12)
+        # Optimized: Expect 6 elements (Pos + Angles)
+        self.assertEqual(len(data), 6)
         self.assertEqual(data[0], 1.0)
 
     def test_step_queue_full(self):

@@ -43,12 +43,17 @@ class WebSink(SinkBlock):
             self.counter += 1
             if self.counter % 3 == 0:
                 if state is not None:
-                    # Optimize: Round to 4 decimal places to reduce JSON payload size (~60% reduction)
-                    # and improve serialization speed.
+                    # Optimization: Only send used telemetry (Pos, Angles) to reduce payload by 50%
+                    # and avoid processing unused velocity/rate states.
+                    # State indices: 0,1,2 (Pos), 3,4,5 (Vel), 6,7,8 (Ang), 9,10,11 (Rates)
+                    # New payload: [x, y, z, phi, theta, psi]
+                    indices = [0, 1, 2, 6, 7, 8]
                     if hasattr(state, 'tolist'):
-                        data = np.round(state, 4).tolist()
+                        # Manual selection is faster/cleaner than fancy indexing for small fixed list
+                        # and avoids allocating full array for rounding
+                        data = [round(float(state[i]), 4) for i in indices]
                     else:
-                        data = [round(float(x), 4) for x in state]
+                        data = [round(float(state[i]), 4) for i in indices]
 
                     # Push state to queue (non-blocking, drop old if full)
                     try:

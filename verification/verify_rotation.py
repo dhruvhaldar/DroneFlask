@@ -12,9 +12,9 @@ def connect():
 
 @sio.on('state')
 def on_state(data):
-    # data: [x,y,z, vx,vy,vz, phi,theta,psi, p,q,r]
-    # psi is index 8
-    psi = data['data'][8]
+    # data: [x,y,z, phi,theta,psi] (Optimized Payload)
+    # psi is index 5
+    psi = data['data'][5]
     yaw_changes.append(psi)
     if len(yaw_changes) % 20 == 0:
         print(f"Current Yaw: {psi}")
