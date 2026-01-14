@@ -32,6 +32,9 @@ class WebSink(SinkBlock):
         self.type = 'web_sink'
         self.q = output_queue
         self.counter = 0
+        # Optimization: Pre-define indices to avoid allocation in loop
+        # State indices: 0,1,2 (Pos), 3,4,5 (Vel), 6,7,8 (Ang), 9,10,11 (Rates)
+        self.indices = [0, 1, 2, 6, 7, 8]
 
     def step(self, t, inputs):
         # Inputs is a list of input values
@@ -44,16 +47,8 @@ class WebSink(SinkBlock):
             if self.counter % 3 == 0:
                 if state is not None:
                     # Optimization: Only send used telemetry (Pos, Angles) to reduce payload by 50%
-                    # and avoid processing unused velocity/rate states.
-                    # State indices: 0,1,2 (Pos), 3,4,5 (Vel), 6,7,8 (Ang), 9,10,11 (Rates)
-                    # New payload: [x, y, z, phi, theta, psi]
-                    indices = [0, 1, 2, 6, 7, 8]
-                    if hasattr(state, 'tolist'):
-                        # Manual selection is faster/cleaner than fancy indexing for small fixed list
-                        # and avoids allocating full array for rounding
-                        data = [round(float(state[i]), 4) for i in indices]
-                    else:
-                        data = [round(float(state[i]), 4) for i in indices]
+                    # Manual selection is faster/cleaner than fancy indexing for small fixed list
+                    data = [round(float(state[i]), 4) for i in self.indices]
 
                     # Push state to queue (non-blocking, drop old if full)
                     try:
