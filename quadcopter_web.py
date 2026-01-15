@@ -36,6 +36,10 @@ class WebSink(SinkBlock):
         # State indices: 0,1,2 (Pos), 3,4,5 (Vel), 6,7,8 (Ang), 9,10,11 (Rates)
         self.indices = [0, 1, 2, 6, 7, 8]
 
+        # Performance: Adaptive Pacing State
+        self.start_wall_time = None
+        self.start_sim_time = None
+
     def step(self, t, inputs):
         # Inputs is a list of input values
         state = inputs[0]
@@ -61,9 +65,21 @@ class WebSink(SinkBlock):
                             pass
                 self.counter = 0
             
-            # Throttle to Real-Time (approx)
-            # dt is 0.01 in app.py. Sleep to prevent running at 1000x speed
-            time.sleep(0.01)
+            # Throttle to Real-Time (Adaptive Pacing)
+            # Ensures simulation runs at 1x speed regardless of CPU speed
+            if self.start_wall_time is None:
+                self.start_wall_time = time.perf_counter()
+                self.start_sim_time = t
+
+            # Calculate target wall time based on simulation elapsed time
+            target_time = self.start_wall_time + (t - self.start_sim_time)
+            sleep_duration = target_time - time.perf_counter()
+
+            if sleep_duration > 0:
+                time.sleep(sleep_duration)
+            else:
+                # Lagging behind or just on time, yield to allow IO (SocketIO/Gevent)
+                time.sleep(0)
         except Exception:
             pass
 
