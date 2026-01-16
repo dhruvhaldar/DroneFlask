@@ -16,8 +16,9 @@ J_inv = np.linalg.inv(J)
 
 def quadcopter_dynamics(t, state, u):
     x, y, z, vx, vy, vz, phi, theta, psi, p, q, r = state
-    w1, w2, w3, w4 = u
-    w_sq = np.array([w1**2, w2**2, w3**2, w4**2])
+    # u is now squared speeds (w^2) directly to avoid redundant sqrt/sq operations
+    w1_sq, w2_sq, w3_sq, w4_sq = u
+    w_sq = np.array([w1_sq, w2_sq, w3_sq, w4_sq])
     thrusts = kF * w_sq
     F_total = np.sum(thrusts)
     
@@ -165,12 +166,13 @@ def flight_controller(state_input, time_input=0):
     
     # Safety Clamp
     epsilon = 0.0
-    w1 = math.sqrt(max(epsilon, w1_sq))
-    w2 = math.sqrt(max(epsilon, w2_sq))
-    w3 = math.sqrt(max(epsilon, w3_sq))
-    w4 = math.sqrt(max(epsilon, w4_sq))
+    # Optimization: Return squared values directly to avoid sqrt/sq overhead
+    w1_sq = max(epsilon, w1_sq)
+    w2_sq = max(epsilon, w2_sq)
+    w3_sq = max(epsilon, w3_sq)
+    w4_sq = max(epsilon, w4_sq)
     
-    u = np.array([w1, w2, w3, w4])
+    u = np.array([w1_sq, w2_sq, w3_sq, w4_sq])
     
     # Passthrough State
     return np.concatenate((u, state))

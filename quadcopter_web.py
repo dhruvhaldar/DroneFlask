@@ -153,12 +153,13 @@ def flight_controller_interactive(cmd, state):
     w3_sq = term_F + term_theta - term_psi
     w4_sq = term_F + term_phi   + term_psi
     
-    w1 = math.sqrt(max(0.0, w1_sq))
-    w2 = math.sqrt(max(0.0, w2_sq))
-    w3 = math.sqrt(max(0.0, w3_sq))
-    w4 = math.sqrt(max(0.0, w4_sq))
+    # Optimization: Return squared values directly to avoid sqrt/sq overhead
+    w1_sq = max(0.0, w1_sq)
+    w2_sq = max(0.0, w2_sq)
+    w3_sq = max(0.0, w3_sq)
+    w4_sq = max(0.0, w4_sq)
     
-    u = np.array([w1, w2, w3, w4])
+    u = np.array([w1_sq, w2_sq, w3_sq, w4_sq])
     
     return [np.concatenate((u, state))]
 
