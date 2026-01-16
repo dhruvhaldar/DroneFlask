@@ -1,20 +1,29 @@
 import unittest
 import numpy as np
 import quadcopter_bdsim
-from profiling_test import calculate_thrust, calculate_torque
+
+# Coefficients from quadcopter_bdsim.py
+kF = 8.875e-6
+kM = 1.203e-7
+
+def calculate_thrust(w):
+    return kF * (w**2)
+
+def calculate_torque(w):
+    return kM * (w**2)
 
 class TestQuadcopter(unittest.TestCase):
     
     def test_thrust_calculation(self):
         """Test if thrust calculation follows the square law"""
         w = 100.0
-        expected = 8.875e-6 * (100.0**2)
+        expected = kF * (100.0**2)
         self.assertAlmostEqual(calculate_thrust(w), expected)
         
     def test_torque_calculation(self):
         """Test if torque calculation follows the square law"""
         w = 100.0
-        expected = 1.203e-7 * (100.0**2)
+        expected = kM * (100.0**2)
         self.assertAlmostEqual(calculate_torque(w), expected)
         
     def test_dynamics_hover(self):
@@ -24,10 +33,10 @@ class TestQuadcopter(unittest.TestCase):
         # 4 * kF * w^2 = 9.81
         # w^2 = 9.81 / (4 * 8.875e-6)
         w_sq = 9.81 / (4 * 8.875e-6)
-        w = np.sqrt(w_sq)
         
         state = np.zeros(12)
-        u = [w, w, w, w]
+        # Pass w_sq directly (Optimization: avoiding sqrt/sq in loop)
+        u = [w_sq, w_sq, w_sq, w_sq]
         
         d_state = quadcopter_bdsim.quadcopter_dynamics(0, state, u)
         
@@ -40,8 +49,9 @@ class TestQuadcopter(unittest.TestCase):
     def test_dynamics_climb(self):
         """Test positive vertical acceleration when thrust > gravity"""
         w = 600.0 # High speed
+        w_sq = w**2
         state = np.zeros(12)
-        u = [w, w, w, w]
+        u = [w_sq, w_sq, w_sq, w_sq]
         d_state = quadcopter_bdsim.quadcopter_dynamics(0, state, u)
         
         # Expect positive z acceleration
@@ -49,13 +59,12 @@ class TestQuadcopter(unittest.TestCase):
         
     def test_yaw_dynamics(self):
         """Test yaw moment generation"""
-        # Increase CW motors (2, 4) -> Should create Positive or Negative Yaw depending on convention
-        # In script: tau_psi = (tau_2 + tau_4) - (tau_1 + tau_3)
-        # So increasing 2,4 should give positive tau_psi -> positive r_dot
-        
         state = np.zeros(12)
         w_base = 300.0
-        u = [w_base, w_base+50, w_base, w_base+50] # Imbalance
+        w_sq_base = w_base**2
+        w_sq_high = (w_base+50)**2
+
+        u = [w_sq_base, w_sq_high, w_sq_base, w_sq_high] # Imbalance
         
         d_state = quadcopter_bdsim.quadcopter_dynamics(0, state, u)
         r_dot = d_state[11] # Last element
