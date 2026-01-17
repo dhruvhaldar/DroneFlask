@@ -20,7 +20,7 @@ socketio = SocketIO(app, async_mode='gevent', cors_allowed_origins="*")
 # --- Shared State ---
 # Controls from Client (Thread-safe dict)
 control_state = {
-    'cmd': [0.0, 0.0, 0.0, 0.0] # [Thrust, Roll, Pitch, Yaw]
+    'cmd': np.zeros(4) # [Thrust, Roll, Pitch, Yaw]
 }
 
 # Output Queue (Sim -> Web)
@@ -87,7 +87,8 @@ def handle_control(json):
     y = float(json.get('yaw', 0))
     
     # Update shared state
-    control_state['cmd'] = [t, r, p, y]
+    # Optimization: Use numpy array directly to avoid repeated allocation in loop
+    control_state['cmd'] = np.array([t, r, p, y])
     # print(f"CMD: {control_state['cmd']}")
 
 @socketio.on('reset_sim')
@@ -96,7 +97,7 @@ def handle_reset():
     # Ideally we restart the sim thread.
     # For now, let's just zero the controls.
     # A true reset is hard with bdsim's blocking run.
-    control_state['cmd'] = [0.0, 0.0, 0.0, 0.0]
+    control_state['cmd'] = np.zeros(4)
 
 if __name__ == '__main__':
     # Start Simulation
