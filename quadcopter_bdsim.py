@@ -17,8 +17,13 @@ J_inv = np.linalg.inv(J)
 def quadcopter_dynamics(t, state, u):
     x, y, z, vx, vy, vz, phi, theta, psi, p, q, r = state
     # u is now squared speeds (w^2) directly to avoid redundant sqrt/sq operations
-    w1_sq, w2_sq, w3_sq, w4_sq = u
-    w_sq = np.array([w1_sq, w2_sq, w3_sq, w4_sq])
+
+    # Optimization: Avoid repacking if u is already an array
+    if isinstance(u, np.ndarray):
+        w_sq = u
+    else:
+        w_sq = np.array(u)
+
     thrusts = kF * w_sq
     F_total = np.sum(thrusts)
     
@@ -178,6 +183,9 @@ def flight_controller(state_input, time_input=0):
     return np.concatenate((u, state))
 
 def power_system(ctrl_vec):
+    # Optimization: Pass-through if already numpy array (avoid alloc/copy)
+    if isinstance(ctrl_vec, np.ndarray):
+        return ctrl_vec
     if isinstance(ctrl_vec, (list, tuple)): ctrl_vec = np.array(ctrl_vec).flatten()
     u = ctrl_vec[0:4]
     state = ctrl_vec[4:]
