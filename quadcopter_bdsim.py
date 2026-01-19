@@ -33,17 +33,10 @@ def quadcopter_dynamics(t, state, u):
     tau_theta = L * (T3 - T1)
     tau_psi = (tau_2 + tau_4) - (tau_1 + tau_3)
     
-    cpsi, spsi = np.cos(psi), np.sin(psi)
-    ctheta, stheta = np.cos(theta), np.sin(theta)
-    cphi, sphi = np.cos(phi), np.sin(phi)
+    cpsi, spsi = math.cos(psi), math.sin(psi)
+    ctheta, stheta = math.cos(theta), math.sin(theta)
+    cphi, sphi = math.cos(phi), math.sin(phi)
     
-    R = np.array([
-        [cpsi*ctheta, cpsi*stheta*sphi - spsi*cphi, cpsi*stheta*cphi + spsi*sphi],
-        [spsi*ctheta, spsi*stheta*sphi + cpsi*cphi, spsi*stheta*cphi - cpsi*sphi],
-        [-stheta,     ctheta*sphi,                  ctheta*cphi]
-    ])
-    
-    F_body = np.array([0, 0, F_total])
     gravity_vec = np.array([0, 0, -MASS * GRAVITY])
     
     if z <= 0.0 and F_total < MASS*GRAVITY and vz < 0:
@@ -51,14 +44,30 @@ def quadcopter_dynamics(t, state, u):
         vz = 0
         z = 0
     else:
-        accel = (np.dot(R, F_body) + gravity_vec) / MASS
+        # Optimization: Only compute the 3rd column of R (needed for Z-axis thrust)
+        # R @ [0, 0, F] = F * R[:, 2]
+        r02 = cpsi*stheta*cphi + spsi*sphi
+        r12 = spsi*stheta*cphi - cpsi*sphi
+        r22 = ctheta*cphi
+
+        # accel = (F_total * R_col3 + gravity) / MASS
+        ax = (F_total * r02) / MASS
+        ay = (F_total * r12) / MASS
+        az = (F_total * r22 - MASS * GRAVITY) / MASS
+        accel = np.array([ax, ay, az])
+
+    # Optimization: Analytical Euler equations for diagonal inertia (avoids 3x3 matrix ops)
+    # J is diagonal [Ixx, Iyy, Izz]
+    p_dot = (tau_phi - (Izz - Iyy) * q * r) / Ixx
+    q_dot = (tau_theta - (Ixx - Izz) * p * r) / Iyy
+    r_dot = (tau_psi - (Iyy - Ixx) * p * q) / Izz
+
+    omega_dot = np.array([p_dot, q_dot, r_dot])
     
-    omega = np.array([p, q, r])
-    torques = np.array([tau_phi, tau_theta, tau_psi])
-    omega_dot = np.dot(J_inv, torques - np.cross(omega, np.dot(J, omega)))
+    ttheta = math.tan(theta)
+    ctheta_val = math.cos(theta)
+    ctheta_inv = 1.0/ctheta_val if abs(ctheta_val) > 1e-3 else 0.0
     
-    ttheta = np.tan(theta)
-    ctheta_inv = 1.0/np.cos(theta) if abs(np.cos(theta)) > 1e-3 else 0
     phi_dot = p + (q*sphi + r*cphi)*ttheta
     theta_dot = q*cphi - r*sphi
     psi_dot = (q*sphi + r*cphi)*ctheta_inv
