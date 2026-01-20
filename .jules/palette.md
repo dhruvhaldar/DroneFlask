@@ -11,3 +11,7 @@
 ## 2024-05-24 - Overlay Interaction Traps
 **Learning:** Placing interactive elements (toasts) inside a `pointer-events-none` container (to let clicks pass through to the canvas) silently disables interaction for child elements unless `pointer-events-auto` is explicitly re-applied.
 **Action:** When designing overlays over 3D canvases, always verify that interactive children (buttons, inputs) explicitly restore pointer events.
+
+## 2024-10-24 - Critical Status Visibility
+**Learning:** In real-time control interfaces, text-only status indicators are insufficient for critical failure states. A full-screen (non-blocking) overlay provides unmistakable feedback.
+**Action:** Use high-contrast overlays for connection loss with `pointer-events-none` to keep controls accessible. specific learnings: Emojis are unreliable for critical icons across platforms; inline SVGs ensure consistent rendering.
