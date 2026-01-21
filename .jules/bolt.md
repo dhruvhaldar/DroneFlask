@@ -11,3 +11,7 @@
 ## 2025-05-23 - Interface Optimization
 **Learning:** Passing pre-computed values (like squared speed) between physics blocks avoids redundant inverse operations (sqrt/sq) in high-frequency loops.
 **Action:** When connecting Physics/Controller blocks, verify if the signal definition can be simplified (e.g. Force proportional to w^2) to save ops.
+
+## 2025-05-24 - Precomputed Physics Constants
+**Learning:** Physics functions in `bdsim` run in a tight Python loop. Repeated divisions and constant arithmetic (e.g. `(Ixx - Iyy)/Izz`) add up.
+**Action:** Precompute inverse mass/inertia and coefficient terms at module level. Replace division with multiplication where possible.
