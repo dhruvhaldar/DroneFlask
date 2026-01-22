@@ -8,6 +8,12 @@ kM = 1.203e-7
 MASS = 1.0
 GRAVITY = 9.81
 L = 0.25 
+# Optimization: Pre-compute mixer constants to avoid division in loops
+MIXER_F = 1.0 / (4 * kF)
+MIXER_PHI = 1.0 / (2 * L * kF)
+MIXER_THETA = 1.0 / (2 * L * kF)
+MIXER_PSI = 1.0 / (4 * kM)
+
 Ixx = 0.01
 Iyy = 0.01
 Izz = 0.02
@@ -55,9 +61,14 @@ def quadcopter_dynamics(t, state, u):
     q_dot = (tau_theta - (Ixx - Izz) * p * r) / Iyy
     r_dot = (tau_psi - (Iyy - Ixx) * p * q) / Izz
 
-    ttheta = math.tan(theta)
-    ctheta_val = math.cos(theta)
-    ctheta_inv = 1.0/ctheta_val if abs(ctheta_val) > 1e-3 else 0.0
+    # Optimization: Reuse ctheta/stheta to avoid redundant trig calls
+    # ttheta = stheta / ctheta (safe if ctheta not 0, handled by check)
+    if abs(ctheta) > 1e-3:
+        ctheta_inv = 1.0 / ctheta
+        ttheta = stheta * ctheta_inv
+    else:
+        ctheta_inv = 0.0
+        ttheta = 0.0
     
     phi_dot = p + (q*sphi + r*cphi)*ttheta
     theta_dot = q*cphi - r*sphi
@@ -165,10 +176,11 @@ def flight_controller(state_input, time_input=0):
     # w3^2 = 1/(4kF) * F + 1/(2LkF)*tau_theta - 1/(4kM)*tau_psi
     # w4^2 = 1/(4kF) * F + 1/(2LkF)*tau_phi   + 1/(4kM)*tau_psi
     
-    term_F = F_total / (4*kF)
-    term_phi = tau_phi / (2*L*kF)
-    term_theta = tau_theta / (2*L*kF)
-    term_psi = tau_psi / (4*kM)
+    # Optimization: Use precomputed constants to avoid division
+    term_F = F_total * MIXER_F
+    term_phi = tau_phi * MIXER_PHI
+    term_theta = tau_theta * MIXER_THETA
+    term_psi = tau_psi * MIXER_PSI
     
     w1_sq = term_F - term_theta - term_psi
     w2_sq = term_F - term_phi   + term_psi

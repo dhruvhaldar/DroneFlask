@@ -11,3 +11,7 @@
 ## 2025-05-23 - Interface Optimization
 **Learning:** Passing pre-computed values (like squared speed) between physics blocks avoids redundant inverse operations (sqrt/sq) in high-frequency loops.
 **Action:** When connecting Physics/Controller blocks, verify if the signal definition can be simplified (e.g. Force proportional to w^2) to save ops.
+
+## 2025-05-23 - Precomputed Constants and Trig Reuse
+**Learning:** In high-frequency physics loops (100Hz+), repeated division by constants and redundant trigonometric calls (like calculating `tan` when `sin` and `cos` are known) add up.
+**Action:** Precompute inverse constants (e.g. `MIXER_F = 1/(4*kF)`) to replace division with multiplication. Reuse trig results (e.g. `tan = sin/cos`) where possible.
