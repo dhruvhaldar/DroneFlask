@@ -153,7 +153,7 @@
       </div>
 
       <!-- Controls Help -->
-      <footer class="self-center glass px-6 py-3 rounded-full mb-8 interactive flex flex-wrap items-center justify-center gap-y-2" role="toolbar" aria-label="Flight Controls">
+      <footer id="controls-footer" class="self-center glass px-6 py-3 rounded-full mb-8 interactive flex flex-wrap items-center justify-center gap-y-2 transition-opacity duration-300" role="toolbar" aria-label="Flight Controls">
         <!-- Thrust -->
         <div class="flex items-center" role="group" aria-label="Thrust Controls">
             <kbd id="key-w" class="bg-gray-700 hover:bg-gray-600 cursor-pointer select-none transition-colors duration-100 px-2 py-1 rounded text-xs active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900" title="Increase Thrust" role="button" tabindex="0" aria-label="Increase Thrust (W)">W</kbd>
@@ -215,6 +215,28 @@
       const socket = io();
       let droneState = { x: 0, y: 0, z: 0, phi: 0, theta: 0, psi: 0 };
       let isStateDirty = false; // Bolt: Dirty flag to decouple network from render
+      let isConnected = false;
+
+      // Palette: UX Helper for Connection State
+      function updateControlState(connected) {
+        isConnected = connected;
+        const footer = document.getElementById('controls-footer');
+        if (connected) {
+            footer.classList.remove('opacity-50', 'grayscale', 'cursor-not-allowed');
+            footer.setAttribute('aria-disabled', 'false');
+        } else {
+            footer.classList.add('opacity-50', 'grayscale', 'cursor-not-allowed');
+            footer.setAttribute('aria-disabled', 'true');
+        }
+      }
+
+      function checkConnection() {
+        if (!isConnected) {
+            showToast("⚠️ Cannot send commands. Disconnected.", "error");
+            return false;
+        }
+        return true;
+      }
 
       socket.on("connect", () => {
         document.getElementById("status-text").innerText = "Online";
@@ -222,6 +244,7 @@
         document.getElementById("status-dot").className = "relative inline-flex rounded-full h-2 w-2 bg-green-500";
         document.getElementById("status-ping").className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75";
         document.getElementById("connection-overlay").classList.add("opacity-0");
+        updateControlState(true);
         showToast("Connected to Drone Server", "success");
       });
 
@@ -231,6 +254,7 @@
          document.getElementById("status-dot").className = "relative inline-flex rounded-full h-2 w-2 bg-red-500";
          document.getElementById("status-ping").className = "hidden"; // Stop pinging when offline
          document.getElementById("connection-overlay").classList.remove("opacity-0");
+         updateControlState(false);
          showToast("Disconnected from Server", "error");
       });
 
@@ -346,12 +370,14 @@
           if (!el) continue;
 
           const press = (e) => {
+            if (!checkConnection()) return;
             e.preventDefault(); // Prevent text selection/scrolling
             keys[key] = 1;
             highlightKey(key, true);
             updateCmd();
           };
           const release = (e) => {
+            if (!isConnected) return; // Silent return for release
             e.preventDefault();
             keys[key] = 0;
             highlightKey(key, false);
@@ -388,7 +414,18 @@
         }
         if (e.key === 'Home') {
             document.getElementById('btn-cam-reset').click();
+            return;
         }
+
+        // Flight Controls check
+        if (!isConnected) {
+            // Only block flight keys, allow others if needed
+            if (Object.keys(keys).includes(e.key) || e.key === 'Escape') {
+                 // Don't toast on every keydown, handled by UI state or explicit button clicks
+                 return;
+            }
+        }
+
         if (e.key === 'Escape') {
             document.getElementById('btn-reset').click();
         }
@@ -397,6 +434,7 @@
         updateCmd();
       });
       window.addEventListener("keyup", (e) => {
+        if (!isConnected) return;
         keys[e.key] = 0;
         highlightKey(e.key, false);
         updateCmd();
@@ -462,6 +500,7 @@
 
       // Takeoff Button
       document.getElementById('btn-takeoff').addEventListener('click', () => {
+          if (!checkConnection()) return;
           throttle = 0.40; // Jump to 40%
           updateCmd(); // Send immediately
           showToast("🚀 Initiating Takeoff Sequence (40% Thrust)", "info");
@@ -470,6 +509,7 @@
 
       // Reset Button (Reloads page effectively for now, but really should reset sim)
       document.getElementById('btn-reset').addEventListener('click', () => {
+         if (!checkConnection()) return;
          socket.emit('reset_sim');
          // Also reset local state
          throttle = 0.0;
@@ -658,6 +698,9 @@
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       });
+
+      // Initialize Control State (Start Disabled until Connected)
+      updateControlState(false);
     </script>
   </body>
 </html>
