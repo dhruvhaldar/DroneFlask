@@ -14,6 +14,12 @@ Izz = 0.02
 J = np.array([[Ixx, 0, 0], [0, Iyy, 0], [0, 0, Izz]])
 J_inv = np.linalg.inv(J)
 
+# Optimization: Pre-computed inverse constants for mixer (avoids division in loop)
+MIXER_F = 1.0 / (4 * kF)
+MIXER_PHI = 1.0 / (2 * L * kF)
+MIXER_THETA = 1.0 / (2 * L * kF)
+MIXER_PSI = 1.0 / (4 * kM)
+
 def quadcopter_dynamics(t, state, u):
     x, y, z, vx, vy, vz, phi, theta, psi, p, q, r = state
     # u is now squared speeds (w^2) directly to avoid redundant sqrt/sq operations
@@ -165,10 +171,11 @@ def flight_controller(state_input, time_input=0):
     # w3^2 = 1/(4kF) * F + 1/(2LkF)*tau_theta - 1/(4kM)*tau_psi
     # w4^2 = 1/(4kF) * F + 1/(2LkF)*tau_phi   + 1/(4kM)*tau_psi
     
-    term_F = F_total / (4*kF)
-    term_phi = tau_phi / (2*L*kF)
-    term_theta = tau_theta / (2*L*kF)
-    term_psi = tau_psi / (4*kM)
+    # Optimization: Use pre-computed constants and multiplication (faster than division)
+    term_F = F_total * MIXER_F
+    term_phi = tau_phi * MIXER_PHI
+    term_theta = tau_theta * MIXER_THETA
+    term_psi = tau_psi * MIXER_PSI
     
     w1_sq = term_F - term_theta - term_psi
     w2_sq = term_F - term_phi   + term_psi
