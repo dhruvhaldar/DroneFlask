@@ -102,8 +102,9 @@
 
       <!-- Telemetry Panel -->
       <aside
+        id="telemetry-panel"
         aria-label="Telemetry"
-        class="absolute top-6 right-6 glass p-4 rounded-xl w-64 interactive space-y-2"
+        class="absolute top-6 right-6 glass p-4 rounded-xl w-64 interactive space-y-2 transition-all duration-500"
       >
         <h2
           class="text-sm font-semibold text-gray-400 uppercase tracking-wider"
@@ -153,7 +154,7 @@
       </div>
 
       <!-- Controls Help -->
-      <footer class="self-center glass px-6 py-3 rounded-full mb-8 interactive flex flex-wrap items-center justify-center gap-y-2" role="toolbar" aria-label="Flight Controls">
+      <footer id="controls-footer" class="self-center glass px-6 py-3 rounded-full mb-8 interactive flex flex-wrap items-center justify-center gap-y-2 transition-all duration-500" role="toolbar" aria-label="Flight Controls">
         <!-- Thrust -->
         <div class="flex items-center" role="group" aria-label="Thrust Controls">
             <kbd id="key-w" class="bg-gray-700 hover:bg-gray-600 cursor-pointer select-none transition-colors duration-100 px-2 py-1 rounded text-xs active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900" title="Increase Thrust" role="button" tabindex="0" aria-label="Increase Thrust (W)">W</kbd>
@@ -216,12 +217,29 @@
       let droneState = { x: 0, y: 0, z: 0, phi: 0, theta: 0, psi: 0 };
       let isStateDirty = false; // Bolt: Dirty flag to decouple network from render
 
+      // Palette: Handle UI state based on connection
+      function updateUIState(isConnected) {
+          const elements = ['telemetry-panel', 'controls-footer'];
+          elements.forEach(id => {
+              const el = document.getElementById(id);
+              if (!el) return;
+              if (isConnected) {
+                  el.classList.remove('opacity-50', 'grayscale');
+              } else {
+                  el.classList.add('opacity-50', 'grayscale');
+              }
+          });
+      }
+      // Initialize as disconnected
+      updateUIState(false);
+
       socket.on("connect", () => {
         document.getElementById("status-text").innerText = "Online";
         document.getElementById("status-text").className = "text-green-400 font-medium transition-colors duration-500";
         document.getElementById("status-dot").className = "relative inline-flex rounded-full h-2 w-2 bg-green-500";
         document.getElementById("status-ping").className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75";
         document.getElementById("connection-overlay").classList.add("opacity-0");
+        updateUIState(true);
         showToast("Connected to Drone Server", "success");
       });
 
@@ -231,6 +249,7 @@
          document.getElementById("status-dot").className = "relative inline-flex rounded-full h-2 w-2 bg-red-500";
          document.getElementById("status-ping").className = "hidden"; // Stop pinging when offline
          document.getElementById("connection-overlay").classList.remove("opacity-0");
+         updateUIState(false);
          showToast("Disconnected from Server", "error");
       });
 
