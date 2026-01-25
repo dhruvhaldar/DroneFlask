@@ -82,6 +82,7 @@
     <div id="ui-layer" class="flex flex-col h-screen p-6 justify-between">
       <!-- Header -->
       <header
+        id="ui-header"
         class="glass p-4 rounded-xl max-w-md interactive animate-fade-in-down"
       >
         <h1
@@ -102,6 +103,7 @@
 
       <!-- Telemetry Panel -->
       <aside
+        id="ui-telemetry"
         aria-label="Telemetry"
         class="absolute top-6 right-6 glass p-4 rounded-xl w-64 interactive space-y-2"
       >
@@ -138,7 +140,7 @@
       </aside>
 
       <!-- Camera Reset -->
-      <div class="absolute bottom-6 right-6 flex flex-col items-center gap-2 interactive group">
+      <div id="ui-cam-controls" class="absolute bottom-6 right-6 flex flex-col items-center gap-2 interactive group">
         <button
             id="btn-cam-reset"
             class="glass p-3 rounded-full hover:bg-white/10 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 transition-all duration-200 text-gray-300 hover:text-white"
@@ -153,7 +155,7 @@
       </div>
 
       <!-- Controls Help -->
-      <footer class="self-center glass px-6 py-3 rounded-full mb-8 interactive flex flex-wrap items-center justify-center gap-y-2" role="toolbar" aria-label="Flight Controls">
+      <footer id="ui-controls" class="self-center glass px-6 py-3 rounded-full mb-8 interactive flex flex-wrap items-center justify-center gap-y-2" role="toolbar" aria-label="Flight Controls">
         <!-- Thrust -->
         <div class="flex items-center" role="group" aria-label="Thrust Controls">
             <kbd id="key-w" class="bg-gray-700 hover:bg-gray-600 cursor-pointer select-none transition-colors duration-100 px-2 py-1 rounded text-xs active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900" title="Increase Thrust" role="button" tabindex="0" aria-label="Increase Thrust (W)">W</kbd>
@@ -222,6 +224,7 @@
         document.getElementById("status-dot").className = "relative inline-flex rounded-full h-2 w-2 bg-green-500";
         document.getElementById("status-ping").className = "animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75";
         document.getElementById("connection-overlay").classList.add("opacity-0");
+        updateUIState(true);
         showToast("Connected to Drone Server", "success");
       });
 
@@ -231,8 +234,26 @@
          document.getElementById("status-dot").className = "relative inline-flex rounded-full h-2 w-2 bg-red-500";
          document.getElementById("status-ping").className = "hidden"; // Stop pinging when offline
          document.getElementById("connection-overlay").classList.remove("opacity-0");
+         updateUIState(false);
          showToast("Disconnected from Server", "error");
       });
+
+      function updateUIState(connected) {
+          const ids = ['ui-controls', 'ui-cam-controls', 'ui-telemetry', 'ui-header'];
+          ids.forEach(id => {
+              const el = document.getElementById(id);
+              if (el) {
+                  if (connected) {
+                      el.classList.remove('opacity-50', 'grayscale', 'pointer-events-none');
+                  } else {
+                      el.classList.add('opacity-50', 'grayscale');
+                      if (id !== 'ui-telemetry') {
+                           el.classList.add('pointer-events-none');
+                      }
+                  }
+              }
+          });
+      }
 
       socket.on("state", (msg) => {
         // msg.data = [x,y,z, vx,vy,vz, phi,theta,psi, p,q,r]
@@ -658,6 +679,9 @@
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       });
+
+      // Initialize UI state
+      updateUIState(false);
     </script>
   </body>
 </html>
