@@ -11,3 +11,7 @@
 ## 2025-05-23 - Interface Optimization
 **Learning:** Passing pre-computed values (like squared speed) between physics blocks avoids redundant inverse operations (sqrt/sq) in high-frequency loops.
 **Action:** When connecting Physics/Controller blocks, verify if the signal definition can be simplified (e.g. Force proportional to w^2) to save ops.
+
+## 2025-05-24 - Physics Constant Folding
+**Learning:** Simulation loops running at high frequency (100Hz+) accumulate cost from repeated division by constants.
+**Action:** Precompute inverse constants (e.g., `1.0/Mass`, `1.0/Ixx`, `1.0/kF`) globally and use multiplication in the `dynamics` and `mixer` functions. This can yield ~1.2x - 2x speedup for those specific blocks.
