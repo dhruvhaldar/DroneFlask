@@ -14,6 +14,14 @@ Izz = 0.02
 J = np.array([[Ixx, 0, 0], [0, Iyy, 0], [0, 0, Izz]])
 J_inv = np.linalg.inv(J)
 
+# Optimization: Precompute inverse constants to replace division with multiplication (faster)
+MIXER_F = 1.0 / (4 * kF)
+MIXER_TORQUE = 1.0 / (2 * L * kF)
+MIXER_YAW = 1.0 / (4 * kM)
+Ixx_inv = 1.0 / Ixx
+Iyy_inv = 1.0 / Iyy
+Izz_inv = 1.0 / Izz
+
 def quadcopter_dynamics(t, state, u):
     x, y, z, vx, vy, vz, phi, theta, psi, p, q, r = state
     # u is now squared speeds (w^2) directly to avoid redundant sqrt/sq operations
@@ -51,9 +59,9 @@ def quadcopter_dynamics(t, state, u):
         az = (F_total * r22 - MASS * GRAVITY) / MASS
 
     # Optimization: Analytical Euler equations for diagonal inertia (avoids 3x3 matrix ops)
-    p_dot = (tau_phi - (Izz - Iyy) * q * r) / Ixx
-    q_dot = (tau_theta - (Ixx - Izz) * p * r) / Iyy
-    r_dot = (tau_psi - (Iyy - Ixx) * p * q) / Izz
+    p_dot = (tau_phi - (Izz - Iyy) * q * r) * Ixx_inv
+    q_dot = (tau_theta - (Ixx - Izz) * p * r) * Iyy_inv
+    r_dot = (tau_psi - (Iyy - Ixx) * p * q) * Izz_inv
 
     ttheta = math.tan(theta)
     ctheta_val = math.cos(theta)
@@ -165,10 +173,11 @@ def flight_controller(state_input, time_input=0):
     # w3^2 = 1/(4kF) * F + 1/(2LkF)*tau_theta - 1/(4kM)*tau_psi
     # w4^2 = 1/(4kF) * F + 1/(2LkF)*tau_phi   + 1/(4kM)*tau_psi
     
-    term_F = F_total / (4*kF)
-    term_phi = tau_phi / (2*L*kF)
-    term_theta = tau_theta / (2*L*kF)
-    term_psi = tau_psi / (4*kM)
+    # Optimization: Use precomputed multiplication constants
+    term_F = F_total * MIXER_F
+    term_phi = tau_phi * MIXER_TORQUE
+    term_theta = tau_theta * MIXER_TORQUE
+    term_psi = tau_psi * MIXER_YAW
     
     w1_sq = term_F - term_theta - term_psi
     w2_sq = term_F - term_phi   + term_psi

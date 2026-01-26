@@ -3,7 +3,7 @@ import numpy as np
 import math
 import queue
 from bdsim.components import SourceBlock, SinkBlock, FunctionBlock
-from quadcopter_bdsim import power_system, rigid_body_dynamics
+from quadcopter_bdsim import power_system, rigid_body_dynamics, MIXER_F, MIXER_TORQUE, MIXER_YAW
 import time
 
 # --- Interactive Control Blocks ---
@@ -148,14 +148,11 @@ def flight_controller_interactive(cmd, state):
     # u = np.array([F_total, tau_phi, tau_theta, tau_psi])
     
     # --- Mixer (Force/Torque -> Motor Speeds) ---
-    kF = 8.875e-6
-    kM = 1.203e-7
-    L = 0.25
-    
-    term_F = F_total / (4*kF)
-    term_phi = tau_phi / (2*L*kF)
-    term_theta = tau_theta / (2*L*kF)
-    term_psi = tau_psi / (4*kM)
+    # Optimization: Use precomputed multiplication constants
+    term_F = F_total * MIXER_F
+    term_phi = tau_phi * MIXER_TORQUE
+    term_theta = tau_theta * MIXER_TORQUE
+    term_psi = tau_psi * MIXER_YAW
     
     w1_sq = term_F - term_theta - term_psi
     w2_sq = term_F - term_phi   + term_psi
