@@ -154,6 +154,13 @@
         <kbd class="text-[10px] bg-gray-800/50 px-1.5 py-0.5 rounded text-gray-400 font-mono opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200 select-none">Home</kbd>
       </div>
 
+      <!-- Interaction Hint -->
+      <div id="interaction-hint" class="absolute bottom-24 left-1/2 transform -translate-x-1/2 glass px-6 py-2 rounded-full text-xs text-blue-200 pointer-events-none transition-opacity duration-700 flex items-center gap-4 z-0 select-none">
+          <span class="flex items-center gap-1"><span class="text-lg" aria-hidden="true">🖱️</span> Drag to Rotate</span>
+          <span class="w-px h-3 bg-white/20" aria-hidden="true"></span>
+          <span class="flex items-center gap-1"><span class="text-lg" aria-hidden="true">📜</span> Scroll to Zoom</span>
+      </div>
+
       <!-- Controls Help -->
       <footer id="ui-controls" class="self-center glass px-6 py-3 rounded-full mb-8 interactive flex flex-wrap items-center justify-center gap-y-2" role="toolbar" aria-label="Flight Controls">
         <!-- Thrust -->
@@ -681,6 +688,21 @@
 
       // Initialize UI state
       updateUIState(false);
+
+      // --- Interaction Hint ---
+      const hintEl = document.getElementById('interaction-hint');
+      const dismissHint = () => {
+          if (hintEl && !hintEl.classList.contains('opacity-0')) {
+              hintEl.classList.add('opacity-0');
+              setTimeout(() => {
+                  if(hintEl && hintEl.parentElement) hintEl.remove();
+              }, 700);
+          }
+      };
+      // Listen for interactions on window
+      ['mousedown', 'touchstart', 'wheel', 'keydown'].forEach(evt =>
+          window.addEventListener(evt, dismissHint, { once: true, passive: true })
+      );
     </script>
   </body>
 </html>
