@@ -11,3 +11,7 @@
 ## 2025-05-23 - Interface Optimization
 **Learning:** Passing pre-computed values (like squared speed) between physics blocks avoids redundant inverse operations (sqrt/sq) in high-frequency loops.
 **Action:** When connecting Physics/Controller blocks, verify if the signal definition can be simplified (e.g. Force proportional to w^2) to save ops.
+
+## 2025-05-24 - Numpy Allocation
+**Learning:** `np.concatenate` and `np.array([...])` inside high-frequency loops are expensive due to allocation overhead.
+**Action:** Use `np.empty` with direct assignment for constructing fixed-size arrays in tight loops. Also, use `tolist()` for faster scalar unpacking from small ndarrays.
