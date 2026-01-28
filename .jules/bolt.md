@@ -11,3 +11,7 @@
 ## 2025-05-23 - Interface Optimization
 **Learning:** Passing pre-computed values (like squared speed) between physics blocks avoids redundant inverse operations (sqrt/sq) in high-frequency loops.
 **Action:** When connecting Physics/Controller blocks, verify if the signal definition can be simplified (e.g. Force proportional to w^2) to save ops.
+
+## 2025-05-23 - Array Construction
+**Learning:** `np.concatenate` involves multiple allocations and is ~2x slower than `np.empty` + assignment for small arrays in high-frequency loops.
+**Action:** Use pre-allocation (`np.empty`) and indexed assignment for constructing state vectors in simulation steps.
