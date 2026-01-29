@@ -313,6 +313,16 @@
       let cmd = { thrust: 0, roll: 0, pitch: 0, yaw: 0 }; // Normalized or Ref
       let lastCmdJson = ""; // Optimization: Track last sent command
 
+      function visualPress(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        // Add pressed state classes: scale down and add ring
+        el.classList.add('scale-95', 'brightness-110', 'ring-2', 'ring-white/50');
+        setTimeout(() => {
+          el.classList.remove('scale-95', 'brightness-110', 'ring-2', 'ring-white/50');
+        }, 150);
+      }
+
       function highlightKey(key, pressed) {
         const keyMap = {
           'w': 'key-w', 's': 'key-s', 'a': 'key-a', 'd': 'key-d',
@@ -420,12 +430,15 @@
         }
         if (e.key === 'Home') {
             document.getElementById('btn-cam-reset').click();
+            visualPress('btn-cam-reset');
         }
         if (e.key === 'Escape') {
             document.getElementById('btn-reset').click();
+            visualPress('btn-reset');
         }
         if (e.key === 't' || e.key === 'T') {
             document.getElementById('btn-takeoff').click();
+            visualPress('btn-takeoff');
         }
         keys[e.key] = 1;
         highlightKey(e.key, true);
