@@ -192,10 +192,14 @@ def flight_controller(state_input, time_input=0):
     w3_sq = max(epsilon, w3_sq)
     w4_sq = max(epsilon, w4_sq)
     
-    u = np.array([w1_sq, w2_sq, w3_sq, w4_sq])
-    
-    # Passthrough State
-    return np.concatenate((u, state))
+    # Optimization: Pre-allocate array and assign to avoid concatenate overhead
+    out = np.empty(16)
+    out[0] = w1_sq
+    out[1] = w2_sq
+    out[2] = w3_sq
+    out[3] = w4_sq
+    out[4:] = state
+    return out
 
 def power_system(ctrl_vec):
     # Optimization: Pass-through if already numpy array (avoid alloc/copy)
