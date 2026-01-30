@@ -63,9 +63,18 @@ def quadcopter_dynamics(t, state, u):
     q_dot = (tau_theta - (Ixx - Izz) * p * r) * Iyy_inv
     r_dot = (tau_psi - (Iyy - Ixx) * p * q) * Izz_inv
 
-    ttheta = math.tan(theta)
-    ctheta_val = math.cos(theta)
-    ctheta_inv = 1.0/ctheta_val if abs(ctheta_val) > 1e-3 else 0.0
+    # Optimization: Reuse ctheta/stheta to avoid expensive tan/cos calls
+    # Note: math.tan(theta) == stheta / ctheta
+    if abs(ctheta) > 1e-9:
+        ttheta = stheta / ctheta
+    else:
+        ttheta = math.tan(theta) # Fallback to handle singularity matching original behavior
+
+    # Use ctheta directly instead of recomputing
+    if abs(ctheta) > 1e-3:
+        ctheta_inv = 1.0 / ctheta
+    else:
+        ctheta_inv = 0.0
     
     phi_dot = p + (q*sphi + r*cphi)*ttheta
     theta_dot = q*cphi - r*sphi
