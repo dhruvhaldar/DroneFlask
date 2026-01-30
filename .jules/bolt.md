@@ -15,3 +15,7 @@
 ## 2025-05-23 - Array Construction
 **Learning:** `np.concatenate` involves multiple allocations and is ~2x slower than `np.empty` + assignment for small arrays in high-frequency loops.
 **Action:** Use pre-allocation (`np.empty`) and indexed assignment for constructing state vectors in simulation steps.
+
+## 2025-05-23 - Trig Reuse
+**Learning:** In 6DOF physics loops, trig functions (`sin`, `cos`, `tan`) of the same angles are often called multiple times. Calculating `tan(theta)` as `stheta/ctheta` (if `cos` and `sin` are already computed) is ~14% faster and numerically sufficient for control loops.
+**Action:** Reuse pre-calculated sine/cosine values for derived trig functions in inner physics loops.
