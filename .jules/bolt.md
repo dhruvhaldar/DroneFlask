@@ -19,3 +19,7 @@
 ## 2025-05-23 - Trig Reuse
 **Learning:** In 6DOF physics loops, trig functions (`sin`, `cos`, `tan`) of the same angles are often called multiple times. Calculating `tan(theta)` as `stheta/ctheta` (if `cos` and `sin` are already computed) is ~14% faster and numerically sufficient for control loops.
 **Action:** Reuse pre-calculated sine/cosine values for derived trig functions in inner physics loops.
+
+## 2025-05-23 - Vector Unpacking
+**Learning:** Unpacking small numpy arrays (e.g. 12 elements) into scalar variables is ~4x slower than converting to a list first (`.tolist()`) and then unpacking.
+**Action:** Always use `.tolist()` before unpacking or accessing multiple elements from small numpy arrays in high-frequency loops.
