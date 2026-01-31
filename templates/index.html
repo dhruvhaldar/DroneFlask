@@ -145,6 +145,7 @@
             id="btn-cam-reset"
             class="glass p-3 rounded-full hover:bg-white/10 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 transition-all duration-200 text-gray-300 hover:text-white"
             aria-label="Reset Camera View"
+            aria-keyshortcuts="Home"
             title="Reset Camera (Home)"
         >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -253,15 +254,37 @@
       function updateUIState(connected) {
         const ids = ['ui-header', 'ui-telemetry', 'ui-cam-controls', 'ui-controls'];
         ids.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
+            const container = document.getElementById(id);
+            if (container) {
+                // Visual Toggle
                 if (connected) {
-                    el.classList.remove('opacity-50', 'grayscale', 'pointer-events-none');
-                    el.classList.add('interactive');
+                    container.classList.remove('opacity-50', 'grayscale', 'pointer-events-none');
+                    container.classList.add('interactive');
                 } else {
-                    el.classList.add('opacity-50', 'grayscale', 'pointer-events-none');
-                    el.classList.remove('interactive');
+                    container.classList.add('opacity-50', 'grayscale', 'pointer-events-none');
+                    container.classList.remove('interactive');
                 }
+
+                // Accessibility Toggle (Disable interactions)
+                // 1. Disable buttons
+                const buttons = container.querySelectorAll('button');
+                buttons.forEach(btn => btn.disabled = !connected);
+
+                // 2. Disable other focusable elements (spans, keys)
+                const focusables = container.querySelectorAll('[tabindex]');
+                focusables.forEach(el => {
+                    if (!connected) {
+                        // Store original tabindex if not already stored
+                        if (!el.dataset.tabindex) el.dataset.tabindex = el.getAttribute('tabindex');
+                        el.setAttribute('tabindex', '-1');
+                        el.setAttribute('aria-disabled', 'true');
+                    } else {
+                        // Restore original tabindex
+                        const original = el.dataset.tabindex || '0';
+                        el.setAttribute('tabindex', original);
+                        el.removeAttribute('aria-disabled');
+                    }
+                });
             }
         });
       }
