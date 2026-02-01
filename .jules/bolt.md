@@ -23,3 +23,11 @@
 ## 2025-05-23 - Vector Unpacking
 **Learning:** Unpacking small numpy arrays (e.g. 12 elements) into scalar variables is ~4x slower than converting to a list first (`.tolist()`) and then unpacking.
 **Action:** Always use `.tolist()` before unpacking or accessing multiple elements from small numpy arrays in high-frequency loops.
+
+## 2025-05-23 - List Slicing vs Numpy Slicing
+**Learning:** For small arrays (16 elements), converting a numpy array to a list and then slicing the list (`L[0:4]`) is ~2x faster than slicing the numpy array (`A[0:4]`) followed by `tolist()` on the slice.
+**Action:** In critical loops passing data between blocks, convert the main input vector to a list *once* before splitting/slicing if the downstream functions consume lists.
+
+## 2025-05-23 - Hidden Binary Artifacts
+**Learning:** Tests generating plots (like `test_animation_export.py`) might create binary files (images/videos) in the root or source dirs.
+**Action:** Always run `git status` or `ls` to check for unintended file creation before submitting, and ensure `.gitignore` covers them.
