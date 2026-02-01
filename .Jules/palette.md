@@ -9,3 +9,7 @@
 ## 2026-01-30 - Ephemeral UI Timing
 **Learning:** Auto-dismissing UI elements (like toasts) that don't pause on interaction can frustrate users and violate WCAG timing guidelines, especially for those who read slower or use keyboard navigation.
 **Action:** Always implement pause-on-hover and pause-on-focus listeners for transient notifications to give users control over the reading time.
+
+## 2026-02-04 - Vestibular Disorder Safety
+**Learning:** Large-scale animations (like full-screen overlays pulsing or elements sliding in) can trigger physical illness in users with vestibular disorders. These decorative effects must respect the user's `prefers-reduced-motion` setting.
+**Action:** Always use Tailwind's `motion-reduce:` modifiers to disable or simplify animations (e.g., `motion-reduce:animate-none`) on all non-essential moving elements.
