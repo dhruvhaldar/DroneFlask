@@ -225,9 +225,21 @@ def power_system(ctrl_vec):
     return np.concatenate((u, state))
 
 def rigid_body_dynamics(input_vec):
-    if isinstance(input_vec, (list, tuple)): input_vec = np.array(input_vec).flatten()
-    w = input_vec[0:4]
-    state = input_vec[4:]
+    # Optimization: Convert to list immediately for faster slicing and unpacking in quadcopter_dynamics.
+    # quadcopter_dynamics converts inputs to list/scalars anyway, so doing it once here
+    # avoids creating intermediate numpy views and multiple .tolist() calls.
+    if isinstance(input_vec, np.ndarray):
+        if input_vec.ndim > 1:
+            input_vec = input_vec.flatten()
+        input_list = input_vec.tolist()
+    elif isinstance(input_vec, (list, tuple)):
+        # Maintain original flattening behavior for list inputs
+        input_list = np.array(input_vec).flatten().tolist()
+    else:
+        input_list = list(input_vec)
+
+    w = input_list[0:4]
+    state = input_list[4:]
     return quadcopter_dynamics(0, state, w)
 
 def run_simulation(pixel_plot=False):
