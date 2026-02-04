@@ -21,6 +21,9 @@ MIXER_YAW = 1.0 / (4 * kM)
 Ixx_inv = 1.0 / Ixx
 Iyy_inv = 1.0 / Iyy
 Izz_inv = 1.0 / Izz
+GYRO_COEFF_P = (Izz - Iyy) * Ixx_inv
+GYRO_COEFF_Q = (Ixx - Izz) * Iyy_inv
+GYRO_COEFF_R = (Iyy - Ixx) * Izz_inv
 
 def quadcopter_dynamics(t, state, u):
     # Optimization: Convert to list for faster unpacking (~4x speedup for 12 elements)
@@ -64,9 +67,9 @@ def quadcopter_dynamics(t, state, u):
         az = (F_total * r22 - MASS * GRAVITY) / MASS
 
     # Optimization: Analytical Euler equations for diagonal inertia (avoids 3x3 matrix ops)
-    p_dot = (tau_phi - (Izz - Iyy) * q * r) * Ixx_inv
-    q_dot = (tau_theta - (Ixx - Izz) * p * r) * Iyy_inv
-    r_dot = (tau_psi - (Iyy - Ixx) * p * q) * Izz_inv
+    p_dot = tau_phi * Ixx_inv - GYRO_COEFF_P * q * r
+    q_dot = tau_theta * Iyy_inv - GYRO_COEFF_Q * p * r
+    r_dot = tau_psi * Izz_inv - GYRO_COEFF_R * p * q
 
     # Optimization: Reuse ctheta/stheta to avoid expensive tan/cos calls
     # Note: math.tan(theta) == stheta / ctheta
@@ -221,15 +224,6 @@ def flight_controller(state_input, time_input=0):
     out[4:] = state
     return out
 
-def power_system(ctrl_vec):
-    # Optimization: Pass-through if already numpy array (avoid alloc/copy)
-    if isinstance(ctrl_vec, np.ndarray):
-        return ctrl_vec
-    if isinstance(ctrl_vec, (list, tuple)): ctrl_vec = np.array(ctrl_vec).flatten()
-    u = ctrl_vec[0:4]
-    state = ctrl_vec[4:]
-    return np.concatenate((u, state))
-
 def rigid_body_dynamics(input_vec):
     # Optimization: Convert to list immediately for faster slicing and unpacking in quadcopter_dynamics.
     # quadcopter_dynamics converts inputs to list/scalars anyway, so doing it once here
@@ -267,8 +261,7 @@ def run_simulation(pixel_plot=False):
     
     controller = bd.FUNCTION(flight_controller, nin=2, nout=1, name='Controller')
     
-    # 4. Power System
-    power = bd.FUNCTION(power_system, nin=1, nout=1, name='PowerSystem')
+    # 4. Power System (Removed: redundant pass-through)
     
     # 5. Dynamics
     dynamics = bd.FUNCTION(rigid_body_dynamics, nin=1, nout=1, name='Dynamics')
@@ -294,8 +287,7 @@ def run_simulation(pixel_plot=False):
     controller[1] = clock
     
     # 1-to-1 connections can use assignment too for consistency or bd.connect
-    power[0] = controller
-    dynamics[0] = power
+    dynamics[0] = controller
     integrator[0] = dynamics
     
     selector[0] = integrator

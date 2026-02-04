@@ -3,7 +3,7 @@ import numpy as np
 import math
 import queue
 from bdsim.components import SourceBlock, SinkBlock, FunctionBlock
-from quadcopter_bdsim import power_system, rigid_body_dynamics, MIXER_F, MIXER_TORQUE, MIXER_YAW
+from quadcopter_bdsim import rigid_body_dynamics, MIXER_F, MIXER_TORQUE, MIXER_YAW
 import time
 
 # --- Interactive Control Blocks ---
@@ -195,7 +195,6 @@ def setup_web_simulation(shared_state, output_queue):
     # Input 0: Command (from Web), Input 1: State (from Integrator)
     controller = bd.FUNCTION(flight_controller_interactive, nin=2, nout=1, name='Controller')
     
-    power = bd.FUNCTION(power_system, nin=1, nout=1, name='PowerSystem')
     dynamics = bd.FUNCTION(rigid_body_dynamics, nin=1, nout=1, name='Dynamics')
     
     # Sinks
@@ -208,8 +207,7 @@ def setup_web_simulation(shared_state, output_queue):
     controller[0] = web_input
     controller[1] = integrator
     
-    power[0] = controller
-    dynamics[0] = power
+    dynamics[0] = controller
     integrator[0] = dynamics
     
     web_sink[0] = integrator

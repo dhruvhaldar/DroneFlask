@@ -6,8 +6,7 @@ digraph G {
 
 	"Integrator" -> "Controller" []
 	"time.0" -> "Controller" []
-	"Controller" -> "PowerSystem" []
-	"PowerSystem" -> "Dynamics" []
+	"Controller" -> "Dynamics" []
 	"Dynamics" -> "Integrator" []
 	"Integrator" -> "Selector" []
 	"Selector" -> "Scope" []

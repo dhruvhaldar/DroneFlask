@@ -23,3 +23,7 @@
 ## 2025-05-23 - Vector Unpacking
 **Learning:** Unpacking small numpy arrays (e.g. 12 elements) into scalar variables is ~4x slower than converting to a list first (`.tolist()`) and then unpacking.
 **Action:** Always use `.tolist()` before unpacking or accessing multiple elements from small numpy arrays in high-frequency loops.
+
+## 2025-05-24 - Block Diagram Overhead
+**Learning:** In pure Python block diagram simulations (like `bdsim`), each block adds scheduling and function call overhead. Redundant pass-through blocks (e.g. for signal shaping) can noticeably impact performance in high-frequency loops.
+**Action:** Remove redundant blocks and wire functions directly where possible; implement signal shaping within the source/dest blocks if cheap.
