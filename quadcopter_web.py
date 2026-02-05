@@ -178,7 +178,7 @@ def flight_controller_interactive(cmd, state):
     out[2] = w3_sq
     out[3] = w4_sq
     out[4:] = state
-    return [out]
+    return out
 
 
 def setup_web_simulation(shared_state, output_queue):

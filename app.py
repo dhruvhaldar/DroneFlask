@@ -88,7 +88,7 @@ def handle_control(json):
     
     # Update shared state
     # Optimization: Use numpy array directly to avoid repeated allocation in loop
-    control_state['cmd'] = np.array([t, r, p, y])
+    control_state['cmd'][:] = [t, r, p, y]
     # print(f"CMD: {control_state['cmd']}")
 
 @socketio.on('reset_sim')
