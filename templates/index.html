@@ -599,7 +599,9 @@
 
         const startTimer = () => {
           clearTimeout(timeoutId);
-          timeoutId = setTimeout(dismiss, 3000);
+          if (type !== 'error') {
+            timeoutId = setTimeout(dismiss, 3000);
+          }
         };
 
         const pauseTimer = () => clearTimeout(timeoutId);
