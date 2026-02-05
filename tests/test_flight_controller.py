@@ -11,13 +11,9 @@ class TestFlightController(unittest.TestCase):
         state = np.zeros(12)
 
         # Run function
-        result_list = flight_controller_interactive(cmd, state)
+        output = flight_controller_interactive(cmd, state)
 
         # Verify output structure
-        self.assertIsInstance(result_list, list)
-        self.assertEqual(len(result_list), 1)
-
-        output = result_list[0]
         self.assertIsInstance(output, np.ndarray)
         self.assertEqual(len(output), 16)
 
@@ -33,8 +29,7 @@ class TestFlightController(unittest.TestCase):
         cmd = np.array([0.5, 0.1, 0.0, 0.0])
         state = np.zeros(12)
 
-        result_list = flight_controller_interactive(cmd, state)
-        output = result_list[0]
+        output = flight_controller_interactive(cmd, state)
 
         w_sq = output[0:4]
         # Roll right (positive phi ref) -> higher speed on one side?

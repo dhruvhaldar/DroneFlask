@@ -1,0 +1,15 @@
+SIM: Worker started
+package roboticstoolbox not loaded: not found, not a proper package, no blocks module
+package machinevisiontoolbox not loaded: not found, not a proper package, no blocks module
+
+Compiling:
+Web Simulation Compiled.
+
+>>> Start simulation: T = 3600.0, dt = 0.01
+  Continuous state variables: 12
+     x0 =  [0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+  Discrete state variables:   0
+
+SERVER: Starting on http://127.0.0.1:5001
+EMIT: Worker started
+Client connected
