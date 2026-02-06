@@ -424,16 +424,24 @@
           const el = document.getElementById(id);
           if (!el) continue;
 
+          let repeatTimer = null;
+
           const press = (e) => {
             e.preventDefault(); // Prevent text selection/scrolling
             keys[key] = 1;
             highlightKey(key, true);
             updateCmd();
+            // Auto-repeat for continuous control (Throttle)
+            if (!repeatTimer) {
+                repeatTimer = setInterval(updateCmd, 50);
+            }
           };
           const release = (e) => {
             e.preventDefault();
             keys[key] = 0;
             highlightKey(key, false);
+            clearInterval(repeatTimer);
+            repeatTimer = null;
             updateCmd();
           };
 
