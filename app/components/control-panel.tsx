@@ -25,6 +25,13 @@ const initialState: ControlState = {
 
 const modes: FlightMode[] = ["Manual", "Stabilize", "Altitude Hold", "Position Hold"];
 
+const modeTooltips: Record<FlightMode, string> = {
+  "Manual": "Direct pilot control with no stabilization",
+  "Stabilize": "Self-levels the drone when sticks are released",
+  "Altitude Hold": "Maintains current altitude automatically",
+  "Position Hold": "Maintains current 3D position using GPS"
+};
+
 export function ControlPanel() {
   const [state, setState] = useState<ControlState>(initialState);
   const [saving, setSaving] = useState(false);
@@ -82,6 +89,8 @@ export function ControlPanel() {
             <button
               key={mode}
               className={state.mode === mode ? "active" : ""}
+              aria-pressed={state.mode === mode}
+              title={modeTooltips[mode]}
               onClick={() => void pushState({ ...state, mode })}
               type="button"
             >
@@ -92,14 +101,23 @@ export function ControlPanel() {
 
         <button
           type="button"
-          onClick={() => void pushState({ ...state, armed: !state.armed })}
+          onClick={() => {
+            if (!state.armed) {
+              if (window.confirm("WARNING: Propellers will spin up. Ensure the area is clear. Arm motors?")) {
+                void pushState({ ...state, armed: true });
+              }
+            } else {
+              void pushState({ ...state, armed: false });
+            }
+          }}
           className={state.armed ? "active" : ""}
+          aria-pressed={state.armed}
           style={{ width: "100%" }}
         >
           {state.armed ? "Disarm" : "Arm Motors"}
         </button>
 
-        <span className="status-pill">{state.armed ? "Armed" : "Safe"} · {state.mode}</span>
+        <span className="status-pill" aria-live="polite">{state.armed ? "Armed" : "Safe"} · {state.mode}</span>
       </section>
 
       <section className="glass panel" style={{ gridColumn: "1 / -1" }}>
@@ -119,7 +137,7 @@ export function ControlPanel() {
           </div>
           <div>
             <p className="subtle">Status</p>
-            <p className="value">{saving ? "Syncing..." : "Synced"}</p>
+            <p className="value" aria-live="polite">{saving ? "Syncing..." : "Synced"}</p>
           </div>
         </div>
       </section>
