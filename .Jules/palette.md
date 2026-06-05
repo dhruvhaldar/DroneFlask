@@ -1,0 +1,3 @@
+## 2025-01-20 - Demystifying Jargon and Securing Hardware Actions
+**Learning:** For specialized applications like drone control panels, users face unique hurdles. Highly technical jargon (e.g., "Stabilize" vs "Position Hold") can be intimidating and obscure exactly what the hardware will do. Simultaneously, destructive or inherently dangerous actions (like spinning up propellers) require intentionality, as an accidental click can have real-world consequences.
+**Action:** Always add descriptive tooltips (`title`) or inline help to clarify domain-specific jargon. Implement explicit friction, such as `window.confirm`, for actions that trigger dangerous real-world hardware states.
