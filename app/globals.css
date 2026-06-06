@@ -106,6 +106,12 @@ button.active {
   box-shadow: 0 0 0 1px #72f0c4 inset;
 }
 
+button:focus-visible,
+input[type="range"]:focus-visible {
+  outline: 2px solid #72f0c4;
+  outline-offset: 2px;
+}
+
 .status-pill {
   display: inline-block;
   margin-top: 0.8rem;
