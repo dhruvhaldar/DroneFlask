@@ -68,7 +68,7 @@ export function ControlPanel() {
               <label htmlFor={axis} style={{ textTransform: "capitalize" }}>
                 {axis}
               </label>
-              <span className="value">{state[axis]}</span>
+              <output htmlFor={axis} className="value">{state[axis]}</output>
             </div>
             <input
               id={axis}
