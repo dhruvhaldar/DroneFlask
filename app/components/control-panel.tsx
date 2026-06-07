@@ -101,6 +101,7 @@ export function ControlPanel() {
 
         <button
           type="button"
+          disabled={!state.armed && state.throttle > 0}
           onClick={() => {
             if (!state.armed) {
               if (window.confirm("WARNING: Propellers will spin up. Ensure the area is clear. Arm motors?")) {
@@ -112,9 +113,13 @@ export function ControlPanel() {
           }}
           className={state.armed ? "active" : ""}
           aria-pressed={state.armed}
-          style={{ width: "100%" }}
+          style={{
+            width: "100%",
+            opacity: (!state.armed && state.throttle > 0) ? 0.5 : 1,
+            cursor: (!state.armed && state.throttle > 0) ? "not-allowed" : "pointer"
+          }}
         >
-          {state.armed ? "Disarm" : "Arm Motors"}
+          {!state.armed && state.throttle > 0 ? "Zero Throttle to Arm" : state.armed ? "Disarm" : "Arm Motors"}
         </button>
 
         <span className="status-pill" aria-live="polite">{state.armed ? "Armed" : "Safe"} · {state.mode}</span>
