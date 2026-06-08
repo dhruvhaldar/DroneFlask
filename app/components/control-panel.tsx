@@ -62,6 +62,7 @@ export function ControlPanel() {
     <div className="grid" style={{ marginTop: "1.1rem" }}>
       <section className="glass panel">
         <h2 className="section-title">Flight Controls</h2>
+        <datalist id="center-snap"><option value="0" /></datalist>
         {(["throttle", "pitch", "roll", "yaw"] as const).map((axis) => (
           <div key={axis} style={{ marginBottom: "0.9rem" }}>
             <div className="row">
@@ -73,10 +74,13 @@ export function ControlPanel() {
             <input
               id={axis}
               type="range"
+              list={axis === "throttle" ? undefined : "center-snap"}
               min={axis === "throttle" ? 0 : -100}
               max={100}
               value={state[axis]}
               onChange={(event) => updateAxis(axis, Number(event.target.value))}
+              onDoubleClick={() => axis !== "throttle" && updateAxis(axis, 0)}
+              title={axis !== "throttle" ? "Double click to center" : undefined}
             />
           </div>
         ))}
@@ -101,8 +105,11 @@ export function ControlPanel() {
 
         <button
           type="button"
-          disabled={!state.armed && state.throttle > 0}
+          aria-disabled={!state.armed && state.throttle > 0}
           onClick={() => {
+            if (!state.armed && state.throttle > 0) {
+              return;
+            }
             if (!state.armed) {
               if (window.confirm("WARNING: Propellers will spin up. Ensure the area is clear. Arm motors?")) {
                 void pushState({ ...state, armed: true });
