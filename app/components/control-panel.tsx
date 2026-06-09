@@ -102,6 +102,9 @@ export function ControlPanel() {
             </button>
           ))}
         </div>
+        <p className="subtle" style={{ fontSize: "0.85rem", marginBottom: "1rem", minHeight: "2.5em" }} aria-live="polite">
+          {modeTooltips[state.mode]}
+        </p>
 
         <button
           type="button"
