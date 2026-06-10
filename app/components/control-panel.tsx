@@ -35,6 +35,7 @@ const modeTooltips: Record<FlightMode, string> = {
 export function ControlPanel() {
   const [state, setState] = useState<ControlState>(initialState);
   const [saving, setSaving] = useState(false);
+  const [hoveredMode, setHoveredMode] = useState<FlightMode | null>(null);
 
   const batteryPct = useMemo(() => Math.max(12, Math.round(100 - state.throttle * 0.62)), [state.throttle]);
 
@@ -88,13 +89,17 @@ export function ControlPanel() {
 
       <section className="glass panel">
         <h2 className="section-title">Mode + Arm</h2>
-        <div className="btn-group" style={{ marginBottom: "0.7rem" }}>
+        <div className="btn-group" role="group" aria-label="Flight Modes" style={{ marginBottom: "0.7rem" }}>
           {modes.map((mode) => (
             <button
               key={mode}
               className={state.mode === mode ? "active" : ""}
               aria-pressed={state.mode === mode}
-              title={modeTooltips[mode]}
+              aria-describedby="mode-description"
+              onMouseEnter={() => setHoveredMode(mode)}
+              onMouseLeave={() => setHoveredMode(null)}
+              onFocus={() => setHoveredMode(mode)}
+              onBlur={() => setHoveredMode(null)}
               onClick={() => void pushState({ ...state, mode })}
               type="button"
             >
@@ -102,8 +107,8 @@ export function ControlPanel() {
             </button>
           ))}
         </div>
-        <p className="subtle" style={{ fontSize: "0.85rem", marginBottom: "1rem", minHeight: "2.5em" }} aria-live="polite">
-          {modeTooltips[state.mode]}
+        <p id="mode-description" className="subtle" style={{ fontSize: "0.85rem", marginBottom: "1rem", minHeight: "2.5em" }} aria-live="polite">
+          {modeTooltips[hoveredMode || state.mode]}
         </p>
 
         <button

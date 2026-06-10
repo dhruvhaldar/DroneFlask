@@ -14,3 +14,7 @@
 ## 2026-06-09 - Making Hidden Context Persistent and Accessible
 **Learning:** Native `title` tooltips on buttons are inherently flawed for critical contextual information—they are invisible on mobile devices, difficult for screen reader users to access, and require slow hover interactions on desktop. For specialized interfaces with complex modes, hiding descriptions in tooltips degrades discoverability.
 **Action:** Replace or augment native hover tooltips with explicit, persistent on-screen text. Use `aria-live="polite"` on a dedicated, visually subtle text element to ensure that when a user switches modes, screen readers immediately announce the descriptive context, vastly improving both visibility and accessibility.
+
+## 2025-01-20 - Enhancing Discoverability over Native Tooltips
+**Learning:** Native `title` tooltips on buttons are inherently flawed for critical contextual information—they are invisible on mobile devices, difficult for screen reader users to access, and require slow hover interactions on desktop. For specialized interfaces with complex modes, hiding descriptions in tooltips degrades discoverability.
+**Action:** Replace or augment native hover tooltips with explicit, persistent on-screen text. Use interactive focus and hover handlers (`onMouseEnter`, `onFocus`, etc) to dynamically update an inline description element mapped via `aria-describedby` and ensure it uses `aria-live="polite"` so screen readers immediately announce the descriptive context, vastly improving both visibility and accessibility without cluttering the UI.
