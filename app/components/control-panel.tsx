@@ -70,7 +70,15 @@ export function ControlPanel() {
               <label htmlFor={axis} style={{ textTransform: "capitalize" }}>
                 {axis}
               </label>
-              <output htmlFor={axis} className="value">{state[axis]}</output>
+              {axis !== "throttle" && (
+                <span className="subtle" style={{ fontSize: "0.75rem", marginLeft: "0.5rem" }}>
+                  (Double-click or &apos;0&apos; to center)
+                </span>
+              )}
+              <output htmlFor={axis} className="value">
+                {state[axis] > 0 ? "+" : ""}
+                {state[axis]}
+              </output>
             </div>
             <input
               id={axis}
@@ -81,7 +89,11 @@ export function ControlPanel() {
               value={state[axis]}
               onChange={(event) => updateAxis(axis, Number(event.target.value))}
               onDoubleClick={() => axis !== "throttle" && updateAxis(axis, 0)}
-              title={axis !== "throttle" ? "Double click to center" : undefined}
+              onKeyDown={(e) => {
+                if (axis !== "throttle" && (e.key === "0" || e.key === "c" || e.key === "Escape")) {
+                  updateAxis(axis, 0);
+                }
+              }}
             />
           </div>
         ))}
