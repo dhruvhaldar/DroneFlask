@@ -71,11 +71,11 @@ export function ControlPanel() {
                 {axis}
               </label>
               {axis !== "throttle" && (
-                <span className="subtle" style={{ fontSize: "0.75rem", marginLeft: "0.5rem" }}>
+                <span id={`${axis}-hint`} className="subtle" style={{ fontSize: "0.75rem", marginLeft: "0.5rem" }}>
                   (Double-click or &apos;0&apos; to center)
                 </span>
               )}
-              <output htmlFor={axis} className="value">
+              <output htmlFor={axis} className="value" aria-hidden="true">
                 {state[axis] > 0 ? "+" : ""}
                 {state[axis]}
               </output>
@@ -87,6 +87,7 @@ export function ControlPanel() {
               min={axis === "throttle" ? 0 : -100}
               max={100}
               value={state[axis]}
+              aria-describedby={axis !== "throttle" ? `${axis}-hint` : undefined}
               onChange={(event) => updateAxis(axis, Number(event.target.value))}
               onDoubleClick={() => axis !== "throttle" && updateAxis(axis, 0)}
               onKeyDown={(e) => {
@@ -154,24 +155,24 @@ export function ControlPanel() {
 
       <section className="glass panel" style={{ gridColumn: "1 / -1" }}>
         <h2 className="section-title">Telemetry</h2>
-        <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))" }}>
+        <dl className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", margin: 0 }}>
           <div>
-            <p className="subtle">Battery</p>
-            <p className="value">{batteryPct}%</p>
+            <dt className="subtle">Battery</dt>
+            <dd className="value" style={{ margin: 0 }}>{batteryPct}%</dd>
           </div>
           <div>
-            <p className="subtle">Link Quality</p>
-            <p className="value">{Math.max(51, 100 - Math.abs(state.yaw))}%</p>
+            <dt className="subtle">Link Quality</dt>
+            <dd className="value" style={{ margin: 0 }}>{Math.max(51, 100 - Math.abs(state.yaw))}%</dd>
           </div>
           <div>
-            <p className="subtle">Vertical Speed</p>
-            <p className="value">{(state.throttle / 10).toFixed(1)} m/s</p>
+            <dt className="subtle">Vertical Speed</dt>
+            <dd className="value" style={{ margin: 0 }}>{(state.throttle / 10).toFixed(1)} m/s</dd>
           </div>
           <div>
-            <p className="subtle">Status</p>
-            <p className="value" aria-live="polite">{saving ? "Syncing..." : "Synced"}</p>
+            <dt className="subtle">Status</dt>
+            <dd className="value" style={{ margin: 0 }} aria-live="polite">{saving ? "Syncing..." : "Synced"}</dd>
           </div>
-        </div>
+        </dl>
       </section>
     </div>
   );
