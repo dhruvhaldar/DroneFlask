@@ -129,6 +129,7 @@ export function ControlPanel() {
           aria-disabled={!state.armed && state.throttle > 0}
           onClick={() => {
             if (!state.armed && state.throttle > 0) {
+              document.getElementById("throttle")?.focus();
               return;
             }
             if (!state.armed) {

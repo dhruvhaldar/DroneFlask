@@ -26,3 +26,7 @@
 ## 2026-06-12 - Associating Hints and Structuring Telemetry Data
 **Learning:** For interactive UI inputs (like range sliders), providing visual text hints regarding keyboard shortcuts doesn't automatically translate to an accessible experience. Screen readers need explicitly linked hints. Moreover, presenting key-value data visually as a grid of elements often lacks semantic meaning for screen readers.
 **Action:** Use `aria-describedby` on inputs to reference the `id` of visually adjacent hint text, ensuring screen reader users hear instructions like keyboard shortcuts. Also, use description lists (`<dl>`, `<dt>`, `<dd>`) for key-value telemetry data instead of generic `<div>` and `<p>` elements to provide strong semantic structure. In addition, when using `output` to reflect a range `input`'s value visually, consider adding `aria-hidden="true"` to the `output` to avoid screen readers announcing the value twice (once from the input and once from the output).
+
+## 2024-06-13 - [Focus Management on Disabled Actions]
+**Learning:** When preventing an action due to an invalid state (like "Zero Throttle to Arm"), silently disabling or ignoring clicks leaves users confused. Guiding them directly to the source of the issue improves usability.
+**Action:** When a button is disabled/inactive due to another input's state, clicking it should shift focus to the input that needs correction, providing a clear path to resolution.
