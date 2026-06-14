@@ -30,3 +30,7 @@
 ## 2024-06-13 - [Focus Management on Disabled Actions]
 **Learning:** When preventing an action due to an invalid state (like "Zero Throttle to Arm"), silently disabling or ignoring clicks leaves users confused. Guiding them directly to the source of the issue improves usability.
 **Action:** When a button is disabled/inactive due to another input's state, clicking it should shift focus to the input that needs correction, providing a clear path to resolution.
+
+## 2024-12-23 - Improve Range Input Accessibility
+**Learning:** Adding a `title` attribute to `input[type="range"]` elements serves as a highly effective, native way to provide tooltips for visual users navigating with a mouse, complementing existing ARIA labels or `htmlFor` bindings which only assist screen readers.
+**Action:** When adding or updating range sliders or generic input fields, ensure to include a descriptive `title` attribute for native tooltips, while still relying on `<label>` elements and `aria-*` tags for screen reader accessibility.

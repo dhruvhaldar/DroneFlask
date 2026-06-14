@@ -1,0 +1,10 @@
+--- app/components/control-panel.tsx
++++ app/components/control-panel.tsx
+@@ -73,6 +73,7 @@
+               min={axis === "throttle" ? 0 : -100}
+               max={100}
+               value={state[axis]}
++              title={axis === "throttle" ? "Drag to adjust throttle" : `Drag to adjust ${axis} (center snaps to 0)`}
+               aria-describedby={`${axis}-hint`}
+               onChange={(event) => updateAxis(axis, Number(event.target.value))}
+               onDoubleClick={() => updateAxis(axis, 0)}
