@@ -34,3 +34,6 @@
 ## 2024-12-23 - Improve Range Input Accessibility
 **Learning:** Adding a `title` attribute to `input[type="range"]` elements serves as a highly effective, native way to provide tooltips for visual users navigating with a mouse, complementing existing ARIA labels or `htmlFor` bindings which only assist screen readers.
 **Action:** When adding or updating range sliders or generic input fields, ensure to include a descriptive `title` attribute for native tooltips, while still relying on `<label>` elements and `aria-*` tags for screen reader accessibility.
+## 2024-12-23 - Corrective Action Buttons
+**Learning:** Buttons providing helpful corrective actions (like auto-zeroing a slider) shouldn't be styled as disabled (`aria-disabled` or `cursor: not-allowed`). This hides the helpful action from both screen readers and sighted users.
+**Action:** Always ensure that if a button has an `onClick` handler that actually does something helpful for the user, it is presented as interactive and fully actionable, using `title` and proper ARIA states to clarify its behavior instead of disabling it.

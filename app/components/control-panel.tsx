@@ -125,7 +125,6 @@ export function ControlPanel() {
 
         <button
           type="button"
-          aria-disabled={!state.armed && state.throttle > 0}
           onClick={() => {
             if (!state.armed && state.throttle > 0) {
               void pushState({ ...state, throttle: 0 });
@@ -140,11 +139,12 @@ export function ControlPanel() {
             }
           }}
           className={state.armed ? "active" : ""}
-          aria-pressed={state.armed}
+          aria-pressed={(!state.armed && state.throttle > 0) ? undefined : state.armed}
+          title={(!state.armed && state.throttle > 0) ? "Click to set throttle to 0 so you can arm motors" : undefined}
           style={{
             width: "100%",
             opacity: (!state.armed && state.throttle > 0) ? 0.8 : 1,
-            cursor: (!state.armed && state.throttle > 0) ? "not-allowed" : "pointer"
+            cursor: "pointer"
           }}
         >
           {!state.armed && state.throttle > 0 ? "Zero Throttle to Arm" : state.armed ? "Disarm" : "Arm Motors"}
