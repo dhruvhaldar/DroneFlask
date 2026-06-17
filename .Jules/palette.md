@@ -37,3 +37,7 @@
 ## 2024-12-23 - Corrective Action Buttons
 **Learning:** Buttons providing helpful corrective actions (like auto-zeroing a slider) shouldn't be styled as disabled (`aria-disabled` or `cursor: not-allowed`). This hides the helpful action from both screen readers and sighted users.
 **Action:** Always ensure that if a button has an `onClick` handler that actually does something helpful for the user, it is presented as interactive and fully actionable, using `title` and proper ARIA states to clarify its behavior instead of disabling it.
+
+## 2024-06-17 - Zero-Dependency Visual Scanning Enhancements
+**Learning:** In telemetry-heavy interfaces, users must quickly parse a dense grid of changing variables. Pure text data often creates a wall of text that requires cognitive load to scan. Adding simple visual anchors drastically reduces this load, but importing full icon libraries can bloat the UI.
+**Action:** Use universally supported unicode emojis as zero-dependency visual anchors adjacent to data labels. They dramatically improve "glanceability" and parse speed without adding new dependencies or complex SVG implementations. Always accompany live-updating telemetry lists with `aria-busy` to inform screen reader users that the content within the region is actively changing.

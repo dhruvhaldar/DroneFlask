@@ -150,27 +150,27 @@ export function ControlPanel() {
           {!state.armed && state.throttle > 0 ? "Zero Throttle to Arm" : state.armed ? "Disarm" : "Arm Motors"}
         </button>
 
-        <span className="status-pill" aria-live="polite">{state.armed ? "Armed" : "Safe"} · {state.mode}</span>
+        <span className="status-pill" aria-live="polite">{state.armed ? "🚨 Armed" : "🛡️ Safe"} · {state.mode}</span>
       </section>
 
       <section className="glass panel" style={{ gridColumn: "1 / -1" }}>
         <h2 className="section-title">Telemetry</h2>
-        <dl className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", margin: 0 }}>
+        <dl className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", margin: 0 }} aria-busy={saving}>
           <div>
-            <dt className="subtle">Battery</dt>
+            <dt className="subtle">🔋 Battery</dt>
             <dd className="value" style={{ margin: 0 }}>{batteryPct}%</dd>
           </div>
           <div>
-            <dt className="subtle">Link Quality</dt>
+            <dt className="subtle">📶 Link Quality</dt>
             <dd className="value" style={{ margin: 0 }}>{Math.max(51, 100 - Math.abs(state.yaw))}%</dd>
           </div>
           <div>
-            <dt className="subtle">Vertical Speed</dt>
+            <dt className="subtle">↕️ Vertical Speed</dt>
             <dd className="value" style={{ margin: 0 }}>{(state.throttle / 10).toFixed(1)} m/s</dd>
           </div>
           <div>
             <dt className="subtle">Status</dt>
-            <dd className="value" style={{ margin: 0 }} aria-live="polite">{saving ? "Syncing..." : "Synced"}</dd>
+            <dd className="value" style={{ margin: 0 }} aria-live="polite">{saving ? "🔄 Syncing..." : "✓ Synced"}</dd>
           </div>
         </dl>
       </section>
