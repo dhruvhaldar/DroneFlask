@@ -107,13 +107,18 @@ export function ControlPanel() {
               key={mode}
               className={state.mode === mode ? "active" : ""}
               aria-pressed={state.mode === mode}
+              aria-disabled={saving ? "true" : undefined}
               aria-describedby="mode-description"
               onMouseEnter={() => setHoveredMode(mode)}
               onMouseLeave={() => setHoveredMode(null)}
               onFocus={() => setHoveredMode(mode)}
               onBlur={() => setHoveredMode(null)}
-              onClick={() => void pushState({ ...state, mode })}
+              onClick={() => {
+                if (saving) return;
+                void pushState({ ...state, mode });
+              }}
               type="button"
+              style={{ cursor: saving ? "wait" : undefined }}
             >
               {mode}
             </button>
@@ -126,6 +131,7 @@ export function ControlPanel() {
         <button
           type="button"
           onClick={() => {
+            if (saving) return;
             if (!state.armed && state.throttle > 0) {
               void pushState({ ...state, throttle: 0 });
               return;
@@ -140,14 +146,15 @@ export function ControlPanel() {
           }}
           className={state.armed ? "active" : ""}
           aria-pressed={(!state.armed && state.throttle > 0) ? undefined : state.armed}
+          aria-disabled={saving ? "true" : undefined}
           title={(!state.armed && state.throttle > 0) ? "Click to set throttle to 0 so you can arm motors" : undefined}
           style={{
             width: "100%",
             opacity: (!state.armed && state.throttle > 0) ? 0.8 : 1,
-            cursor: "pointer"
+            cursor: saving ? "wait" : "pointer"
           }}
         >
-          {!state.armed && state.throttle > 0 ? "Zero Throttle to Arm" : state.armed ? "Disarm" : "Arm Motors"}
+          {saving ? "🔄 Processing..." : (!state.armed && state.throttle > 0 ? "Zero Throttle to Arm" : state.armed ? "Disarm" : "Arm Motors")}
         </button>
 
         <span className="status-pill" aria-live="polite">{state.armed ? "🚨 Armed" : "🛡️ Safe"} · {state.mode}</span>
