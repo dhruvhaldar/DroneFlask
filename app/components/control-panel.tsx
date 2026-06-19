@@ -71,7 +71,11 @@ export function ControlPanel() {
                 {axis}
               </label>
               <span id={`${axis}-hint`} className="subtle" style={{ fontSize: "0.75rem", marginLeft: "0.5rem" }}>
-                {axis === "throttle" ? "(Double-click or 'Esc' to zero)" : "(Double-click or '0' to center)"}
+                {axis === "throttle" ? (
+                  <>Double-click or <kbd className="px-1.5 py-0.5 rounded border border-white/20 bg-white/5 font-mono text-[10px] text-gray-300 shadow-sm mx-0.5">Esc</kbd> to zero</>
+                ) : (
+                  <>Double-click or <kbd className="px-1.5 py-0.5 rounded border border-white/20 bg-white/5 font-mono text-[10px] text-gray-300 shadow-sm mx-0.5">0</kbd> / <kbd className="px-1.5 py-0.5 rounded border border-white/20 bg-white/5 font-mono text-[10px] text-gray-300 shadow-sm mx-0.5">c</kbd> to center</>
+                )}
               </span>
               <output htmlFor={axis} className="value" aria-hidden="true">
                 {state[axis] > 0 ? "+" : ""}

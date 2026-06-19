@@ -45,3 +45,7 @@
 ## 2025-01-20 - Maintaining Keyboard Navigation During Async Feedback
 **Learning:** For buttons triggering async operations (like "Arm Motors" or switching modes), adding the `disabled` attribute immediately removes the element from the document tab order. If a user triggers the action via keyboard (`Enter` or `Space`), their focus is immediately lost, resetting them to the top of the page—a highly frustrating experience, especially for screen reader users.
 **Action:** Use `aria-disabled="true"` combined with manual click/keydown blocking (`if (saving) return;`) instead of the native `disabled` attribute for buttons indicating an active loading state. This allows the button to remain focusable and visually communicate its processing state (e.g., using `cursor: wait` or text changes) without breaking the user's navigational context.
+
+## 2024-05-18 - Visual distinction for keyboard shortcuts
+**Learning:** Users often miss keyboard shortcuts hidden in plain text hints, and undocumented shortcuts ('C' for center) cause confusion if discovered accidentally.
+**Action:** Always wrap keyboard shortcuts in semantic `<kbd>` tags and style them to look like physical keys (using the design system's style, e.g., glassmorphism) so they stand out clearly and intuitively.
