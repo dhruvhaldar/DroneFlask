@@ -49,3 +49,6 @@
 ## 2024-05-18 - Visual distinction for keyboard shortcuts
 **Learning:** Users often miss keyboard shortcuts hidden in plain text hints, and undocumented shortcuts ('C' for center) cause confusion if discovered accidentally.
 **Action:** Always wrap keyboard shortcuts in semantic `<kbd>` tags and style them to look like physical keys (using the design system's style, e.g., glassmorphism) so they stand out clearly and intuitively.
+## 2024-05-20 - Contextual Confirmation for Destructive Actions
+**Learning:** For actions like disarming a drone, the context of the action matters heavily. Disarming on the ground (throttle 0) should be frictionless. However, disarming mid-air (throttle > 0) causes immediate catastrophic failure. A one-size-fits-all approach to action confirmations either creates annoying friction for safe states or allows accidental catastrophic outcomes in dangerous states.
+**Action:** Always evaluate the state-context of destructive actions. Apply conditional friction (like `window.confirm`) only when the current context (e.g., active throttle) implies high risk, allowing safe-state actions to remain frictionless.

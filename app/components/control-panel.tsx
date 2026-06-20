@@ -79,7 +79,7 @@ export function ControlPanel() {
               </span>
               <output htmlFor={axis} className="value" aria-hidden="true">
                 {state[axis] > 0 ? "+" : ""}
-                {state[axis]}
+                {state[axis]}%
               </output>
             </div>
             <input
@@ -145,7 +145,13 @@ export function ControlPanel() {
                 void pushState({ ...state, armed: true });
               }
             } else {
-              void pushState({ ...state, armed: false });
+              if (state.throttle > 0) {
+                if (window.confirm("DANGER: Throttle is active. Disarming now will cause the drone to fall out of the sky. Are you sure?")) {
+                  void pushState({ ...state, armed: false });
+                }
+              } else {
+                void pushState({ ...state, armed: false });
+              }
             }
           }}
           className={state.armed ? "active" : ""}
@@ -180,7 +186,7 @@ export function ControlPanel() {
             <dd className="value" style={{ margin: 0 }}>{(state.throttle / 10).toFixed(1)} m/s</dd>
           </div>
           <div>
-            <dt className="subtle">Status</dt>
+            <dt className="subtle">📡 Status</dt>
             <dd className="value" style={{ margin: 0 }} aria-live="polite">{saving ? "🔄 Syncing..." : "✓ Synced"}</dd>
           </div>
         </dl>
