@@ -52,3 +52,6 @@
 ## 2024-05-20 - Contextual Confirmation for Destructive Actions
 **Learning:** For actions like disarming a drone, the context of the action matters heavily. Disarming on the ground (throttle 0) should be frictionless. However, disarming mid-air (throttle > 0) causes immediate catastrophic failure. A one-size-fits-all approach to action confirmations either creates annoying friction for safe states or allows accidental catastrophic outcomes in dangerous states.
 **Action:** Always evaluate the state-context of destructive actions. Apply conditional friction (like `window.confirm`) only when the current context (e.g., active throttle) implies high risk, allowing safe-state actions to remain frictionless.
+## 2026-06-21 - [Replace blocking window.confirm]
+**Learning:** Synchronous `window.confirm` calls block the main JavaScript thread, which is problematic for Next.js apps handling real-time state like telemetry.
+**Action:** Use an inline confirmation state (e.g., `confirmAction`) and UI to handle warnings non-blockingly.

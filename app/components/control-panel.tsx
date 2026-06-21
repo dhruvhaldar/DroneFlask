@@ -36,6 +36,7 @@ export function ControlPanel() {
   const [state, setState] = useState<ControlState>(initialState);
   const [saving, setSaving] = useState(false);
   const [hoveredMode, setHoveredMode] = useState<FlightMode | null>(null);
+  const [confirmAction, setConfirmAction] = useState<"arm" | "disarm" | null>(null);
 
   const batteryPct = useMemo(() => Math.max(12, Math.round(100 - state.throttle * 0.62)), [state.throttle]);
 
@@ -132,6 +133,14 @@ export function ControlPanel() {
           {modeTooltips[hoveredMode || state.mode]}
         </p>
 
+        {confirmAction && (
+          <p role="alert" className="subtle" style={{ fontSize: "0.85rem", color: "#ff8c8c", marginBottom: "0.5rem" }}>
+            {confirmAction === "arm"
+              ? "WARNING: Propellers will spin up. Ensure area is clear. Click again to confirm."
+              : "DANGER: Throttle is active. Drone will fall. Click again to confirm."}
+          </p>
+        )}
+
         <button
           type="button"
           onClick={() => {
@@ -141,19 +150,27 @@ export function ControlPanel() {
               return;
             }
             if (!state.armed) {
-              if (window.confirm("WARNING: Propellers will spin up. Ensure the area is clear. Arm motors?")) {
+              if (confirmAction === "arm") {
                 void pushState({ ...state, armed: true });
+                setConfirmAction(null);
+              } else {
+                setConfirmAction("arm");
               }
             } else {
               if (state.throttle > 0) {
-                if (window.confirm("DANGER: Throttle is active. Disarming now will cause the drone to fall out of the sky. Are you sure?")) {
+                if (confirmAction === "disarm") {
                   void pushState({ ...state, armed: false });
+                  setConfirmAction(null);
+                } else {
+                  setConfirmAction("disarm");
                 }
               } else {
                 void pushState({ ...state, armed: false });
+                setConfirmAction(null);
               }
             }
           }}
+          onBlur={() => setConfirmAction(null)}
           className={state.armed ? "active" : ""}
           aria-pressed={(!state.armed && state.throttle > 0) ? undefined : state.armed}
           aria-disabled={saving ? "true" : undefined}
@@ -161,10 +178,11 @@ export function ControlPanel() {
           style={{
             width: "100%",
             opacity: (!state.armed && state.throttle > 0) ? 0.8 : 1,
-            cursor: saving ? "wait" : "pointer"
+            cursor: saving ? "wait" : "pointer",
+            borderColor: confirmAction ? "#ff8c8c" : undefined
           }}
         >
-          {saving ? "🔄 Processing..." : (!state.armed && state.throttle > 0 ? "Zero Throttle to Arm" : state.armed ? "Disarm" : "Arm Motors")}
+          {saving ? "🔄 Processing..." : confirmAction ? "Click to Confirm" : (!state.armed && state.throttle > 0 ? "Zero Throttle to Arm" : state.armed ? "Disarm" : "Arm Motors")}
         </button>
 
         <span className="status-pill" aria-live="polite">{state.armed ? "🚨 Armed" : "🛡️ Safe"} · {state.mode}</span>
