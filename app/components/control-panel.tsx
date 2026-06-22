@@ -193,11 +193,17 @@ export function ControlPanel() {
         <dl className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", margin: 0 }} aria-busy={saving}>
           <div>
             <dt className="subtle">🔋 Battery</dt>
-            <dd className="value" style={{ margin: 0 }}>{batteryPct}%</dd>
+            <dd className="value" style={{ margin: 0 }}>
+              {batteryPct}%
+              <meter value={batteryPct} min="0" max="100" low={20} high={80} optimum={100} aria-label="Battery Level" style={{ width: "100%", display: "block", marginTop: "0.25rem" }} />
+            </dd>
           </div>
           <div>
             <dt className="subtle">📶 Link Quality</dt>
-            <dd className="value" style={{ margin: 0 }}>{Math.max(51, 100 - Math.abs(state.yaw))}%</dd>
+            <dd className="value" style={{ margin: 0 }}>
+              {Math.max(51, 100 - Math.abs(state.yaw))}%
+              <meter value={Math.max(51, 100 - Math.abs(state.yaw))} min="0" max="100" low={30} high={70} optimum={100} aria-label="Link Quality Level" style={{ width: "100%", display: "block", marginTop: "0.25rem" }} />
+            </dd>
           </div>
           <div>
             <dt className="subtle">↕️ Vertical Speed</dt>

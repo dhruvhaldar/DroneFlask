@@ -55,3 +55,7 @@
 ## 2026-06-21 - [Replace blocking window.confirm]
 **Learning:** Synchronous `window.confirm` calls block the main JavaScript thread, which is problematic for Next.js apps handling real-time state like telemetry.
 **Action:** Use an inline confirmation state (e.g., `confirmAction`) and UI to handle warnings non-blockingly.
+
+## 2025-01-20 - Adding Semantic Visual Hierarchy with Native `<meter>` Tags
+**Learning:** Pure text-based telemetry indicators (like percentage readings) force users to read and interpret numbers, which increases cognitive load when monitoring live systems. While progress bar components are often introduced to solve this, they usually require new CSS or complex React components that bloat the bundle. Native HTML `<meter>` elements provide a lightweight, semantically correct, and accessible solution out-of-the-box.
+**Action:** Use the native `<meter>` tag to provide visual context for scalar telemetry values (like Battery or Link Quality). Leverage its built-in attributes (`min`, `max`, `low`, `high`, `optimum`) to implicitly handle state-based coloring without custom CSS, and always add an `aria-label` to ensure screen readers can contextualize the bar.
