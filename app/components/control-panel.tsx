@@ -182,36 +182,36 @@ export function ControlPanel() {
             borderColor: confirmAction ? "#ff8c8c" : undefined
           }}
         >
-          {saving ? "🔄 Processing..." : confirmAction ? "Click to Confirm" : (!state.armed && state.throttle > 0 ? "Zero Throttle to Arm" : state.armed ? "Disarm" : "Arm Motors")}
+          {saving ? <><span aria-hidden="true">🔄</span> Processing...</> : confirmAction ? "Click to Confirm" : (!state.armed && state.throttle > 0 ? "Zero Throttle to Arm" : state.armed ? "Disarm" : "Arm Motors")}
         </button>
 
-        <span className="status-pill" aria-live="polite">{state.armed ? "🚨 Armed" : "🛡️ Safe"} · {state.mode}</span>
+        <span className="status-pill" aria-live="polite">{state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>} · {state.mode}</span>
       </section>
 
       <section className="glass panel" style={{ gridColumn: "1 / -1" }}>
         <h2 className="section-title">Telemetry</h2>
         <dl className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", margin: 0 }} aria-busy={saving}>
           <div>
-            <dt className="subtle">🔋 Battery</dt>
+            <dt className="subtle"><span aria-hidden="true">🔋</span> Battery</dt>
             <dd className="value" style={{ margin: 0 }}>
               {batteryPct}%
               <meter value={batteryPct} min="0" max="100" low={20} high={80} optimum={100} aria-label="Battery Level" style={{ width: "100%", display: "block", marginTop: "0.25rem" }} />
             </dd>
           </div>
           <div>
-            <dt className="subtle">📶 Link Quality</dt>
+            <dt className="subtle"><span aria-hidden="true">📶</span> Link Quality</dt>
             <dd className="value" style={{ margin: 0 }}>
               {Math.max(51, 100 - Math.abs(state.yaw))}%
               <meter value={Math.max(51, 100 - Math.abs(state.yaw))} min="0" max="100" low={30} high={70} optimum={100} aria-label="Link Quality Level" style={{ width: "100%", display: "block", marginTop: "0.25rem" }} />
             </dd>
           </div>
           <div>
-            <dt className="subtle">↕️ Vertical Speed</dt>
+            <dt className="subtle"><span aria-hidden="true">↕️</span> Vertical Speed</dt>
             <dd className="value" style={{ margin: 0 }}>{(state.throttle / 10).toFixed(1)} m/s</dd>
           </div>
           <div>
-            <dt className="subtle">📡 Status</dt>
-            <dd className="value" style={{ margin: 0 }} aria-live="polite">{saving ? "🔄 Syncing..." : "✓ Synced"}</dd>
+            <dt className="subtle"><span aria-hidden="true">📡</span> Status</dt>
+            <dd className="value" style={{ margin: 0 }} aria-live="polite">{saving ? <><span aria-hidden="true">🔄</span> Syncing...</> : "✓ Synced"}</dd>
           </div>
         </dl>
       </section>

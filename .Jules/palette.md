@@ -59,3 +59,7 @@
 ## 2025-01-20 - Adding Semantic Visual Hierarchy with Native `<meter>` Tags
 **Learning:** Pure text-based telemetry indicators (like percentage readings) force users to read and interpret numbers, which increases cognitive load when monitoring live systems. While progress bar components are often introduced to solve this, they usually require new CSS or complex React components that bloat the bundle. Native HTML `<meter>` elements provide a lightweight, semantically correct, and accessible solution out-of-the-box.
 **Action:** Use the native `<meter>` tag to provide visual context for scalar telemetry values (like Battery or Link Quality). Leverage its built-in attributes (`min`, `max`, `low`, `high`, `optimum`) to implicitly handle state-based coloring without custom CSS, and always add an `aria-label` to ensure screen readers can contextualize the bar.
+
+## 2025-01-20 - Hiding Decorative Emojis from Screen Readers
+**Learning:** When using emojis as visual anchors next to explicit text labels, screen readers announce both the emoji's default literal name and the text label (e.g., "Battery Battery"). This is repetitive and degrades the auditory user experience.
+**Action:** Always wrap purely decorative emojis that accompany text labels in `<span aria-hidden="true">`. This ensures they enhance the visual UI for sighted users without adding redundant noise for screen reader users.
