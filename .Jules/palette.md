@@ -63,3 +63,15 @@
 ## 2025-01-20 - Hiding Decorative Emojis from Screen Readers
 **Learning:** When using emojis as visual anchors next to explicit text labels, screen readers announce both the emoji's default literal name and the text label (e.g., "Battery Battery"). This is repetitive and degrades the auditory user experience.
 **Action:** Always wrap purely decorative emojis that accompany text labels in `<span aria-hidden="true">`. This ensures they enhance the visual UI for sighted users without adding redundant noise for screen reader users.
+
+## 2025-01-20 - Reducing Auditory Spam on Rapidly Updating States
+**Learning:** Adding `aria-live="polite"` to rapidly updating UI elements, such as a "Syncing..." status tied to a slider's real-time continuous movement, overwhelms screen readers with constant, overlapping auditory spam, degrading the user experience.
+**Action:** Remove `aria-live` from high-frequency or transient state indicators unless the final state change is critical, infrequent, and needs to interrupt the user's current context. Let visual users rely on the visual indicator without punishing screen reader users.
+
+## 2025-01-20 - Preserving Formatting Context in Range Inputs for Screen Readers
+**Learning:** Sighted users see formatting context alongside slider values (e.g., "+50%"). Screen readers, however, only read the raw numeric `value` attribute of the `<input type="range">`, stripping this important context (positive/negative sign and unit).
+**Action:** Always provide an explicit `aria-valuetext` attribute on range inputs to ensure screen readers announce the value with its full formatting context (e.g., `aria-valuetext={state[axis] > 0 ? "+" + state[axis] + "%" : state[axis] + "%"}`).
+
+## 2025-01-20 - Keyboard Escape Hatch for Inline Confirmations
+**Learning:** When transitioning a button to an inline confirmation state (e.g., clicking to arm -> "Click again to confirm"), keyboard users might reconsider but have no intuitive way to dismiss the warning and reset the button state without shifting focus.
+**Action:** Always provide an `onKeyDown` handler on buttons with multi-step inline actions that listens for the `Escape` key, allowing users to safely abort the action and reset the button's state without leaving the element.
