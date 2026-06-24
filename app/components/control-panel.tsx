@@ -92,6 +92,7 @@ export function ControlPanel() {
               value={state[axis]}
               title={axis === "throttle" ? "Drag to adjust throttle" : `Drag to adjust ${axis} (center snaps to 0)`}
               aria-describedby={`${axis}-hint`}
+              aria-valuetext={state[axis] > 0 ? `+${state[axis]}%` : `${state[axis]}%`}
               onChange={(event) => updateAxis(axis, Number(event.target.value))}
               onDoubleClick={() => updateAxis(axis, 0)}
               onKeyDown={(e) => {
@@ -134,7 +135,7 @@ export function ControlPanel() {
         </p>
 
         {confirmAction && (
-          <p role="alert" className="subtle" style={{ fontSize: "0.85rem", color: "#ff8c8c", marginBottom: "0.5rem" }}>
+          <p id="confirm-alert" role="alert" className="subtle" style={{ fontSize: "0.85rem", color: "#ff8c8c", marginBottom: "0.5rem" }}>
             {confirmAction === "arm"
               ? "WARNING: Propellers will spin up. Ensure area is clear. Click again to confirm."
               : "DANGER: Throttle is active. Drone will fall. Click again to confirm."}
@@ -171,9 +172,16 @@ export function ControlPanel() {
             }
           }}
           onBlur={() => setConfirmAction(null)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape" && confirmAction) {
+              e.stopPropagation();
+              setConfirmAction(null);
+            }
+          }}
           className={state.armed ? "active" : ""}
           aria-pressed={(!state.armed && state.throttle > 0) ? undefined : state.armed}
           aria-disabled={saving ? "true" : undefined}
+          aria-describedby={confirmAction ? "confirm-alert" : undefined}
           title={(!state.armed && state.throttle > 0) ? "Click to set throttle to 0 so you can arm motors" : undefined}
           style={{
             width: "100%",
@@ -211,7 +219,7 @@ export function ControlPanel() {
           </div>
           <div>
             <dt className="subtle"><span aria-hidden="true">📡</span> Status</dt>
-            <dd className="value" style={{ margin: 0 }} aria-live="polite">{saving ? <><span aria-hidden="true">🔄</span> Syncing...</> : "✓ Synced"}</dd>
+            <dd className="value" style={{ margin: 0 }}>{saving ? <><span aria-hidden="true">🔄</span> Syncing...</> : "✓ Synced"}</dd>
           </div>
         </dl>
       </section>
