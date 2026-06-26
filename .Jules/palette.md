@@ -75,3 +75,7 @@
 ## 2025-01-20 - Keyboard Escape Hatch for Inline Confirmations
 **Learning:** When transitioning a button to an inline confirmation state (e.g., clicking to arm -> "Click again to confirm"), keyboard users might reconsider but have no intuitive way to dismiss the warning and reset the button state without shifting focus.
 **Action:** Always provide an `onKeyDown` handler on buttons with multi-step inline actions that listens for the `Escape` key, allowing users to safely abort the action and reset the button's state without leaving the element.
+
+## 2026-06-26 - Keyboard Shortcut Resiliency and Screen Reader Optimization
+**Learning:** Relying on exact string matches for keyboard shortcuts (like `e.key === 'c'`) breaks when Caps Lock or Shift is active. Furthermore, decorative unicode characters like '✓' add auditory noise for screen reader users.
+**Action:** Use `.toLowerCase()` when checking single-character keydown events to ensure reliability across keyboard states. Always wrap purely decorative text characters that accompany status labels in `<span aria-hidden="true">`. Avoid replacing existing CSS classes (like Tailwind utility classes) with inline styles to preserve maintainability; if a component is visually broken due to missing framework CSS, fix it by appending available existing classes (e.g., `.glass`) rather than rewriting its structure.
