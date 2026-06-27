@@ -25,6 +25,13 @@ const initialState: ControlState = {
 
 const modes: FlightMode[] = ["Manual", "Stabilize", "Altitude Hold", "Position Hold"];
 
+const modeIcons: Record<FlightMode, string> = {
+  "Manual": "🕹️",
+  "Stabilize": "⚖️",
+  "Altitude Hold": "↕️",
+  "Position Hold": "📍"
+};
+
 const modeTooltips: Record<FlightMode, string> = {
   "Manual": "Direct pilot control with no stabilization",
   "Stabilize": "Self-levels the drone when sticks are released",
@@ -126,11 +133,11 @@ export function ControlPanel() {
               type="button"
               style={{ cursor: saving ? "wait" : undefined }}
             >
-              {mode}
+              <span aria-hidden="true">{modeIcons[mode]} </span>{mode}
             </button>
           ))}
         </div>
-        <p id="mode-description" className="subtle" style={{ fontSize: "0.85rem", marginBottom: "1rem", minHeight: "2.5em" }} aria-live="polite">
+        <p id="mode-description" className="subtle" style={{ fontSize: "0.85rem", marginBottom: "1rem", minHeight: "2.5em" }}>
           {modeTooltips[hoveredMode || state.mode]}
         </p>
 

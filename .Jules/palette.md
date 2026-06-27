@@ -79,3 +79,7 @@
 ## 2026-06-26 - Keyboard Shortcut Resiliency and Screen Reader Optimization
 **Learning:** Relying on exact string matches for keyboard shortcuts (like `e.key === 'c'`) breaks when Caps Lock or Shift is active. Furthermore, decorative unicode characters like '✓' add auditory noise for screen reader users.
 **Action:** Use `.toLowerCase()` when checking single-character keydown events to ensure reliability across keyboard states. Always wrap purely decorative text characters that accompany status labels in `<span aria-hidden="true">`. Avoid replacing existing CSS classes (like Tailwind utility classes) with inline styles to preserve maintainability; if a component is visually broken due to missing framework CSS, fix it by appending available existing classes (e.g., `.glass`) rather than rewriting its structure.
+
+## 2025-01-20 - Reducing Double Announcements on Tooltips
+**Learning:** Adding `aria-live="polite"` to an element acting as a tooltip description (referenced by `aria-describedby` on a focusable element) causes some screen readers to announce the content twice when the user focuses the element: once because it's the described-by content, and once because the live region mutates.
+**Action:** Do not use `aria-live` on tooltip containers that update upon hover/focus when they are already linked to the active element via `aria-describedby`. Rely solely on the `aria-describedby` association to provide context to assistive technologies.
