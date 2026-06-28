@@ -83,3 +83,7 @@
 ## 2025-01-20 - Reducing Double Announcements on Tooltips
 **Learning:** Adding `aria-live="polite"` to an element acting as a tooltip description (referenced by `aria-describedby` on a focusable element) causes some screen readers to announce the content twice when the user focuses the element: once because it's the described-by content, and once because the live region mutates.
 **Action:** Do not use `aria-live` on tooltip containers that update upon hover/focus when they are already linked to the active element via `aria-describedby`. Rely solely on the `aria-describedby` association to provide context to assistive technologies.
+
+## 2025-01-20 - Visible Escape Hatches and Consistent Visual Weight
+**Learning:** Providing a keyboard escape hatch (like `Esc`) for inline confirmations is only effective if users know it exists. Without a visible hint, users may feel trapped. Additionally, inline warning states should match the visual weight of active states (e.g., matching border and box-shadow) to properly signal importance.
+**Action:** Always include explicitly visible keyboard hints (using `<kbd>` tags) alongside inline warnings so users know how to dismiss them. When applying warning colors, ensure they match the full visual weight (like inset box-shadows) of the app's existing active components.

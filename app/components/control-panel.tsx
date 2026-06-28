@@ -142,11 +142,16 @@ export function ControlPanel() {
         </p>
 
         {confirmAction && (
-          <p id="confirm-alert" role="alert" className="subtle" style={{ fontSize: "0.85rem", color: "#ff8c8c", marginBottom: "0.5rem" }}>
-            {confirmAction === "arm"
-              ? "WARNING: Propellers will spin up. Ensure area is clear. Click again to confirm."
-              : "DANGER: Throttle is active. Drone will fall. Click again to confirm."}
-          </p>
+          <div id="confirm-alert" role="alert" style={{ marginBottom: "0.5rem" }}>
+            <p className="subtle" style={{ fontSize: "0.85rem", color: "#ff8c8c" }}>
+              {confirmAction === "arm"
+                ? "WARNING: Propellers will spin up. Ensure area is clear. Click again to confirm."
+                : "DANGER: Throttle is active. Drone will fall. Click again to confirm."}
+            </p>
+            <p className="subtle" style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>
+              Or press <kbd className="px-1.5 py-0.5 rounded border border-white/20 bg-white/5 font-mono text-[10px] text-gray-300 shadow-sm mx-0.5 glass">Esc</kbd> to cancel.
+            </p>
+          </div>
         )}
 
         <button
@@ -194,7 +199,8 @@ export function ControlPanel() {
             width: "100%",
             opacity: (!state.armed && state.throttle > 0) ? 0.8 : 1,
             cursor: saving ? "wait" : "pointer",
-            borderColor: confirmAction ? "#ff8c8c" : undefined
+            borderColor: confirmAction ? "#ff8c8c" : undefined,
+            boxShadow: confirmAction ? "0 0 0 1px #ff8c8c inset" : undefined
           }}
         >
           {saving ? <><span aria-hidden="true">🔄</span> Processing...</> : confirmAction ? "Click to Confirm" : (!state.armed && state.throttle > 0 ? "Zero Throttle to Arm" : state.armed ? "Disarm" : "Arm Motors")}
