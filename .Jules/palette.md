@@ -87,3 +87,7 @@
 ## 2025-01-20 - Visible Escape Hatches and Consistent Visual Weight
 **Learning:** Providing a keyboard escape hatch (like `Esc`) for inline confirmations is only effective if users know it exists. Without a visible hint, users may feel trapped. Additionally, inline warning states should match the visual weight of active states (e.g., matching border and box-shadow) to properly signal importance.
 **Action:** Always include explicitly visible keyboard hints (using `<kbd>` tags) alongside inline warnings so users know how to dismiss them. When applying warning colors, ensure they match the full visual weight (like inset box-shadows) of the app's existing active components.
+
+## 2025-01-20 - Prevent Interaction Layout Shift for Conditional Content
+**Learning:** Rendering conditional content (like inline warnings or confirmations) immediately above an interactive target (like a button) causes the interactive target to shift downwards when the conditional content appears. This disrupts the user interaction, often forcing the user to reposition their mouse to complete a multi-step action.
+**Action:** Always render conditional inline confirmations or alerts below the primary interactive target that triggered them, or ensure fixed positioning/heights, to prevent the target from shifting away from the user's cursor.

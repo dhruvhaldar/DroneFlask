@@ -141,19 +141,6 @@ export function ControlPanel() {
           {modeTooltips[hoveredMode || state.mode]}
         </p>
 
-        {confirmAction && (
-          <div id="confirm-alert" role="alert" style={{ marginBottom: "0.5rem" }}>
-            <p className="subtle" style={{ fontSize: "0.85rem", color: "#ff8c8c" }}>
-              {confirmAction === "arm"
-                ? "WARNING: Propellers will spin up. Ensure area is clear. Click again to confirm."
-                : "DANGER: Throttle is active. Drone will fall. Click again to confirm."}
-            </p>
-            <p className="subtle" style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>
-              Or press <kbd className="px-1.5 py-0.5 rounded border border-white/20 bg-white/5 font-mono text-[10px] text-gray-300 shadow-sm mx-0.5 glass">Esc</kbd> to cancel.
-            </p>
-          </div>
-        )}
-
         <button
           type="button"
           onClick={() => {
@@ -205,6 +192,19 @@ export function ControlPanel() {
         >
           {saving ? <><span aria-hidden="true">🔄</span> Processing...</> : confirmAction ? "Click to Confirm" : (!state.armed && state.throttle > 0 ? "Zero Throttle to Arm" : state.armed ? "Disarm" : "Arm Motors")}
         </button>
+
+        {confirmAction && (
+          <div id="confirm-alert" role="alert" style={{ marginTop: "0.75rem" }}>
+            <p className="subtle" style={{ fontSize: "0.85rem", color: "#ff8c8c" }}>
+              {confirmAction === "arm"
+                ? "WARNING: Propellers will spin up. Ensure area is clear. Click again to confirm."
+                : "DANGER: Throttle is active. Drone will fall. Click again to confirm."}
+            </p>
+            <p className="subtle" style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>
+              Or press <kbd className="px-1.5 py-0.5 rounded border border-white/20 bg-white/5 font-mono text-[10px] text-gray-300 shadow-sm mx-0.5 glass">Esc</kbd> to cancel.
+            </p>
+          </div>
+        )}
 
         <span className="status-pill" aria-live="polite">{state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>} · {state.mode}</span>
       </section>
