@@ -85,7 +85,7 @@ export function ControlPanel() {
                   <>Double-click or <kbd className="px-1.5 py-0.5 rounded border border-white/20 bg-white/5 font-mono text-[10px] text-gray-300 shadow-sm mx-0.5 glass">0</kbd> / <kbd className="px-1.5 py-0.5 rounded border border-white/20 bg-white/5 font-mono text-[10px] text-gray-300 shadow-sm mx-0.5 glass">c</kbd> to center</>
                 )}
               </span>
-              <output htmlFor={axis} className="value" aria-hidden="true">
+              <output htmlFor={axis} className={`value ${state[axis] === 0 ? "subtle" : ""}`.trim()} aria-hidden="true">
                 {state[axis] > 0 ? "+" : ""}
                 {state[axis]}%
               </output>
@@ -190,7 +190,17 @@ export function ControlPanel() {
             boxShadow: confirmAction ? "0 0 0 1px #ff8c8c inset" : undefined
           }}
         >
-          {saving ? <><span aria-hidden="true">🔄</span> Processing...</> : confirmAction ? "Click to Confirm" : (!state.armed && state.throttle > 0 ? "Zero Throttle to Arm" : state.armed ? "Disarm" : "Arm Motors")}
+          {saving ? (
+            <><span aria-hidden="true">🔄</span> Processing...</>
+          ) : confirmAction ? (
+            <><span aria-hidden="true">⚠️</span> Click to Confirm</>
+          ) : (!state.armed && state.throttle > 0) ? (
+            <><span aria-hidden="true">🛑</span> Zero Throttle to Arm</>
+          ) : state.armed ? (
+            <><span aria-hidden="true">🔒</span> Disarm</>
+          ) : (
+            "Arm Motors"
+          )}
         </button>
 
         {confirmAction && (
