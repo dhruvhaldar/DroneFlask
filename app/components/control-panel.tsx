@@ -199,7 +199,7 @@ export function ControlPanel() {
           ) : state.armed ? (
             <><span aria-hidden="true">🔒</span> Disarm</>
           ) : (
-            "Arm Motors"
+            <><span aria-hidden="true">🚀</span> Arm Motors</>
           )}
         </button>
 
