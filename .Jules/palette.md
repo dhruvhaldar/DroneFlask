@@ -94,3 +94,6 @@
 ## 2026-06-30 - Emojis as State Anchors and Dimming Neutral Values
 **Learning:** Wrapping state-indicating emojis in `aria-hidden="true"` provides visual clarity without adding redundant noise to screen readers, significantly improving accessibility.
 **Action:** Always wrap non-semantic visual emojis used alongside text labels with `aria-hidden="true"`.
+## 2024-05-24 - Inline Confirmation Layout Shifts
+**Learning:** Placing static indicator elements (like status pills) below conditional warnings or confirmations causes a jarring layout shift during interaction.
+**Action:** Always render conditional content (like inline warnings or confirmations) below the primary interactive target and any static indicators that triggered them, or ensure fixed positioning/heights to prevent layout displacement.

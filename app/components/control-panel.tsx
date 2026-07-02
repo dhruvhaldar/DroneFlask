@@ -203,6 +203,8 @@ export function ControlPanel() {
           )}
         </button>
 
+        <span className="status-pill" aria-live="polite">{state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>} · {state.mode}</span>
+
         {confirmAction && (
           <div id="confirm-alert" role="alert" style={{ marginTop: "0.75rem" }}>
             <p className="subtle" style={{ fontSize: "0.85rem", color: "#ff8c8c" }}>
@@ -215,8 +217,6 @@ export function ControlPanel() {
             </p>
           </div>
         )}
-
-        <span className="status-pill" aria-live="polite">{state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>} · {state.mode}</span>
       </section>
 
       <section className="glass panel" style={{ gridColumn: "1 / -1" }}>
