@@ -97,3 +97,6 @@
 ## 2024-05-24 - Inline Confirmation Layout Shifts
 **Learning:** Placing static indicator elements (like status pills) below conditional warnings or confirmations causes a jarring layout shift during interaction.
 **Action:** Always render conditional content (like inline warnings or confirmations) below the primary interactive target and any static indicators that triggered them, or ensure fixed positioning/heights to prevent layout displacement.
+## 2024-05-15 - Structural classes on inline typography
+**Learning:** Applying layout-level structural CSS classes (like large panel boxes with massive shadows and blurs) to inline typographical elements (like `<kbd>`) completely disrupts the inline flow and heavily obscures surrounding text, reducing legibility and aesthetics.
+**Action:** Always ensure that inline visual styles (like keycap indicators) use dedicated minimal styles (e.g. slight padding, small border radius) and avoid reusing overarching structural classes (e.g. `.glass` panels).
