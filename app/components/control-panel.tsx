@@ -69,8 +69,8 @@ export function ControlPanel() {
 
   return (
     <div className="grid" style={{ marginTop: "1.1rem" }}>
-      <section className="glass panel">
-        <h2 className="section-title">Flight Controls</h2>
+      <section className="glass panel" aria-labelledby="controls-title">
+        <h2 id="controls-title" className="section-title">Flight Controls</h2>
         <datalist id="center-snap"><option value="0" /></datalist>
         {(["throttle", "pitch", "roll", "yaw"] as const).map((axis) => (
           <div key={axis} style={{ marginBottom: "0.9rem" }}>
@@ -112,8 +112,8 @@ export function ControlPanel() {
         ))}
       </section>
 
-      <section className="glass panel">
-        <h2 className="section-title">Mode + Arm</h2>
+      <section className="glass panel" aria-labelledby="mode-arm-title">
+        <h2 id="mode-arm-title" className="section-title">Mode + Arm</h2>
         <div className="btn-group" role="group" aria-label="Flight Modes" style={{ marginBottom: "0.7rem" }}>
           {modes.map((mode) => (
             <button
@@ -221,21 +221,21 @@ export function ControlPanel() {
         </div>
       </section>
 
-      <section className="glass panel" style={{ gridColumn: "1 / -1" }}>
-        <h2 className="section-title">Telemetry</h2>
+      <section className="glass panel" style={{ gridColumn: "1 / -1" }} aria-labelledby="telemetry-title">
+        <h2 id="telemetry-title" className="section-title">Telemetry</h2>
         <dl className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", margin: 0 }} aria-busy={saving}>
           <div>
             <dt className="subtle"><span aria-hidden="true">🔋</span> Battery</dt>
             <dd className="value" style={{ margin: 0 }}>
               {batteryPct}%
-              <meter value={batteryPct} min="0" max="100" low={20} high={80} optimum={100} aria-label="Battery Level" style={{ width: "100%", display: "block", marginTop: "0.25rem" }} />
+              <meter value={batteryPct} min="0" max="100" low={20} high={80} optimum={100} aria-hidden="true" style={{ width: "100%", display: "block", marginTop: "0.25rem" }} />
             </dd>
           </div>
           <div>
             <dt className="subtle"><span aria-hidden="true">📶</span> Link Quality</dt>
             <dd className="value" style={{ margin: 0 }}>
               {Math.max(51, 100 - Math.abs(state.yaw))}%
-              <meter value={Math.max(51, 100 - Math.abs(state.yaw))} min="0" max="100" low={30} high={70} optimum={100} aria-label="Link Quality Level" style={{ width: "100%", display: "block", marginTop: "0.25rem" }} />
+              <meter value={Math.max(51, 100 - Math.abs(state.yaw))} min="0" max="100" low={30} high={70} optimum={100} aria-hidden="true" style={{ width: "100%", display: "block", marginTop: "0.25rem" }} />
             </dd>
           </div>
           <div>
