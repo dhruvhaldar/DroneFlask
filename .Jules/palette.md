@@ -100,3 +100,7 @@
 ## 2024-05-15 - Structural classes on inline typography
 **Learning:** Applying layout-level structural CSS classes (like large panel boxes with massive shadows and blurs) to inline typographical elements (like `<kbd>`) completely disrupts the inline flow and heavily obscures surrounding text, reducing legibility and aesthetics.
 **Action:** Always ensure that inline visual styles (like keycap indicators) use dedicated minimal styles (e.g. slight padding, small border radius) and avoid reusing overarching structural classes (e.g. `.glass` panels).
+
+## 2025-01-20 - Reducing Double Announcements on Visual Meters
+**Learning:** Placing an `aria-label` directly on a `<meter>` element that sits adjacent to a raw text percentage causes screen readers to redundantly announce the value twice (once for the text node, once for the meter).
+**Action:** When using `<meter>` tags strictly as visual accompaniments to adjacent explicit text values, use `aria-hidden="true"` instead of an `aria-label` to prevent "double-speak" and provide a cleaner auditory experience.
