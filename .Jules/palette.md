@@ -104,3 +104,7 @@
 ## 2025-01-20 - Reducing Double Announcements on Visual Meters
 **Learning:** Placing an `aria-label` directly on a `<meter>` element that sits adjacent to a raw text percentage causes screen readers to redundantly announce the value twice (once for the text node, once for the meter).
 **Action:** When using `<meter>` tags strictly as visual accompaniments to adjacent explicit text values, use `aria-hidden="true"` instead of an `aria-label` to prevent "double-speak" and provide a cleaner auditory experience.
+
+## 2026-07-07 - Verifying the Execution Environment for Utility Classes
+**Learning:** Relying on utility classes (e.g., Tailwind's `px-1.5 py-0.5`) on semantic tags like `<kbd>` without confirming the framework is actually installed results in those tags rendering as plain, unstyled text. This completely undermines the UX goal of making keyboard shortcuts visually distinct as physical keys.
+**Action:** Always verify the project's CSS architecture before applying utility classes. If a project relies on standard CSS, add semantic styling globally rather than injecting inert framework-specific classes.
