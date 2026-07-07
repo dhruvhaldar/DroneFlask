@@ -80,9 +80,9 @@ export function ControlPanel() {
               </label>
               <span id={`${axis}-hint`} className="subtle" style={{ fontSize: "0.75rem", marginLeft: "0.5rem" }}>
                 {axis === "throttle" ? (
-                  <>Double-click or <kbd className="px-1.5 py-0.5 rounded border border-white/20 bg-white/5 font-mono text-[10px] text-gray-300 shadow-sm mx-0.5">Esc</kbd> to zero</>
+                  <>Double-click or <kbd>Esc</kbd> to zero</>
                 ) : (
-                  <>Double-click or <kbd className="px-1.5 py-0.5 rounded border border-white/20 bg-white/5 font-mono text-[10px] text-gray-300 shadow-sm mx-0.5">0</kbd> / <kbd className="px-1.5 py-0.5 rounded border border-white/20 bg-white/5 font-mono text-[10px] text-gray-300 shadow-sm mx-0.5">c</kbd> to center</>
+                  <>Double-click or <kbd>0</kbd> / <kbd>c</kbd> to center</>
                 )}
               </span>
               <output htmlFor={axis} className={`value ${state[axis] === 0 ? "subtle" : ""}`.trim()} aria-hidden="true">
@@ -214,7 +214,7 @@ export function ControlPanel() {
                   : "DANGER: Throttle is active. Drone will fall. Click again to confirm."}
               </p>
               <p className="subtle" style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>
-                Or press <kbd className="px-1.5 py-0.5 rounded border border-white/20 bg-white/5 font-mono text-[10px] text-gray-300 shadow-sm mx-0.5">Esc</kbd> to cancel.
+                Or press <kbd>Esc</kbd> to cancel.
               </p>
             </div>
           )}
