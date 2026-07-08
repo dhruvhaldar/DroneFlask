@@ -108,3 +108,7 @@
 ## 2026-07-07 - Verifying the Execution Environment for Utility Classes
 **Learning:** Relying on utility classes (e.g., Tailwind's `px-1.5 py-0.5`) on semantic tags like `<kbd>` without confirming the framework is actually installed results in those tags rendering as plain, unstyled text. This completely undermines the UX goal of making keyboard shortcuts visually distinct as physical keys.
 **Action:** Always verify the project's CSS architecture before applying utility classes. If a project relies on standard CSS, add semantic styling globally rather than injecting inert framework-specific classes.
+
+## 2025-01-20 - Adding Visual Distinction for Aria-Disabled State
+**Learning:** Components sometimes use `aria-disabled="true"` instead of the native `disabled` attribute to maintain keyboard focusability or enable interactive tooltips. However, without explicit CSS rules, these elements look identical to active ones and respond to hover events, which causes confusion and makes the UI feel broken during asynchronous actions.
+**Action:** Always add visual inertness styles specifically for `[aria-disabled="true"]`. Reduce opacity, apply a `not-allowed` cursor, and remove hover/active interactions by guarding base CSS rules with `:not([aria-disabled="true"])`.
