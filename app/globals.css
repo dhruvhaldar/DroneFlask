@@ -91,13 +91,19 @@ button {
   border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
+  transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
-button:hover {
+button:hover:not([aria-disabled="true"]) {
   transform: translateY(-1px);
 }
 
-button:active {
+button[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+button:active:not([aria-disabled="true"]) {
   transform: translateY(0);
 }
 
