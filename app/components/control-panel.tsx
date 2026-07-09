@@ -191,9 +191,9 @@ export function ControlPanel() {
           }}
         >
           {saving ? (
-            <><span aria-hidden="true">🔄</span> Processing...</>
+            <><span aria-hidden="true">🔄</span> Syncing...</>
           ) : confirmAction ? (
-            <><span aria-hidden="true">⚠️</span> Click to Confirm</>
+            <><span aria-hidden="true">⚠️</span> Confirm {confirmAction === "arm" ? "Arm" : "Disarm"}</>
           ) : (!state.armed && state.throttle > 0) ? (
             <><span aria-hidden="true">🛑</span> Zero Throttle to Arm</>
           ) : state.armed ? (
