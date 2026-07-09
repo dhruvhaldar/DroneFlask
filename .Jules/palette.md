@@ -112,3 +112,7 @@
 ## 2025-01-20 - Adding Visual Distinction for Aria-Disabled State
 **Learning:** Components sometimes use `aria-disabled="true"` instead of the native `disabled` attribute to maintain keyboard focusability or enable interactive tooltips. However, without explicit CSS rules, these elements look identical to active ones and respond to hover events, which causes confusion and makes the UI feel broken during asynchronous actions.
 **Action:** Always add visual inertness styles specifically for `[aria-disabled="true"]`. Reduce opacity, apply a `not-allowed` cursor, and remove hover/active interactions by guarding base CSS rules with `:not([aria-disabled="true"])`.
+
+## 2024-07-09 - Explicit Context on Multi-step Inline Confirmations
+**Learning:** Using generic strings like "Click to Confirm" on multi-step buttons introduces cognitive load, particularly for screen reader users or users handling destructive actions (like arming/disarming a drone). Users lose the context of *what* they are confirming directly on the focused element.
+**Action:** Always replace generic confirmation labels with explicit, state-aware strings (e.g., `Confirm ${action}`) that describe the exact destructive action being finalized.
