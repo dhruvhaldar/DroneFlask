@@ -116,3 +116,11 @@
 ## 2024-07-09 - Explicit Context on Multi-step Inline Confirmations
 **Learning:** Using generic strings like "Click to Confirm" on multi-step buttons introduces cognitive load, particularly for screen reader users or users handling destructive actions (like arming/disarming a drone). Users lose the context of *what* they are confirming directly on the focused element.
 **Action:** Always replace generic confirmation labels with explicit, state-aware strings (e.g., `Confirm ${action}`) that describe the exact destructive action being finalized.
+
+## 2024-07-10 - Inline Styles Overriding Semantic Accessibility States
+**Learning:** Hardcoding generic inline styles (like `opacity: 1`) on interactive elements forcefully overrides global CSS rules tied to semantic states (e.g., `[aria-disabled="true"]`). This breaks critical visual feedback (like dimming) for screen reader / keyboard users during asynchronous operations.
+**Action:** Avoid inline styling for properties that change based on state. If needed, conditionally apply inline styles (e.g., `style={{ opacity: isSaving ? undefined : 1 }}`) so global accessible CSS rules can correctly take precedence when a state is active.
+
+## 2024-07-10 - Semantic Number Formatting for Magnitudes vs. Axes
+**Learning:** Prefixing values with a `+` sign (e.g., `+50%`) is confusing for absolute magnitude controls (like Throttle, which goes from 0 to 100), as `+` implies a bidirectional axis (like Pitch/Roll/Yaw from -100 to +100).
+**Action:** Only apply directional prefixes (+/-) to axes that have a center point. Absolute magnitude controls should display plain scalar values.

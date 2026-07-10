@@ -86,7 +86,7 @@ export function ControlPanel() {
                 )}
               </span>
               <output htmlFor={axis} className={`value ${state[axis] === 0 ? "subtle" : ""}`.trim()} aria-hidden="true">
-                {state[axis] > 0 ? "+" : ""}
+                {axis !== "throttle" && state[axis] > 0 ? "+" : ""}
                 {state[axis]}%
               </output>
             </div>
@@ -99,7 +99,7 @@ export function ControlPanel() {
               value={state[axis]}
               title={axis === "throttle" ? "Drag to adjust throttle" : `Drag to adjust ${axis} (center snaps to 0)`}
               aria-describedby={`${axis}-hint`}
-              aria-valuetext={state[axis] > 0 ? `+${state[axis]}%` : `${state[axis]}%`}
+              aria-valuetext={axis !== "throttle" && state[axis] > 0 ? `+${state[axis]}%` : `${state[axis]}%`}
               onChange={(event) => updateAxis(axis, Number(event.target.value))}
               onDoubleClick={() => updateAxis(axis, 0)}
               onKeyDown={(e) => {
@@ -184,7 +184,7 @@ export function ControlPanel() {
           title={(!state.armed && state.throttle > 0) ? "Click to set throttle to 0 so you can arm motors" : undefined}
           style={{
             width: "100%",
-            opacity: (!state.armed && state.throttle > 0) ? 0.8 : 1,
+            opacity: saving ? undefined : (!state.armed && state.throttle > 0) ? 0.8 : undefined,
             cursor: saving ? "wait" : "pointer",
             borderColor: confirmAction ? "#ff8c8c" : undefined,
             boxShadow: confirmAction ? "0 0 0 1px #ff8c8c inset" : undefined
