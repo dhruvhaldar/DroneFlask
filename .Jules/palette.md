@@ -116,3 +116,11 @@
 ## 2024-07-09 - Explicit Context on Multi-step Inline Confirmations
 **Learning:** Using generic strings like "Click to Confirm" on multi-step buttons introduces cognitive load, particularly for screen reader users or users handling destructive actions (like arming/disarming a drone). Users lose the context of *what* they are confirming directly on the focused element.
 **Action:** Always replace generic confirmation labels with explicit, state-aware strings (e.g., `Confirm ${action}`) that describe the exact destructive action being finalized.
+
+## 2024-12-25 - Avoid Formatting Absolute Magnitude Controls with Directional Prefixes
+**Learning:** Formatting absolute magnitude controls (like Throttle, 0-100) with directional prefixes (e.g., `+50%`) implies bidirectionality where there is none, causing confusion visually and misrepresenting context via screen readers (`aria-valuetext`).
+**Action:** Always reserve directional prefixes (like `+` and `-`) strictly for bidirectional axes (e.g., Pitch/Roll/Yaw) and omit them from absolute magnitude inputs to accurately reflect the semantic domain.
+
+## 2024-12-25 - Avoiding Hardcoded Generic Inline Styles on Interactive Elements
+**Learning:** Using explicit, hardcoded generic styles (like `opacity: 1` or `cursor: pointer`) inline on components directly overrides global, semantic-based CSS rules (such as `[aria-disabled="true"]`), preventing elements from visually indicating their correct disabled or inert state.
+**Action:** Avoid hardcoding generic inline styles. Instead, conditionally apply styles or rely on `undefined` when no override is needed (e.g., `opacity: isSaving ? undefined : 1` -> better to use `opacity: isSaving ? undefined : undefined` or simply conditional `opacity`). This allows overarching semantic CSS rules to handle visual accessibility cues naturally.
