@@ -116,3 +116,6 @@
 ## 2024-07-09 - Explicit Context on Multi-step Inline Confirmations
 **Learning:** Using generic strings like "Click to Confirm" on multi-step buttons introduces cognitive load, particularly for screen reader users or users handling destructive actions (like arming/disarming a drone). Users lose the context of *what* they are confirming directly on the focused element.
 **Action:** Always replace generic confirmation labels with explicit, state-aware strings (e.g., `Confirm ${action}`) that describe the exact destructive action being finalized.
+## 2024-07-12 - Directional Prefixes on Absolute Axes
+**Learning:** Applying a directional prefix (like `+`) to an absolute magnitude control (such as Throttle, 0-100) implies it is bidirectional. This confuses users expecting standard 0-100 scaling, especially when adjacent to actual bidirectional axes (like Pitch/Roll/Yaw, -100 to +100).
+**Action:** Avoid formatting absolute magnitude controls with directional prefixes. Reserve prefixes like `+` solely for bidirectional axes.
