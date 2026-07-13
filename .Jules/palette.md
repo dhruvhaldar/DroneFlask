@@ -116,3 +116,11 @@
 ## 2024-07-09 - Explicit Context on Multi-step Inline Confirmations
 **Learning:** Using generic strings like "Click to Confirm" on multi-step buttons introduces cognitive load, particularly for screen reader users or users handling destructive actions (like arming/disarming a drone). Users lose the context of *what* they are confirming directly on the focused element.
 **Action:** Always replace generic confirmation labels with explicit, state-aware strings (e.g., `Confirm ${action}`) that describe the exact destructive action being finalized.
+
+## 2025-01-20 - Preserving formatting for magnitude vs directional controls
+**Learning:** Hardcoding directional prefixes (like `+`) for all values greater than 0 on range inputs breaks semantic meaning for absolute magnitude controls (like Throttle 0-100), causing confusion when compared to bi-directional axes (like Pitch/Roll/Yaw -100 to 100).
+**Action:** Avoid formatting absolute magnitude controls with directional prefixes. Ensure formatting logic conditionally checks the axis type (e.g. `axis !== "throttle"`) before prepending signs to `output` displays and `aria-valuetext`.
+
+## 2025-01-20 - Allowing global semantic ARIA states to override inline styles
+**Learning:** Hardcoding generic inline styles (like `opacity: 1` or `cursor: pointer`) on interactive elements forcefully overrides global CSS rules tied to semantic states, such as `[aria-disabled="true"]`. This breaks visual accessibility cues (like reducing opacity or showing a `not-allowed` cursor) during asynchronous operations.
+**Action:** Always conditionally apply inline styles (e.g. `opacity: isSaving ? undefined : 1`) to allow global, accessible CSS rules to properly cascade and take precedence when semantic ARIA states are active.
