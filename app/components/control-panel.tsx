@@ -42,6 +42,7 @@ const modeTooltips: Record<FlightMode, string> = {
 export function ControlPanel() {
   const [state, setState] = useState<ControlState>(initialState);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(false);
   const [hoveredMode, setHoveredMode] = useState<FlightMode | null>(null);
   const [confirmAction, setConfirmAction] = useState<"arm" | "disarm" | null>(null);
 
@@ -50,14 +51,18 @@ export function ControlPanel() {
   async function pushState(next: ControlState) {
     setState(next);
     setSaving(true);
+    setError(false);
     try {
       const res = await fetch("/api/state", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(next)
       });
+      if (!res.ok) throw new Error("Sync failed");
       const updated = (await res.json()) as ControlState;
       setState(updated);
+    } catch {
+      setError(true);
     } finally {
       setSaving(false);
     }
@@ -99,6 +104,7 @@ export function ControlPanel() {
               value={state[axis]}
               title={axis === "throttle" ? "Drag to adjust throttle" : `Drag to adjust ${axis} (center snaps to 0)`}
               aria-describedby={`${axis}-hint`}
+              aria-keyshortcuts={axis === "throttle" ? "Escape" : "Escape 0 c"}
               aria-valuetext={state[axis] > 0 && axis !== "throttle" ? `+${state[axis]}%` : `${state[axis]}%`}
               onChange={(event) => updateAxis(axis, Number(event.target.value))}
               onDoubleClick={() => updateAxis(axis, 0)}
@@ -181,6 +187,7 @@ export function ControlPanel() {
           aria-pressed={(!state.armed && state.throttle > 0) ? undefined : state.armed}
           aria-disabled={saving ? "true" : undefined}
           aria-describedby={confirmAction ? "confirm-alert" : undefined}
+          aria-keyshortcuts={confirmAction ? "Escape" : undefined}
           title={(!state.armed && state.throttle > 0) ? "Click to set throttle to 0 so you can arm motors" : undefined}
           style={{
             width: "100%",
@@ -244,7 +251,9 @@ export function ControlPanel() {
           </div>
           <div>
             <dt className="subtle"><span aria-hidden="true">📡</span> Status</dt>
-            <dd className="value" style={{ margin: 0 }}>{saving ? <><span aria-hidden="true">🔄</span> Syncing...</> : <><span aria-hidden="true">✓</span> Synced</>}</dd>
+            <dd className="value" style={{ margin: 0, color: error ? "#ff8c8c" : undefined }} title={error ? "Failed to sync control state. Check connection." : undefined}>
+              {saving ? <><span aria-hidden="true">🔄</span> Syncing...</> : error ? <><span aria-hidden="true">⚠️</span> Offline</> : <><span aria-hidden="true">✓</span> Synced</>}
+            </dd>
           </div>
         </dl>
       </section>
