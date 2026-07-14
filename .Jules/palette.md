@@ -124,3 +124,7 @@
 ## 2025-01-20 - Allowing global semantic ARIA states to override inline styles
 **Learning:** Hardcoding generic inline styles (like `opacity: 1` or `cursor: pointer`) on interactive elements forcefully overrides global CSS rules tied to semantic states, such as `[aria-disabled="true"]`. This breaks visual accessibility cues (like reducing opacity or showing a `not-allowed` cursor) during asynchronous operations.
 **Action:** Always conditionally apply inline styles (e.g. `opacity: isSaving ? undefined : 1`) to allow global, accessible CSS rules to properly cascade and take precedence when semantic ARIA states are active.
+
+## 2024-05-18 - Missing Failure Feedback in Optimistic UIs
+**Learning:** In highly interactive, real-time control interfaces (like drone telemetry), optimistic UI updates that fail silently on the network lead to dangerous state mismatches where users believe critical actions (like 'Disarm') succeeded when they actually didn't.
+**Action:** Always provide explicit error or 'Offline' feedback in the UI when async requests fail, especially when local UI state is updated optimistically.
