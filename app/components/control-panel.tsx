@@ -80,15 +80,17 @@ export function ControlPanel() {
         {(["throttle", "pitch", "roll", "yaw"] as const).map((axis) => (
           <div key={axis} style={{ marginBottom: "0.9rem" }}>
             <div className="row">
-              <label htmlFor={axis} style={{ textTransform: "capitalize" }}>
-                {axis}
-              </label>
-              <span id={`${axis}-hint`} className="subtle" style={{ fontSize: "0.75rem", marginLeft: "0.5rem" }}>
-                {axis === "throttle" ? (
-                  <>Double-click or <kbd>Esc</kbd> to zero</>
-                ) : (
-                  <>Double-click or <kbd>0</kbd> / <kbd>c</kbd> to center</>
-                )}
+              <span style={{ display: "flex", alignItems: "baseline", gap: "0.5rem" }}>
+                <label htmlFor={axis} style={{ textTransform: "capitalize" }}>
+                  {axis}
+                </label>
+                <span id={`${axis}-hint`} className="subtle" style={{ fontSize: "0.75rem" }}>
+                  {axis === "throttle" ? (
+                    <>Double-click or <kbd>Esc</kbd> to zero</>
+                  ) : (
+                    <>Double-click or <kbd>0</kbd> / <kbd>c</kbd> to center</>
+                  )}
+                </span>
               </span>
               <output htmlFor={axis} className={`value ${state[axis] === 0 ? "subtle" : ""}`.trim()} aria-hidden="true">
                 {state[axis] > 0 && axis !== "throttle" ? "+" : ""}
