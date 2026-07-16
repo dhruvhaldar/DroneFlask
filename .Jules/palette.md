@@ -128,3 +128,11 @@
 ## 2024-05-18 - Missing Failure Feedback in Optimistic UIs
 **Learning:** In highly interactive, real-time control interfaces (like drone telemetry), optimistic UI updates that fail silently on the network lead to dangerous state mismatches where users believe critical actions (like 'Disarm') succeeded when they actually didn't.
 **Action:** Always provide explicit error or 'Offline' feedback in the UI when async requests fail, especially when local UI state is updated optimistically.
+
+## 2025-01-20 - Actionable Shortcuts vs Disabled States
+**Learning:** Using reduced opacity (e.g., 0.8) and warning icons (🛑) on a button that actually performs an auto-correction action (like zeroing a throttle) misleads users into thinking the button is completely disabled. They will seek other ways to fix the issue instead of clicking the helpful shortcut.
+**Action:** When a button acts as a shortcut to fix a prerequisite state (like auto-zeroing a slider), style it as fully active and use action-oriented phrasing (e.g., "Auto-Zero") rather than warning phrasing (e.g., "Zero to Arm").
+
+## 2025-01-20 - Optimistic UI State Illusions in Localized Indicators
+**Learning:** In systems with optimistic updates, showing localized status pills (like "Armed" or "Safe") alongside separate "Synced/Offline" indicators can create dangerous illusions. If the sync fails, the primary status pill still incorrectly shows the optimistic state, misleading the user.
+**Action:** Always intertwine sync error states directly into the most prominent primary status indicators. E.g., if there is an error, the primary status pill should explicitly say "Offline" instead of incorrectly displaying the optimistic "Armed" or "Safe" state.
