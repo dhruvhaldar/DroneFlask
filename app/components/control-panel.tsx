@@ -193,7 +193,6 @@ export function ControlPanel() {
           title={(!state.armed && state.throttle > 0) ? "Click to set throttle to 0 so you can arm motors" : undefined}
           style={{
             width: "100%",
-            opacity: saving ? undefined : (!state.armed && state.throttle > 0) ? 0.8 : undefined,
             cursor: saving ? "wait" : undefined,
             borderColor: confirmAction ? "#ff8c8c" : undefined,
             boxShadow: confirmAction ? "0 0 0 1px #ff8c8c inset" : undefined
@@ -204,7 +203,7 @@ export function ControlPanel() {
           ) : confirmAction ? (
             <><span aria-hidden="true">⚠️</span> Confirm {confirmAction === "arm" ? "Arm" : "Disarm"}</>
           ) : (!state.armed && state.throttle > 0) ? (
-            <><span aria-hidden="true">🛑</span> Zero Throttle to Arm</>
+            <><span aria-hidden="true">⬇️</span> Auto-Zero Throttle</>
           ) : state.armed ? (
             <><span aria-hidden="true">🔒</span> Disarm</>
           ) : (
@@ -212,7 +211,7 @@ export function ControlPanel() {
           )}
         </button>
 
-        <span className="status-pill" aria-live="polite">{state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>} · {state.mode}</span>
+        <span className="status-pill" aria-live="polite">{error ? <><span aria-hidden="true">⚠️</span> Offline</> : state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>} · {state.mode}</span>
 
         <div style={{ minHeight: "4.25rem", marginTop: "0.75rem" }}>
           {confirmAction && (
