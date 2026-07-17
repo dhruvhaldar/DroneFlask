@@ -81,7 +81,7 @@ export function ControlPanel() {
           <div key={axis} style={{ marginBottom: "0.9rem" }}>
             <div className="row">
               <span style={{ display: "flex", alignItems: "baseline", gap: "0.5rem" }}>
-                <label htmlFor={axis} style={{ textTransform: "capitalize" }}>
+                <label htmlFor={axis} style={{ textTransform: "capitalize", cursor: "pointer" }}>
                   {axis}
                 </label>
                 <span id={`${axis}-hint`} className="subtle" style={{ fontSize: "0.75rem" }}>
@@ -211,12 +211,12 @@ export function ControlPanel() {
           )}
         </button>
 
-        <span className="status-pill" aria-live="polite">{error ? <><span aria-hidden="true">⚠️</span> Offline</> : state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>} · {state.mode}</span>
+        <span className="status-pill" aria-live="polite" style={{ color: error || state.armed ? "#ff8c8c" : undefined, borderColor: error || state.armed ? "#ff8c8c" : undefined }}>{error ? <><span aria-hidden="true">⚠️</span> Offline</> : state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>} · {state.mode}</span>
 
         <div style={{ minHeight: "4.25rem", marginTop: "0.75rem" }}>
           {confirmAction && (
             <div id="confirm-alert" role="alert">
-              <p className="subtle" style={{ fontSize: "0.85rem", color: "#ff8c8c" }}>
+              <p style={{ fontSize: "0.85rem", color: "#ff8c8c", fontWeight: 500 }}>
                 {confirmAction === "arm"
                   ? "WARNING: Propellers will spin up. Ensure area is clear. Click again to confirm."
                   : "DANGER: Throttle is active. Drone will fall. Click again to confirm."}
