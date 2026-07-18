@@ -136,3 +136,7 @@
 ## 2025-01-20 - Optimistic UI State Illusions in Localized Indicators
 **Learning:** In systems with optimistic updates, showing localized status pills (like "Armed" or "Safe") alongside separate "Synced/Offline" indicators can create dangerous illusions. If the sync fails, the primary status pill still incorrectly shows the optimistic state, misleading the user.
 **Action:** Always intertwine sync error states directly into the most prominent primary status indicators. E.g., if there is an error, the primary status pill should explicitly say "Offline" instead of incorrectly displaying the optimistic "Armed" or "Safe" state.
+
+## 2026-07-18 - Inline Cursors vs Semantic Disabled States
+**Learning:** Hardcoded generic inline styles (like `cursor: wait`) forcefully override global semantic CSS rules tied to states like `[aria-disabled="true"]`. This prevents the application from showing standard `not-allowed` cursors and can confuse users when a button is temporarily locked out during network operations.
+**Action:** Avoid hardcoding inline cursor states for async actions. Instead, let global `[aria-disabled="true"]` CSS rules handle the visual inertness natively, and add explicit tooltips (e.g., `title="Action unavailable while syncing"`) to provide clear context for why the interaction is blocked.

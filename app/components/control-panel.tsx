@@ -139,7 +139,7 @@ export function ControlPanel() {
                 void pushState({ ...state, mode });
               }}
               type="button"
-              style={{ cursor: saving ? "wait" : undefined }}
+              title={saving ? "Action unavailable while syncing" : undefined}
             >
               <span aria-hidden="true">{modeIcons[mode]} </span>{mode}
             </button>
@@ -190,10 +190,9 @@ export function ControlPanel() {
           aria-disabled={saving ? "true" : undefined}
           aria-describedby={confirmAction ? "confirm-alert" : undefined}
           aria-keyshortcuts={confirmAction ? "Escape" : undefined}
-          title={(!state.armed && state.throttle > 0) ? "Click to set throttle to 0 so you can arm motors" : undefined}
+          title={saving ? "Action unavailable while syncing" : (!state.armed && state.throttle > 0) ? "Click to set throttle to 0 so you can arm motors" : undefined}
           style={{
             width: "100%",
-            cursor: saving ? "wait" : undefined,
             borderColor: confirmAction ? "#ff8c8c" : undefined,
             boxShadow: confirmAction ? "0 0 0 1px #ff8c8c inset" : undefined
           }}
