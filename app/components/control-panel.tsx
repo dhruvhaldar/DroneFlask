@@ -79,7 +79,7 @@ export function ControlPanel() {
         <datalist id="center-snap"><option value="0" /></datalist>
         {(["throttle", "pitch", "roll", "yaw"] as const).map((axis) => (
           <div key={axis} style={{ marginBottom: "0.9rem" }}>
-            <div className="row">
+            <div className="row" onDoubleClick={() => updateAxis(axis, 0)} title={axis === "throttle" ? "Double-click to zero" : "Double-click to center"} style={{ userSelect: "none" }}>
               <span style={{ display: "flex", alignItems: "baseline", gap: "0.5rem" }}>
                 <label htmlFor={axis} style={{ textTransform: "capitalize", cursor: "pointer" }}>
                   {axis}

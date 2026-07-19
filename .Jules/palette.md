@@ -140,3 +140,7 @@
 ## 2026-07-18 - Inline Cursors vs Semantic Disabled States
 **Learning:** Hardcoded generic inline styles (like `cursor: wait`) forcefully override global semantic CSS rules tied to states like `[aria-disabled="true"]`. This prevents the application from showing standard `not-allowed` cursors and can confuse users when a button is temporarily locked out during network operations.
 **Action:** Avoid hardcoding inline cursor states for async actions. Instead, let global `[aria-disabled="true"]` CSS rules handle the visual inertness natively, and add explicit tooltips (e.g., `title="Action unavailable while syncing"`) to provide clear context for why the interaction is blocked.
+
+## 2025-02-12 - Expand double-click targets for axis reset
+**Learning:** Expanding hit targets for quick actions (like double-clicking to zero an axis) beyond just the input element significantly improves usability, but when those targets include text (labels/hints), double-clicking often triggers native browser text selection, causing jarring blue highlight flashes.
+**Action:** When adding rapid click/double-click handlers to container wrappers (like `.row`), explicitly apply `userSelect: "none"` to prevent unintended and disruptive text selection highlighting during natural interaction.
