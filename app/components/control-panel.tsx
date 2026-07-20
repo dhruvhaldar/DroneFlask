@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 type FlightMode = "Manual" | "Stabilize" | "Altitude Hold" | "Position Hold";
 
@@ -47,6 +47,19 @@ export function ControlPanel() {
   const [confirmAction, setConfirmAction] = useState<"arm" | "disarm" | null>(null);
 
   const batteryPct = useMemo(() => Math.max(12, Math.round(100 - state.throttle * 0.62)), [state.throttle]);
+
+  useEffect(() => {
+    document.title = error ? "⚠️ Offline - Drone Control Station" : state.armed ? "🚨 Armed - Drone Control Station" : "🛡️ Safe - Drone Control Station";
+
+    if (state.armed) {
+      const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+        e.preventDefault();
+        return (e.returnValue = "");
+      };
+      window.addEventListener("beforeunload", handleBeforeUnload);
+      return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+    }
+  }, [error, state.armed]);
 
   async function pushState(next: ControlState) {
     setState(next);

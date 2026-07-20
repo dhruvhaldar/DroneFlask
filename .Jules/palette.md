@@ -144,3 +144,7 @@
 ## 2025-02-12 - Expand double-click targets for axis reset
 **Learning:** Expanding hit targets for quick actions (like double-clicking to zero an axis) beyond just the input element significantly improves usability, but when those targets include text (labels/hints), double-clicking often triggers native browser text selection, causing jarring blue highlight flashes.
 **Action:** When adding rapid click/double-click handlers to container wrappers (like `.row`), explicitly apply `userSelect: "none"` to prevent unintended and disruptive text selection highlighting during natural interaction.
+
+## 2024-05-14 - Situational Awareness for Real-Time Control UI
+**Learning:** Real-time control interfaces require cross-tab situational awareness (`document.title` dynamic updates based on flight state) and protection against catastrophic accidental closures (`beforeunload` during Armed state) because a sudden disconnect could cause a drone crash.
+**Action:** Always implement `document.title` state syncing and `beforeunload` protections for dangerous active application states to prevent accidental tab closures.
