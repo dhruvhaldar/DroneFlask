@@ -148,3 +148,7 @@
 ## 2024-05-14 - Situational Awareness for Real-Time Control UI
 **Learning:** Real-time control interfaces require cross-tab situational awareness (`document.title` dynamic updates based on flight state) and protection against catastrophic accidental closures (`beforeunload` during Armed state) because a sudden disconnect could cause a drone crash.
 **Action:** Always implement `document.title` state syncing and `beforeunload` protections for dangerous active application states to prevent accidental tab closures.
+
+## 2026-07-21 - Preserve Contextual Button Text During Global Async Operations
+**Learning:** Overriding the text of primary action buttons (like Arm/Disarm) with generic loading states (e.g., 'Syncing...') triggered by unrelated global async operations (like sliding a throttle) creates a jarring UX. It visually hijacks the button's context and can disorient users in critical interfaces.
+**Action:** Avoid altering contextual button text for global background network state. Handle global loading states elsewhere (e.g., a status pill) and ensure state updates are short-circuited if the target value matches the current state to prevent redundant syncs and UI lockouts.

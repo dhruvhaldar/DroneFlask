@@ -82,6 +82,7 @@ export function ControlPanel() {
   }
 
   function updateAxis(axis: keyof Pick<ControlState, "throttle" | "pitch" | "roll" | "yaw">, value: number) {
+    if (state[axis] === value) return;
     void pushState({ ...state, [axis]: value });
   }
 
@@ -148,7 +149,7 @@ export function ControlPanel() {
               onFocus={() => setHoveredMode(mode)}
               onBlur={() => setHoveredMode(null)}
               onClick={() => {
-                if (saving) return;
+                if (saving || state.mode === mode) return;
                 void pushState({ ...state, mode });
               }}
               type="button"
@@ -210,9 +211,7 @@ export function ControlPanel() {
             boxShadow: confirmAction ? "0 0 0 1px #ff8c8c inset" : undefined
           }}
         >
-          {saving ? (
-            <><span aria-hidden="true">🔄</span> Syncing...</>
-          ) : confirmAction ? (
+          {confirmAction ? (
             <><span aria-hidden="true">⚠️</span> Confirm {confirmAction === "arm" ? "Arm" : "Disarm"}</>
           ) : (!state.armed && state.throttle > 0) ? (
             <><span aria-hidden="true">⬇️</span> Auto-Zero Throttle</>
