@@ -102,7 +102,7 @@ export function ControlPanel() {
                   {axis === "throttle" ? (
                     <>Double-click or <kbd>Esc</kbd> to zero</>
                   ) : (
-                    <>Double-click or <kbd>0</kbd> / <kbd>c</kbd> to center</>
+                    <>Double-click or <kbd>0</kbd> / <kbd>C</kbd> to center</>
                   )}
                 </span>
               </span>
@@ -200,7 +200,6 @@ export function ControlPanel() {
             }
           }}
           className={state.armed ? "active" : ""}
-          aria-pressed={(!state.armed && state.throttle > 0) ? undefined : state.armed}
           aria-disabled={saving ? "true" : undefined}
           aria-describedby={confirmAction ? "confirm-alert" : undefined}
           aria-keyshortcuts={confirmAction ? "Escape" : undefined}
