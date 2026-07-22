@@ -75,6 +75,7 @@ h1 {
 
 input[type="range"] {
   width: 100%;
+  cursor: pointer;
 }
 
 .btn-group {
@@ -91,7 +92,7 @@ button {
   border-radius: 12px;
   cursor: pointer;
   font-weight: 600;
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  transition: transform 0.15s ease, opacity 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 button:hover:not([aria-disabled="true"]) {

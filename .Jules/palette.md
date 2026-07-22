@@ -152,3 +152,7 @@
 ## 2026-07-21 - Preserve Contextual Button Text During Global Async Operations
 **Learning:** Overriding the text of primary action buttons (like Arm/Disarm) with generic loading states (e.g., 'Syncing...') triggered by unrelated global async operations (like sliding a throttle) creates a jarring UX. It visually hijacks the button's context and can disorient users in critical interfaces.
 **Action:** Avoid altering contextual button text for global background network state. Handle global loading states elsewhere (e.g., a status pill) and ensure state updates are short-circuited if the target value matches the current state to prevent redundant syncs and UI lockouts.
+
+## 2025-01-20 - Dynamic Text Buttons vs Aria-Pressed
+**Learning:** Using `aria-pressed` on a toggle button whose actual text label completely changes to reflect the new state (e.g., from "Arm Motors" to "Disarm") creates a highly confusing, double-spoken state for screen readers. The screen reader will announce "Disarm, toggle button, pressed", mixing the new action with the old state concept.
+**Action:** Only use `aria-pressed` on buttons whose primary text or icon remains static (e.g., a "Mute" button that stays "Mute" but toggles pressed state). If the button text explicitly changes to describe the *next* action, do not use `aria-pressed`.
