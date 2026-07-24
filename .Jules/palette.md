@@ -156,3 +156,7 @@
 ## 2025-01-20 - Dynamic Text Buttons vs Aria-Pressed
 **Learning:** Using `aria-pressed` on a toggle button whose actual text label completely changes to reflect the new state (e.g., from "Arm Motors" to "Disarm") creates a highly confusing, double-spoken state for screen readers. The screen reader will announce "Disarm, toggle button, pressed", mixing the new action with the old state concept.
 **Action:** Only use `aria-pressed` on buttons whose primary text or icon remains static (e.g., a "Mute" button that stays "Mute" but toggles pressed state). If the button text explicitly changes to describe the *next* action, do not use `aria-pressed`.
+
+## 2025-02-19 - Animating Inline Text Emojis/SVGs
+**Learning:** CSS transforms (like `@keyframes spin` utilizing `rotate()`) do not function on elements with a default `display: inline` block formatting context. If you attempt to animate an emoji wrapped in a `<span aria-hidden="true">`, it will remain static unless the display property is changed.
+**Action:** When applying rotational or transform animations to inline text elements or emojis, ensure the utility class includes `display: inline-block;` so the browser can accurately calculate and apply the transform.
