@@ -156,3 +156,11 @@
 ## 2025-01-20 - Dynamic Text Buttons vs Aria-Pressed
 **Learning:** Using `aria-pressed` on a toggle button whose actual text label completely changes to reflect the new state (e.g., from "Arm Motors" to "Disarm") creates a highly confusing, double-spoken state for screen readers. The screen reader will announce "Disarm, toggle button, pressed", mixing the new action with the old state concept.
 **Action:** Only use `aria-pressed` on buttons whose primary text or icon remains static (e.g., a "Mute" button that stays "Mute" but toggles pressed state). If the button text explicitly changes to describe the *next* action, do not use `aria-pressed`.
+
+## 2025-01-20 - Accessible Native Keyboard Shortcuts
+**Learning:** Relying solely on `<kbd>` text limits accessibility. Sighted users may not know what a single letter like 'C' stands for without context, and screen readers will just read the letter blindly without indicating it's a hotkey.
+**Action:** Add explicit `title` (for visual tooltips) and `aria-label` (for screen readers) attributes to `<kbd>` shortcut indicators to ensure both audiences immediately grasp the physical key binding (e.g. `<kbd aria-label="Center" title="Center">C</kbd>`).
+
+## 2025-01-21 - Accessible Keyboard Shortcuts using `<abbr>`
+**Learning:** Adding `aria-label` to a `<kbd>` tag does not work for screen readers unless it has an interactive role, leading to redundant/invalid HTML. `aria-label` should not be used on non-interactive elements like `<kbd>`.
+**Action:** To make keyboard shortcut abbreviations accessible without invalid ARIA usage, wrap the shortcut text in an `<abbr title="Expanded Text" style={{ textDecoration: "none" }}>` inside the `<kbd>`. This provides context on hover for sighted users and expanded text for screen readers.
