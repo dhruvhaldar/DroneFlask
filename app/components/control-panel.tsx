@@ -100,9 +100,9 @@ export function ControlPanel() {
                 </label>
                 <span id={`${axis}-hint`} className="subtle" style={{ fontSize: "0.75rem" }}>
                   {axis === "throttle" ? (
-                    <>Double-click or <kbd>Esc</kbd> to zero</>
+                    <>Double-click or <kbd><abbr title="Escape" style={{ textDecoration: "none" }}>Esc</abbr></kbd> to zero</>
                   ) : (
-                    <>Double-click or <kbd>0</kbd> / <kbd>C</kbd> to center</>
+                    <>Double-click or <kbd>0</kbd> / <kbd><abbr title="Center" style={{ textDecoration: "none" }}>C</abbr></kbd> to center</>
                   )}
                 </span>
               </span>
@@ -232,7 +232,7 @@ export function ControlPanel() {
                   : "DANGER: Throttle is active. Drone will fall. Click again to confirm."}
               </p>
               <p className="subtle" style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>
-                Or press <kbd>Esc</kbd> to cancel.
+                Or press <kbd><abbr title="Escape" style={{ textDecoration: "none" }}>Esc</abbr></kbd> to cancel.
               </p>
             </div>
           )}
