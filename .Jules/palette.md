@@ -164,3 +164,7 @@
 ## 2025-01-21 - Accessible Keyboard Shortcuts using `<abbr>`
 **Learning:** Adding `aria-label` to a `<kbd>` tag does not work for screen readers unless it has an interactive role, leading to redundant/invalid HTML. `aria-label` should not be used on non-interactive elements like `<kbd>`.
 **Action:** To make keyboard shortcut abbreviations accessible without invalid ARIA usage, wrap the shortcut text in an `<abbr title="Expanded Text" style={{ textDecoration: "none" }}>` inside the `<kbd>`. This provides context on hover for sighted users and expanded text for screen readers.
+
+## 2025-02-12 - Clearing Multi-step Inline Confirmations on Parallel Input
+**Learning:** If a multi-step inline confirmation (like "Confirm Arm" or "Confirm Disarm") is left active while a user modifies a parallel interface element (such as adjusting a slider or changing a flight mode), it can create dangerous state mismatches. The user might change context but accidentally confirm the previous destructive action, leading to unintended consequences in real-time control interfaces.
+**Action:** Always ensure that interacting with secondary controls (e.g., updating an axis or switching modes) explicitly dismisses any pending inline confirmations for unrelated actions by resetting the confirmation state to null.
