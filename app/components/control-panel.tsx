@@ -82,6 +82,7 @@ export function ControlPanel() {
   }
 
   function updateAxis(axis: keyof Pick<ControlState, "throttle" | "pitch" | "roll" | "yaw">, value: number) {
+    setConfirmAction(null);
     if (state[axis] === value) return;
     void pushState({ ...state, [axis]: value });
   }
@@ -149,6 +150,7 @@ export function ControlPanel() {
               onFocus={() => setHoveredMode(mode)}
               onBlur={() => setHoveredMode(null)}
               onClick={() => {
+                setConfirmAction(null);
                 if (saving || state.mode === mode) return;
                 void pushState({ ...state, mode });
               }}
