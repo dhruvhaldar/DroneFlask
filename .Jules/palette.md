@@ -168,3 +168,7 @@
 ## 2025-02-12 - Clearing Multi-step Inline Confirmations on Parallel Interactions
 **Learning:** Relying strictly on `onBlur` to dismiss dangerous inline multi-step confirmations (like "Confirm Arm") is insufficient. Many parallel interactions in a UI (like dragging range sliders, double-clicking non-focusable wrappers, or standard button clicks in Safari) do not inherently move browser focus. This causes the dangerous confirmation state to linger unexpectedly while the user is performing unrelated actions.
 **Action:** Always explicitly dismiss multi-step inline confirmations during parallel interactions (e.g., when a user interacts with a slider or changes modes). Do not rely solely on `onBlur` events on the confirmation button itself to handle all dismissal cases.
+
+## 2025-02-20 - Prevent screen reader spam on high-frequency state changes
+**Learning:** Adding `aria-live="polite"` to rapidly updating UI elements, such as a status pill tied to real-time control modes or continuous network syncing, overwhelms screen readers with constant, overlapping auditory spam, degrading the user experience.
+**Action:** Remove `aria-live` from high-frequency or transient state indicators unless the final state change is critical, infrequent, and needs to interrupt the user's current context. Let visual users rely on the visual indicator without punishing screen reader users.
