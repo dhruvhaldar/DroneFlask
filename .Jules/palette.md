@@ -172,3 +172,7 @@
 ## 2025-02-20 - Prevent screen reader spam on high-frequency state changes
 **Learning:** Adding `aria-live="polite"` to rapidly updating UI elements, such as a status pill tied to real-time control modes or continuous network syncing, overwhelms screen readers with constant, overlapping auditory spam, degrading the user experience.
 **Action:** Remove `aria-live` from high-frequency or transient state indicators unless the final state change is critical, infrequent, and needs to interrupt the user's current context. Let visual users rely on the visual indicator without punishing screen reader users.
+
+## 2025-02-23 - Visual Hierarchy of Network Statuses
+**Learning:** Rendering non-critical network states (like 'Syncing...' or 'Synced') with the same visual weight as critical data or error states ('Offline') creates unnecessary visual noise. In high-density telemetry panels, users' attention should be drawn to problems, not expected background activity.
+**Action:** Visually de-emphasize expected, neutral states in status indicators by applying existing utility CSS classes (e.g., `subtle`). This reduces noise and ensures critical error states stand out prominently in the visual hierarchy.
