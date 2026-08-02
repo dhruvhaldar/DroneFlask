@@ -265,7 +265,7 @@ export function ControlPanel() {
           <div>
             <dt className="subtle"><span aria-hidden="true">📡</span> Status</dt>
             <dd className="value" style={{ margin: 0, color: error ? "#ff8c8c" : undefined }} title={error ? "Failed to sync control state. Check connection." : undefined}>
-              {saving ? <span className="subtle"><span aria-hidden="true">🔄</span> Syncing...</span> : error ? <><span aria-hidden="true">⚠️</span> Offline</> : <span className="subtle"><span aria-hidden="true">✓</span> Synced</span>}
+              {saving ? <span className="subtle"><span aria-hidden="true" className="spin">🔄</span> Syncing...</span> : error ? <><span aria-hidden="true">⚠️</span> Offline</> : <span className="subtle"><span aria-hidden="true">✓</span> Synced</span>}
             </dd>
           </div>
         </dl>

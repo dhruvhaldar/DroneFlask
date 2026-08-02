@@ -176,3 +176,7 @@
 ## 2025-02-23 - Visual Hierarchy of Network Statuses
 **Learning:** Rendering non-critical network states (like 'Syncing...' or 'Synced') with the same visual weight as critical data or error states ('Offline') creates unnecessary visual noise. In high-density telemetry panels, users' attention should be drawn to problems, not expected background activity.
 **Action:** Visually de-emphasize expected, neutral states in status indicators by applying existing utility CSS classes (e.g., `subtle`). This reduces noise and ensures critical error states stand out prominently in the visual hierarchy.
+
+## 2025-03-02 - Animating Inline Emojis requires inline-block
+**Learning:** Applying CSS transforms or animations (like `@keyframes spin`) directly to inline elements (such as spans wrapping emojis like `🔄`) will fail because transforms do not function on default `display: inline` properties. The animation will be ignored.
+**Action:** When animating inline decorative elements or emojis using CSS transforms, explicitly apply `display: inline-block` to the element (e.g., via a `.spin` class) so the transform box is respected and the animation plays correctly.
