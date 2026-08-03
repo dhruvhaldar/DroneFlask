@@ -180,3 +180,6 @@
 ## 2025-03-02 - Animating Inline Emojis requires inline-block
 **Learning:** Applying CSS transforms or animations (like `@keyframes spin`) directly to inline elements (such as spans wrapping emojis like `🔄`) will fail because transforms do not function on default `display: inline` properties. The animation will be ignored.
 **Action:** When animating inline decorative elements or emojis using CSS transforms, explicitly apply `display: inline-block` to the element (e.g., via a `.spin` class) so the transform box is respected and the animation plays correctly.
+## 2026-08-03 - Explicit Escape Hatches for Mobile Users
+**Learning:** Relying solely on `onBlur` to cancel inline warnings traps mobile users without an Escape key, as tapping non-interactive areas does not trigger blur events on touch devices.
+**Action:** Always provide explicit, tappable 'Cancel' buttons alongside keyboard hints for inline confirmations to ensure touch accessibility.

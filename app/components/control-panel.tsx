@@ -233,9 +233,14 @@ export function ControlPanel() {
                   ? "WARNING: Propellers will spin up. Ensure area is clear. Click again to confirm."
                   : "DANGER: Throttle is active. Drone will fall. Click again to confirm."}
               </p>
-              <p className="subtle" style={{ fontSize: "0.85rem", marginTop: "0.25rem" }}>
-                Or press <kbd><abbr title="Escape" style={{ textDecoration: "none" }}>Esc</abbr></kbd> to cancel.
-              </p>
+              <div className="row" style={{ marginTop: "0.5rem", marginBottom: 0 }}>
+                <p className="subtle" style={{ fontSize: "0.85rem" }}>
+                  Or press <kbd><abbr title="Escape" style={{ textDecoration: "none" }}>Esc</abbr></kbd> to cancel.
+                </p>
+                <button type="button" className="subtle" onClick={() => setConfirmAction(null)}>
+                  Cancel
+                </button>
+              </div>
             </div>
           )}
         </div>
