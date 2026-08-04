@@ -183,3 +183,6 @@
 ## 2026-08-03 - Explicit Escape Hatches for Mobile Users
 **Learning:** Relying solely on `onBlur` to cancel inline warnings traps mobile users without an Escape key, as tapping non-interactive areas does not trigger blur events on touch devices.
 **Action:** Always provide explicit, tappable 'Cancel' buttons alongside keyboard hints for inline confirmations to ensure touch accessibility.
+## 2026-08-04 - Explicit Cancellation on Blur Dismissable Interfaces
+**Learning:** When multi-step inline confirmations rely on `onBlur` to cancel (or dismiss), users tapping an explicit 'Cancel' button on touch devices (or mouse down on desktop) can trigger the `onBlur` of the primary element before the 'Cancel' button's `onClick` resolves, potentially causing a race condition or dropped events.
+**Action:** For explicit 'Cancel' buttons inside an area that might disappear due to an `onBlur` on a parent/primary element, use `onPointerDown` (with `e.preventDefault()`) instead of `onClick`. This ensures the cancel action is registered immediately before the blur event fires, providing a smooth and guaranteed escape hatch for both touch and mouse users.

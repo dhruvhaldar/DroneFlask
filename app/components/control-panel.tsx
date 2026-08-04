@@ -237,7 +237,7 @@ export function ControlPanel() {
                 <p className="subtle" style={{ fontSize: "0.85rem" }}>
                   Or press <kbd><abbr title="Escape" style={{ textDecoration: "none" }}>Esc</abbr></kbd> to cancel.
                 </p>
-                <button type="button" className="subtle" onClick={() => setConfirmAction(null)}>
+                <button type="button" className="subtle" onMouseDown={(e) => e.preventDefault()} onClick={() => setConfirmAction(null)}>
                   Cancel
                 </button>
               </div>
