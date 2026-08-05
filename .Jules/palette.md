@@ -186,3 +186,7 @@
 ## 2026-08-04 - Explicit Cancellation on Blur Dismissable Interfaces
 **Learning:** When multi-step inline confirmations rely on `onBlur` to cancel (or dismiss), users tapping an explicit 'Cancel' button on touch devices (or mouse down on desktop) can trigger the `onBlur` of the primary element before the 'Cancel' button's `onClick` resolves, potentially causing a race condition or dropped events.
 **Action:** For explicit 'Cancel' buttons inside an area that might disappear due to an `onBlur` on a parent/primary element, use `onPointerDown` (with `e.preventDefault()`) instead of `onClick`. This ensures the cancel action is registered immediately before the blur event fires, providing a smooth and guaranteed escape hatch for both touch and mouse users.
+
+## 2025-10-24 - Accessibility Keyboard Trap on Blur Dialogs
+**Learning:** Relying solely on `onBlur` directly on a trigger button to dismiss an inline warning/confirmation dialog creates a keyboard trap. When users tab to reach an explicit "Cancel" button inside the dialog, the focus leaves the trigger button, triggering `onBlur`, which immediately closes the dialog. This makes it impossible for keyboard users to interact with anything inside the confirmation element.
+**Action:** Wrap both the trigger element and the confirmation dialog in a parent container `div` and attach the `onBlur` event there. Use `if (!e.currentTarget.contains(e.relatedTarget))` to check if the new focus target is outside the parent container before dismissing the dialog, allowing users to tab safely to buttons inside.

@@ -165,84 +165,89 @@ export function ControlPanel() {
           {modeTooltips[hoveredMode || state.mode]}
         </p>
 
-        <button
-          type="button"
-          onClick={() => {
-            if (saving) return;
-            if (!state.armed && state.throttle > 0) {
-              void pushState({ ...state, throttle: 0 });
-              return;
-            }
-            if (!state.armed) {
-              if (confirmAction === "arm") {
-                void pushState({ ...state, armed: true });
-                setConfirmAction(null);
-              } else {
-                setConfirmAction("arm");
+        <div onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            setConfirmAction(null);
+          }
+        }}>
+          <button
+            type="button"
+            onClick={() => {
+              if (saving) return;
+              if (!state.armed && state.throttle > 0) {
+                void pushState({ ...state, throttle: 0 });
+                return;
               }
-            } else {
-              if (state.throttle > 0) {
-                if (confirmAction === "disarm") {
-                  void pushState({ ...state, armed: false });
+              if (!state.armed) {
+                if (confirmAction === "arm") {
+                  void pushState({ ...state, armed: true });
                   setConfirmAction(null);
                 } else {
-                  setConfirmAction("disarm");
+                  setConfirmAction("arm");
                 }
               } else {
-                void pushState({ ...state, armed: false });
+                if (state.throttle > 0) {
+                  if (confirmAction === "disarm") {
+                    void pushState({ ...state, armed: false });
+                    setConfirmAction(null);
+                  } else {
+                    setConfirmAction("disarm");
+                  }
+                } else {
+                  void pushState({ ...state, armed: false });
+                  setConfirmAction(null);
+                }
+              }
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Escape" && confirmAction) {
+                e.stopPropagation();
                 setConfirmAction(null);
               }
-            }
-          }}
-          onBlur={() => setConfirmAction(null)}
-          onKeyDown={(e) => {
-            if (e.key === "Escape" && confirmAction) {
-              e.stopPropagation();
-              setConfirmAction(null);
-            }
-          }}
-          className={state.armed ? "active" : ""}
-          aria-disabled={saving ? "true" : undefined}
-          aria-describedby={confirmAction ? "confirm-alert" : undefined}
-          aria-keyshortcuts={confirmAction ? "Escape" : undefined}
-          title={saving ? "Action unavailable while syncing" : (!state.armed && state.throttle > 0) ? "Click to set throttle to 0 so you can arm motors" : undefined}
-          style={{
-            width: "100%",
-            borderColor: confirmAction ? "#ff8c8c" : undefined,
-            boxShadow: confirmAction ? "0 0 0 1px #ff8c8c inset" : undefined
-          }}
-        >
-          {confirmAction ? (
-            <><span aria-hidden="true">⚠️</span> Confirm {confirmAction === "arm" ? "Arm" : "Disarm"}</>
-          ) : (!state.armed && state.throttle > 0) ? (
-            <><span aria-hidden="true">⬇️</span> Auto-Zero Throttle</>
-          ) : state.armed ? (
-            <><span aria-hidden="true">🔒</span> Disarm</>
-          ) : (
-            <><span aria-hidden="true">🚀</span> Arm Motors</>
-          )}
-        </button>
+            }}
+            className={state.armed ? "active" : ""}
+            aria-disabled={saving ? "true" : undefined}
+            aria-describedby={confirmAction ? "confirm-alert" : undefined}
+            aria-keyshortcuts={confirmAction ? "Escape" : undefined}
+            title={saving ? "Action unavailable while syncing" : (!state.armed && state.throttle > 0) ? "Click to set throttle to 0 so you can arm motors" : undefined}
+            style={{
+              width: "100%",
+              borderColor: confirmAction ? "#ff8c8c" : undefined,
+              boxShadow: confirmAction ? "0 0 0 1px #ff8c8c inset" : undefined
+            }}
+          >
+            {confirmAction ? (
+              <><span aria-hidden="true">⚠️</span> Confirm {confirmAction === "arm" ? "Arm" : "Disarm"}</>
+            ) : (!state.armed && state.throttle > 0) ? (
+              <><span aria-hidden="true">⬇️</span> Auto-Zero Throttle</>
+            ) : state.armed ? (
+              <><span aria-hidden="true">🔒</span> Disarm</>
+            ) : (
+              <><span aria-hidden="true">🚀</span> Arm Motors</>
+            )}
+          </button>
 
-        <span className="status-pill" style={{ color: error || state.armed ? "#ff8c8c" : undefined, borderColor: error || state.armed ? "#ff8c8c" : undefined }}>{error ? <><span aria-hidden="true">⚠️</span> Offline</> : state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>} · {state.mode}</span>
+          <span className="status-pill" style={{ color: error || state.armed ? "#ff8c8c" : undefined, borderColor: error || state.armed ? "#ff8c8c" : undefined }}>{error ? <><span aria-hidden="true">⚠️</span> Offline</> : state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>} · {state.mode}</span>
 
-        <div style={{ minHeight: "4.25rem", marginTop: "0.75rem" }}>
-          {confirmAction && (
-            <div id="confirm-alert" role="alert">
-              <p style={{ fontSize: "0.85rem", color: "#ff8c8c", fontWeight: 500 }}>
-                {confirmAction === "arm"
-                  ? "WARNING: Propellers will spin up. Ensure area is clear. Click again to confirm."
-                  : "DANGER: Throttle is active. Drone will fall. Click again to confirm."}
-              </p>
-              <div className="row" style={{ marginTop: "0.5rem", marginBottom: 0 }}>
-                <p className="subtle" style={{ fontSize: "0.85rem" }}>
-                  Or press <kbd><abbr title="Escape" style={{ textDecoration: "none" }}>Esc</abbr></kbd> to cancel.
+          <div style={{ minHeight: "4.25rem", marginTop: "0.75rem" }}>
+            {confirmAction && (
+              <div id="confirm-alert" role="alert">
+                <p style={{ fontSize: "0.85rem", color: "#ff8c8c", fontWeight: 500 }}>
+                  {confirmAction === "arm"
+                    ? "WARNING: Propellers will spin up. Ensure area is clear. Click again to confirm."
+                    : "DANGER: Throttle is active. Drone will fall. Click again to confirm."}
                 </p>
-                <button type="button" className="subtle" onMouseDown={(e) => e.preventDefault()} onClick={() => setConfirmAction(null)}>
-                  Cancel
-                </button>
+                <div className="row" style={{ marginTop: "0.5rem", marginBottom: 0 }}>
+                  <p className="subtle" style={{ fontSize: "0.85rem" }}>
+                    Or press <kbd><abbr title="Escape" style={{ textDecoration: "none" }}>Esc</abbr></kbd> to cancel.
+                  </p>
+                  <button type="button" className="subtle" onPointerDown={(e) => e.preventDefault()} onClick={() => setConfirmAction(null)}>
+                    Cancel
+                  </button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </section>
 
