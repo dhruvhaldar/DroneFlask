@@ -165,12 +165,22 @@ export function ControlPanel() {
           {modeTooltips[hoveredMode || state.mode]}
         </p>
 
-        <div onBlur={(e) => {
-          if (!e.currentTarget.contains(e.relatedTarget)) {
-            setConfirmAction(null);
-          }
-        }}>
+        <div
+          onBlur={(e) => {
+            if (!e.currentTarget.contains(e.relatedTarget)) {
+              setConfirmAction(null);
+            }
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Escape" && confirmAction) {
+              e.stopPropagation();
+              setConfirmAction(null);
+              document.getElementById("arm-disarm-trigger")?.focus();
+            }
+          }}
+        >
           <button
+            id="arm-disarm-trigger"
             type="button"
             onClick={() => {
               if (saving) return;
@@ -197,12 +207,6 @@ export function ControlPanel() {
                   void pushState({ ...state, armed: false });
                   setConfirmAction(null);
                 }
-              }
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Escape" && confirmAction) {
-                e.stopPropagation();
-                setConfirmAction(null);
               }
             }}
             className={state.armed ? "active" : ""}
@@ -241,7 +245,15 @@ export function ControlPanel() {
                   <p className="subtle" style={{ fontSize: "0.85rem" }}>
                     Or press <kbd><abbr title="Escape" style={{ textDecoration: "none" }}>Esc</abbr></kbd> to cancel.
                   </p>
-                  <button type="button" className="subtle" onPointerDown={(e) => e.preventDefault()} onClick={() => setConfirmAction(null)}>
+                  <button
+                    type="button"
+                    className="subtle"
+                    onPointerDown={(e) => e.preventDefault()}
+                    onClick={() => {
+                      setConfirmAction(null);
+                      document.getElementById("arm-disarm-trigger")?.focus();
+                    }}
+                  >
                     Cancel
                   </button>
                 </div>
