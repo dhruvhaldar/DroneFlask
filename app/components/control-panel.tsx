@@ -248,7 +248,11 @@ export function ControlPanel() {
                   <button
                     type="button"
                     className="subtle"
-                    onPointerDown={(e) => e.preventDefault()}
+                    onPointerDown={(e) => {
+                      e.preventDefault();
+                      setConfirmAction(null);
+                      document.getElementById("arm-disarm-trigger")?.focus();
+                    }}
                     onClick={() => {
                       setConfirmAction(null);
                       document.getElementById("arm-disarm-trigger")?.focus();
