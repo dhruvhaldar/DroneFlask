@@ -209,21 +209,21 @@ export function ControlPanel() {
                 }
               }
             }}
-            className={state.armed ? "active" : ""}
+            className=""
             aria-disabled={saving ? "true" : undefined}
             aria-describedby={confirmAction ? "confirm-alert" : undefined}
             aria-keyshortcuts={confirmAction ? "Escape" : undefined}
             title={saving ? "Action unavailable while syncing" : (!state.armed && state.throttle > 0) ? "Click to set throttle to 0 so you can arm motors" : undefined}
             style={{
               width: "100%",
-              borderColor: confirmAction ? "#ff8c8c" : undefined,
-              boxShadow: confirmAction ? "0 0 0 1px #ff8c8c inset" : undefined
+              borderColor: confirmAction || state.armed ? "#ff8c8c" : undefined,
+              boxShadow: confirmAction || state.armed ? "0 0 0 1px #ff8c8c inset" : undefined
             }}
           >
             {confirmAction ? (
               <><span aria-hidden="true">⚠️</span> Confirm {confirmAction === "arm" ? "Arm" : "Disarm"}</>
             ) : (!state.armed && state.throttle > 0) ? (
-              <><span aria-hidden="true">⬇️</span> Auto-Zero Throttle</>
+              <><span aria-hidden="true">⬇️</span> Zero Throttle to Arm</>
             ) : state.armed ? (
               <><span aria-hidden="true">🔒</span> Disarm</>
             ) : (
@@ -248,6 +248,7 @@ export function ControlPanel() {
                   <button
                     type="button"
                     className="subtle"
+                    aria-label="Cancel confirmation"
                     onPointerDown={(e) => {
                       e.preventDefault();
                       setConfirmAction(null);
@@ -286,7 +287,7 @@ export function ControlPanel() {
           </div>
           <div>
             <dt className="subtle"><span aria-hidden="true">↕️</span> Vertical Speed</dt>
-            <dd className="value" style={{ margin: 0 }}>{(state.throttle / 10).toFixed(1)} m/s</dd>
+            <dd className="value" style={{ margin: 0 }}>{(state.throttle / 10).toFixed(1)} <abbr title="meters per second" style={{ textDecoration: "none" }}>m/s</abbr></dd>
           </div>
           <div>
             <dt className="subtle"><span aria-hidden="true">📡</span> Status</dt>

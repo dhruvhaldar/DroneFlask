@@ -198,3 +198,11 @@
 ## 2026-08-05 - Maintain Keyboard Accessibility When Fixing Touch Blurs
 **Learning:** Preventing race conditions on mobile/touch interfaces by using `onPointerDown={(e) => e.preventDefault()}` effectively stops the subsequent `onClick` event from firing. If the action logic is only inside `onClick`, touch users cannot interact with the button. Conversely, moving the logic *only* to `onPointerDown` breaks accessibility for keyboard users, since `Enter` or `Space` keypresses on a button fire `onClick` but do not emit pointer events.
 **Action:** When overriding default blur behaviors with `onPointerDown` + `preventDefault()`, always place the core component state modification/action logic inside *both* `onPointerDown` and `onClick`. This guarantees interaction works seamlessly across touch devices, mice, and keyboard navigation.
+
+## 2026-08-09 - Unified Danger State Visuals
+**Learning:** Contradictory danger states (e.g. green borders on Armed button instead of red) confuse users in critical contexts.
+**Action:** Apply consistent danger colors to active destructive states.
+
+## 2026-08-09 - Semantic Units for Screen Readers
+**Learning:** Screen readers blindly read raw units like 'm/s' as 'm slash s'.
+**Action:** Use an `<abbr>` tag with a title to expand the unit, improving auditory comprehension.
