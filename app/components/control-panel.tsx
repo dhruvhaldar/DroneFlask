@@ -213,7 +213,7 @@ export function ControlPanel() {
             aria-disabled={saving ? "true" : undefined}
             aria-describedby={confirmAction ? "confirm-alert" : undefined}
             aria-keyshortcuts={confirmAction ? "Escape" : undefined}
-            title={saving ? "Action unavailable while syncing" : (!state.armed && state.throttle > 0) ? "Click to set throttle to 0 so you can arm motors" : undefined}
+            title={saving ? "Action unavailable while syncing" : (!state.armed && state.throttle > 0) ? "Click to automatically zero throttle and enable arming" : undefined}
             style={{
               width: "100%",
               borderColor: confirmAction || state.armed ? "#ff8c8c" : undefined,
@@ -223,7 +223,7 @@ export function ControlPanel() {
             {confirmAction ? (
               <><span aria-hidden="true">⚠️</span> Confirm {confirmAction === "arm" ? "Arm" : "Disarm"}</>
             ) : (!state.armed && state.throttle > 0) ? (
-              <><span aria-hidden="true">⬇️</span> Zero Throttle to Arm</>
+              <><span aria-hidden="true">✨</span> Auto-Zero Throttle to Arm</>
             ) : state.armed ? (
               <><span aria-hidden="true">🔒</span> Disarm</>
             ) : (
