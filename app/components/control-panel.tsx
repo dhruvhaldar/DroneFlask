@@ -44,6 +44,7 @@ export function ControlPanel() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(false);
   const [hoveredMode, setHoveredMode] = useState<FlightMode | null>(null);
+  const [focusedMode, setFocusedMode] = useState<FlightMode | null>(null);
   const [confirmAction, setConfirmAction] = useState<"arm" | "disarm" | null>(null);
 
   const batteryPct = useMemo(() => Math.max(12, Math.round(100 - state.throttle * 0.62)), [state.throttle]);
@@ -147,8 +148,8 @@ export function ControlPanel() {
               aria-describedby="mode-description"
               onMouseEnter={() => setHoveredMode(mode)}
               onMouseLeave={() => setHoveredMode(null)}
-              onFocus={() => setHoveredMode(mode)}
-              onBlur={() => setHoveredMode(null)}
+              onFocus={() => setFocusedMode(mode)}
+              onBlur={() => setFocusedMode(null)}
               onClick={() => {
                 setConfirmAction(null);
                 if (saving || state.mode === mode) return;
@@ -162,7 +163,7 @@ export function ControlPanel() {
           ))}
         </div>
         <p id="mode-description" className="subtle" style={{ fontSize: "0.85rem", marginBottom: "1rem", minHeight: "2.5em" }}>
-          {modeTooltips[hoveredMode || state.mode]}
+          {modeTooltips[hoveredMode || focusedMode || state.mode]}
         </p>
 
         <div
