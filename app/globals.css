@@ -75,7 +75,12 @@ h1 {
 
 input[type="range"] {
   width: 100%;
-  cursor: pointer;
+  cursor: grab;
+  accent-color: #72f0c4;
+}
+
+input[type="range"]:active {
+  cursor: grabbing;
 }
 
 .btn-group {
@@ -150,5 +155,11 @@ kbd {
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spin {
+    animation: none;
   }
 }
