@@ -211,6 +211,8 @@ export function ControlPanel() {
               }
             }}
             className=""
+            aria-expanded={confirmAction !== null}
+            aria-controls={confirmAction ? "confirm-alert" : undefined}
             aria-disabled={saving ? "true" : undefined}
             aria-describedby={confirmAction ? "confirm-alert" : undefined}
             aria-keyshortcuts={confirmAction ? "Escape" : undefined}
