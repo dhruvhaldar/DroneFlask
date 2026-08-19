@@ -210,3 +210,7 @@
 ## 2026-08-12 - Prevent Keyboard Focus Dropping from Tooltips on Simultaneous Interaction
 **Learning:** Tying both `onFocus` and `onMouseEnter` to a single state variable (like `hoveredMode`) to drive `aria-describedby` tooltips is an accessibility risk. If a keyboard user focuses a button (displaying the tooltip), but their mouse cursor accidentally brushes across a different button and leaves, the single state variable resets to `null`, completely clearing the tooltip and leaving the keyboard user without context, despite the button still holding browser focus.
 **Action:** Always maintain separate state bindings for keyboard focus (`focusedMode`) and pointer hover (`hoveredMode`). Combine them during render (e.g., `hoveredMode || focusedMode || defaultState`) to ensure keyboard users retain their tooltip context regardless of transient mouse movements.
+
+## 2025-03-08 - ARIA Disclosure Triggers for Inline Confirmations
+**Learning:** When a button dynamically spawns an inline warning or confirmation block (acting as a disclosure trigger), screen readers need explicit semantic context to understand the relationship between the button and the newly revealed content. Without these attributes, users may not realize the button controls an expanding section or what content it expands.
+**Action:** Always add `aria-expanded` and `aria-controls` attributes to buttons that dynamically spawn inline warnings or confirmations to provide screen readers with explicit semantic context.
