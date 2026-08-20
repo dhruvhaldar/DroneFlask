@@ -214,6 +214,8 @@ export function ControlPanel() {
             aria-disabled={saving ? "true" : undefined}
             aria-describedby={confirmAction ? "confirm-alert" : undefined}
             aria-keyshortcuts={confirmAction ? "Escape" : undefined}
+            aria-expanded={!!confirmAction}
+            aria-controls={confirmAction ? "confirm-alert" : undefined}
             title={saving ? "Action unavailable while syncing" : (!state.armed && state.throttle > 0) ? "Click to automatically zero throttle and enable arming" : undefined}
             style={{
               width: "100%",
