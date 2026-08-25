@@ -183,6 +183,8 @@ export function ControlPanel() {
           <button
             id="arm-disarm-trigger"
             type="button"
+            aria-expanded={confirmAction ? true : false}
+            aria-controls={confirmAction ? "confirm-alert" : undefined}
             onClick={() => {
               if (saving) return;
               if (!state.armed && state.throttle > 0) {
