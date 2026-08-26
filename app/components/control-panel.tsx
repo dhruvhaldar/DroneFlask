@@ -183,8 +183,6 @@ export function ControlPanel() {
           <button
             id="arm-disarm-trigger"
             type="button"
-            aria-expanded={confirmAction ? true : false}
-            aria-controls={confirmAction ? "confirm-alert" : undefined}
             onClick={() => {
               if (saving) return;
               if (!state.armed && state.throttle > 0) {
@@ -216,14 +214,8 @@ export function ControlPanel() {
             aria-expanded={!!confirmAction}
             aria-controls={confirmAction ? "confirm-alert" : undefined}
             aria-disabled={saving ? "true" : undefined}
-            aria-expanded={!!confirmAction}
-            aria-controls={confirmAction ? "confirm-alert" : undefined}
             aria-describedby={confirmAction ? "confirm-alert" : undefined}
-            aria-expanded={!!confirmAction}
-            aria-controls={confirmAction ? "confirm-alert" : undefined}
             aria-keyshortcuts={confirmAction ? "Escape" : undefined}
-            aria-expanded={confirmAction !== null}
-            aria-controls={confirmAction ? "confirm-alert" : undefined}
             title={saving ? "Action unavailable while syncing" : (!state.armed && state.throttle > 0) ? "Click to automatically zero throttle and enable arming" : undefined}
             style={{
               width: "100%",
