@@ -214,3 +214,7 @@
 ## 2025-03-08 - Semantic Context for Inline Confirmations
 **Learning:** When a button dynamically spawns an inline confirmation block or warning acting as a disclosure trigger, omitting `aria-expanded` and `aria-controls` attributes leaves screen readers without explicit semantic context about what the button controls and whether the controlled content is visible.
 **Action:** Always add `aria-expanded` and `aria-controls` attributes to buttons that toggle inline warnings or confirmations, linking them to the ID of the spawned content to ensure accessibility for screen readers.
+
+## 2025-03-10 - Prevent Native Gestures on Range Sliders
+**Learning:** HTML range sliders on mobile devices often clash with native browser gestures (like panning to scroll or pull-to-refresh). When a user attempts to drag a control slider, the browser may intercept the touch event to scroll the page instead, creating a frustrating and potentially dangerous interaction in a real-time control interface.
+**Action:** Always apply `touch-action: none;` via CSS to `input[type="range"]` elements in touch-heavy or control interfaces. This explicitly instructs the browser to disable native gestures on the element, ensuring all touch events are passed directly to the slider for smooth dragging.
