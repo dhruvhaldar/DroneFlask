@@ -236,9 +236,9 @@ export function ControlPanel() {
 
           <span className={`status-pill ${!error && !state.armed ? "subtle" : ""}`.trim()} style={{ color: error || state.armed ? "#ff8c8c" : undefined, borderColor: error || state.armed ? "#ff8c8c" : undefined }}>{error ? <><span aria-hidden="true">⚠️</span> Offline</> : state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>} · {state.mode}</span>
 
-          <div style={{ minHeight: "4.25rem", marginTop: "0.75rem" }}>
+          <div id="confirm-alert" role="alert" style={{ minHeight: "4.25rem", marginTop: "0.75rem" }}>
             {confirmAction && (
-              <div id="confirm-alert" role="alert">
+              <div>
                 <p style={{ fontSize: "0.85rem", color: "#ff8c8c", fontWeight: 500 }}>
                   {confirmAction === "arm"
                     ? "WARNING: Propellers will spin up. Ensure area is clear. Click again to confirm."

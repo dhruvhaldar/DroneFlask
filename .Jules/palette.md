@@ -218,3 +218,7 @@
 ## 2025-03-08 - Preventing Touch Gestures from Interrupting Native Sliders
 **Learning:** In touch-heavy or real-time control interfaces, native mobile browser gestures (like panning to scroll or pull-to-refresh) can intercept touch events while the user is trying to drag a range slider, interrupting the control input and causing jarring page movements.
 **Action:** Always apply `touch-action: none;` to HTML range sliders (`input[type="range"]`) via CSS to prevent native mobile browser gestures from interfering with slider dragging.
+
+## 2025-04-18 - Ensure Screen Readers Announce Dynamic Alerts
+**Learning:** Conditionally rendering a `role="alert"` (or `aria-live`) container directly alongside its contents often prevents screen readers from announcing it when it appears in the DOM. Screen readers typically need the live region to already exist in the accessibility tree to listen for subsequent text content mutations inside it.
+**Action:** Always place `role="alert"` or `aria-live` attributes on a static, continuously rendered parent container. Then, conditionally render only the inner content. This ensures the live region is already being monitored by the screen reader when the new text is injected, guaranteeing the announcement.
