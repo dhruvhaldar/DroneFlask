@@ -124,6 +124,7 @@ export function ControlPanel() {
               aria-describedby={`${axis}-hint`}
               aria-keyshortcuts={axis === "throttle" ? "Escape" : "Escape 0 c"}
               aria-valuetext={state[axis] > 0 && axis !== "throttle" ? `+${state[axis]}%` : `${state[axis]}%`}
+              style={{ accentColor: state.armed ? "#ff8c8c" : undefined, outlineColor: state.armed ? "#ff8c8c" : undefined }}
               onChange={(event) => updateAxis(axis, Number(event.target.value))}
               onDoubleClick={() => updateAxis(axis, 0)}
               onKeyDown={(e) => {
@@ -157,6 +158,7 @@ export function ControlPanel() {
               }}
               type="button"
               title={saving ? "Action unavailable while syncing" : undefined}
+              style={{ borderColor: state.mode === mode && state.armed ? "#ff8c8c" : undefined, boxShadow: state.mode === mode && state.armed ? "0 0 0 1px #ff8c8c inset" : undefined, outlineColor: state.mode === mode && state.armed ? "#ff8c8c" : undefined }}
             >
               <span aria-hidden="true">{modeIcons[mode]} </span>{mode}
             </button>
@@ -220,7 +222,8 @@ export function ControlPanel() {
             style={{
               width: "100%",
               borderColor: confirmAction || state.armed ? "#ff8c8c" : undefined,
-              boxShadow: confirmAction || state.armed ? "0 0 0 1px #ff8c8c inset" : undefined
+              boxShadow: confirmAction || state.armed ? "0 0 0 1px #ff8c8c inset" : undefined,
+              outlineColor: confirmAction || state.armed ? "#ff8c8c" : undefined
             }}
           >
             {confirmAction ? (

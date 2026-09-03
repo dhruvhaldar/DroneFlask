@@ -222,3 +222,7 @@
 ## 2025-04-18 - Ensure Screen Readers Announce Dynamic Alerts
 **Learning:** Conditionally rendering a `role="alert"` (or `aria-live`) container directly alongside its contents often prevents screen readers from announcing it when it appears in the DOM. Screen readers typically need the live region to already exist in the accessibility tree to listen for subsequent text content mutations inside it.
 **Action:** Always place `role="alert"` or `aria-live` attributes on a static, continuously rendered parent container. Then, conditionally render only the inner content. This ensures the live region is already being monitored by the screen reader when the new text is injected, guaranteeing the announcement.
+
+## 2026-08-14 - Unified Danger State Outlines and Accents
+**Learning:** Even when primary borders or backgrounds are dynamically colored for danger states (e.g. red `#ff8c8c` when armed), keyboard focus rings (driven by global CSS `outline` / `focus-visible`) and native `input[type="range"]` thumbs (`accent-color`) will still fall back to their default, safe colors (e.g. green `#72f0c4`). This creates contradictory visual signals where an active dangerous element appears green while focused or interacted with.
+**Action:** When applying dynamic danger states to interactive components, always override `outlineColor` and (if applicable) `accentColor` inline to match the danger state border color, ensuring uniform, non-contradictory visual feedback for keyboard and pointer users.
