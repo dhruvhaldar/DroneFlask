@@ -226,3 +226,7 @@
 ## 2026-08-14 - Unified Danger State Outlines and Accents
 **Learning:** Even when primary borders or backgrounds are dynamically colored for danger states (e.g. red `#ff8c8c` when armed), keyboard focus rings (driven by global CSS `outline` / `focus-visible`) and native `input[type="range"]` thumbs (`accent-color`) will still fall back to their default, safe colors (e.g. green `#72f0c4`). This creates contradictory visual signals where an active dangerous element appears green while focused or interacted with.
 **Action:** When applying dynamic danger states to interactive components, always override `outlineColor` and (if applicable) `accentColor` inline to match the danger state border color, ensuring uniform, non-contradictory visual feedback for keyboard and pointer users.
+
+## 2025-10-24 - Actionable Recovery UI for Network Failures
+**Learning:** Relying solely on passive visual indicators (like an 'Offline' badge) during critical network failures leaves users stuck without a clear path to resolve the issue. If the interface is real-time and syncing fails, users may have to change critical parameters (like dropping throttle) just to trigger a new sync attempt.
+**Action:** Always provide an explicit, actionable recovery UI (such as a 'Retry' button) alongside critical network error indicators, allowing users to safely re-attempt syncing without altering their active control state. Ensure screen readers are also informed via a continuous, visually hidden `role="alert"` container.
