@@ -298,11 +298,35 @@ export function ControlPanel() {
           <div>
             <dt className="subtle"><span aria-hidden="true">📡</span> Status</dt>
             <dd className="value" style={{ margin: 0, color: error ? "#ff8c8c" : undefined }} title={error ? "Failed to sync control state. Check connection." : undefined}>
-              {saving ? <span className="subtle"><span aria-hidden="true" className="spin">🔄</span> Syncing...</span> : error ? <><span aria-hidden="true">⚠️</span> Offline</> : <span className="subtle"><span aria-hidden="true">✓</span> Synced</span>}
+              {saving ? <span className="subtle"><span aria-hidden="true" className="spin">🔄</span> Syncing...</span> : error ? (
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                  <><span aria-hidden="true">⚠️</span> Offline</>
+                  <button
+                    type="button"
+                    className="subtle"
+                    aria-label="Retry connection"
+                    style={{ padding: "0.15rem 0.4rem", fontSize: "0.75rem", borderRadius: "6px" }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      void pushState(state);
+                    }}
+                  >
+                    Retry
+                  </button>
+                </div>
+              ) : <span className="subtle"><span aria-hidden="true">✓</span> Synced</span>}
             </dd>
           </div>
         </dl>
       </section>
+
+      {/* Visually hidden live region for critical network errors */}
+      <div
+        role="alert"
+        style={{ position: "absolute", width: "1px", height: "1px", padding: 0, margin: "-1px", overflow: "hidden", clip: "rect(0, 0, 0, 0)", whiteSpace: "nowrap", borderWidth: 0 }}
+      >
+        {error ? "Warning: Connection lost. Drone is offline." : ""}
+      </div>
     </div>
   );
 }
