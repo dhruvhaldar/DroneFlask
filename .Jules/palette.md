@@ -230,3 +230,7 @@
 ## 2025-10-24 - Actionable Recovery UI for Network Failures
 **Learning:** Relying solely on passive visual indicators (like an 'Offline' badge) during critical network failures leaves users stuck without a clear path to resolve the issue. If the interface is real-time and syncing fails, users may have to change critical parameters (like dropping throttle) just to trigger a new sync attempt.
 **Action:** Always provide an explicit, actionable recovery UI (such as a 'Retry' button) alongside critical network error indicators, allowing users to safely re-attempt syncing without altering their active control state. Ensure screen readers are also informed via a continuous, visually hidden `role="alert"` container.
+
+## 2026-08-15 - Skip Links in Single-Page Apps
+**Learning:** Even in dense, single-page application interfaces (like control dashboards), keyboard and screen-reader users still require a "Skip to main content" link at the start of the document. Without it, they must tab through navigation or header elements repeatedly, despite the page not changing entirely.
+**Action:** Always include a visually hidden (but focusable) skip-to-content link immediately inside the `<body>` that targets the `<main>` tag. Ensure the `<main>` tag has `tabIndex={-1}` and `style={{ outline: "none" }}` to safely receive programmatic focus without showing a generic, distracting focus ring.
