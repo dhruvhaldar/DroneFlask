@@ -2,7 +2,7 @@ import { ControlPanel } from "./components/control-panel";
 
 export default function HomePage() {
   return (
-    <main>
+    <main id="main-content" tabIndex={-1} style={{ outline: "none" }}>
       <section className="glass panel" aria-labelledby="header-title">
         <h1 id="header-title">Drone Control Station</h1>
         <p className="subtle">

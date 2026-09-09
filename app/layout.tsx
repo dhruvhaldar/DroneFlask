@@ -6,10 +6,15 @@ export const metadata: Metadata = {
   description: "Glassmorphism drone controls with serverless telemetry endpoints"
 };
 
+import { SkipLink } from "./components/skip-link";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <SkipLink />
+        {children}
+      </body>
     </html>
   );
 }
