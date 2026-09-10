@@ -234,3 +234,7 @@
 ## 2026-08-15 - Skip Links in Single-Page Apps
 **Learning:** Even in dense, single-page application interfaces (like control dashboards), keyboard and screen-reader users still require a "Skip to main content" link at the start of the document. Without it, they must tab through navigation or header elements repeatedly, despite the page not changing entirely.
 **Action:** Always include a visually hidden (but focusable) skip-to-content link immediately inside the `<body>` that targets the `<main>` tag. Ensure the `<main>` tag has `tabIndex={-1}` and `style={{ outline: "none" }}` to safely receive programmatic focus without showing a generic, distracting focus ring.
+
+## 2025-05-19 - Smooth Transitions and Semantic Roles for Status Indicators
+**Learning:** Adding `role="status"` to dynamic status indicators (like a "Safe" / "Armed" pill) ensures that screen readers announce critical state changes non-intrusively without stealing focus. However, if the visual transition is abrupt (e.g., snapping instantly from a neutral color to a red danger state), it can feel jarring and disconnected from the rest of the polished UI.
+**Action:** When using `role="status"` for non-intrusive A11y announcements on dynamic status indicators, maintain visual continuity by pairing state changes with inline CSS transitions (e.g., `transition: color 0.15s ease, border-color 0.15s ease`) that match the global design system's animation timings.
