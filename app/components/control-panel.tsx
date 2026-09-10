@@ -237,7 +237,17 @@ export function ControlPanel() {
             )}
           </button>
 
-          <span className={`status-pill ${!error && !state.armed ? "subtle" : ""}`.trim()} style={{ color: error || state.armed ? "#ff8c8c" : undefined, borderColor: error || state.armed ? "#ff8c8c" : undefined }}>{error ? <><span aria-hidden="true">⚠️</span> Offline</> : state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>} · {state.mode}</span>
+          <span
+            className={`status-pill ${!error && !state.armed ? "subtle" : ""}`.trim()}
+            role="status"
+            style={{
+              color: error || state.armed ? "#ff8c8c" : undefined,
+              borderColor: error || state.armed ? "#ff8c8c" : undefined,
+              transition: "color 0.15s ease, border-color 0.15s ease",
+            }}
+          >
+            {error ? <><span aria-hidden="true">⚠️</span> Offline</> : state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>} · {state.mode}
+          </span>
 
           <div id="confirm-alert" role="alert" style={{ minHeight: "4.25rem", marginTop: "0.75rem" }}>
             {confirmAction && (
@@ -297,7 +307,7 @@ export function ControlPanel() {
           </div>
           <div>
             <dt className="subtle"><span aria-hidden="true">📡</span> Status</dt>
-            <dd className="value" style={{ margin: 0, color: error ? "#ff8c8c" : undefined }} title={error ? "Failed to sync control state. Check connection." : undefined}>
+            <dd className="value" style={{ margin: 0, color: error ? "#ff8c8c" : undefined, transition: "color 0.15s ease" }} title={error ? "Failed to sync control state. Check connection." : undefined}>
               {saving ? <span className="subtle"><span aria-hidden="true" className="spin">🔄</span> Syncing...</span> : error ? (
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                   <><span aria-hidden="true">⚠️</span> Offline</>
