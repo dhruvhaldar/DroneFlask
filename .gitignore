@@ -5,3 +5,10 @@ node_modules
 npm-debug.log*
 .DS_Store
 tsconfig.tsbuildinfo
+venv
+__pycache__
+package-lock.json
+dist
+.pnpm-store
+.pytest_cache
+tests/artifacts/
