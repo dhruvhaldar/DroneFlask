@@ -27,7 +27,7 @@ export class RealityCapture {
     this.tiles.group.matrixAutoUpdate = false;
     this.tiles.group.matrix.copy(earthToLocal(origin));
     this.tiles.group.updateMatrixWorld(true);
-    this.tiles.errorTarget = 12;
+    this.tiles.errorTarget = 8;
     this.tiles.downloadQueue.maxJobsPerOrigin = 4;
     this.tiles.parseQueue.maxJobs = 2;
     this.tiles.lruCache.maxSize = 160;
@@ -46,7 +46,9 @@ export class RealityCapture {
     this.camera.matrixWorldInverse.multiplyMatrices(this.camera.projectionMatrixInverse, combined);
     this.camera.matrixWorld.copy(this.camera.matrixWorldInverse).invert();
     this.camera.matrixAutoUpdate = false;
-    this.tiles.setResolutionFromRenderer(this.camera, renderer);
+    // The shared canvas is resized by MapLibre, not renderer.setSize().
+    // Renderer.getSize() therefore becomes stale after fullscreen or a resize.
+    this.tiles.setResolution(this.camera, renderer.domElement.width, renderer.domElement.height);
     this.tiles.group.updateMatrixWorld(true);
     this.tiles.update();
   }

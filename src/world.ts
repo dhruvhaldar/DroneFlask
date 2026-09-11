@@ -46,7 +46,7 @@ export class FlightWorld {
     this.status = status;
     this.map = new GeoMap({
       container: host, style: mapStyle, center: [this.location.lng, this.location.lat],
-      zoom: 17.8, elevation: 265, pitch: 60, bearing: 20, maxPitch: 85, maxZoom: 23,
+      zoom: 17, elevation: 265, pitch: 60, bearing: 20, maxPitch: 85, maxZoom: 23,
       centerClampedToGround: false, interactive: false,
       canvasContextAttributes: { antialias: true, preserveDrawingBuffer: true },
       attributionControl: { compact: false, customAttribution: '<a href="https://maplibre.org/maplibre-gl-js/docs/examples/add-3d-tiles-using-threejs/" target="_blank" rel="noopener">3D capture: AGI HQ sample</a>' },
@@ -78,7 +78,18 @@ export class FlightWorld {
     });
     this.map.on('webglcontextlost', () => { this.ready = false; this.status('Graphics context lost. Reload to resume.', false); });
     this.loadingTimer = setTimeout(() => { if (!this.ready) this.status('Map is taking longer to load. Check your connection or retry.', false); }, 20000);
-    this.observer = new ResizeObserver(() => { this.map.resize(); this.minimap.resize(); });
+    let viewportHeight = host.clientHeight;
+    this.observer = new ResizeObserver(() => {
+      const height = host.clientHeight;
+      const zoom = this.map.getZoom();
+      this.map.resize(); this.minimap.resize();
+      // Map zoom is measured in pixels: compensate for height changes to
+      // preserve the orbit camera's distance when entering/leaving fullscreen.
+      if (height > 0 && viewportHeight > 0 && height !== viewportHeight && this.cameraMode === 'Orbit') {
+        this.map.setZoom(zoom + Math.log2(height / viewportHeight));
+      }
+      if (height > 0) viewportHeight = height;
+    });
     this.observer.observe(host); this.observer.observe(miniHost);
     this.onWheel = e => {
       e.preventDefault();
@@ -112,7 +123,12 @@ export class FlightWorld {
           .scale(new THREE.Vector3(scale, -scale, scale)).multiply(new THREE.Matrix4().makeRotationX(Math.PI / 2));
         this.camera.projectionMatrix.fromArray(args.defaultProjectionData.mainMatrix).multiply(local);
         this.reality?.update(args.projectionMatrix, this.camera.projectionMatrix, this.renderer);
-        this.renderer.resetState(); this.renderer.render(this.scene, this.camera); if (this.reality) this.map.triggerRepaint();
+        this.renderer.resetState();
+        // MapLibre owns the canvas size. Keep Three's viewport in drawing-buffer
+        // pixels without resizing the shared canvas (which would clear the map).
+        const canvas = this.map.getCanvas();
+        this.renderer.setViewport(0, 0, canvas.width, canvas.height);
+        this.renderer.render(this.scene, this.camera); if (this.reality) this.map.triggerRepaint();
       },
     };
   }
@@ -135,7 +151,7 @@ export class FlightWorld {
     this.location = location; this.ready = false; this.groundElevation = 0; this.clearTrail();
     this.status(location.tileset ? 'Loading textured 3D capture…' : 'Loading map and elevation…', false);
     if (this.map.getLayer('terrain-hillshade')) this.configureScenery();
-    this.map.jumpTo({ center: [location.lng, location.lat], elevation: location.tileset ? 265 : 0, zoom: location.tileset ? 17.8 : 14.3, pitch: 60, bearing: 20 });
+    this.map.jumpTo({ center: [location.lng, location.lat], elevation: location.tileset ? 265 : 0, zoom: location.tileset ? 17 : 14.3, pitch: 60, bearing: 20 });
     this.minimap.jumpTo({ center: [location.lng, location.lat], zoom: 13 });
     this.cameraMode = this.currentCamera = 'Orbit';
   }
@@ -186,7 +202,7 @@ export class FlightWorld {
     }
     this.drone.visible = this.cameraMode !== 'FPV';
     if (this.cameraMode === 'Orbit') {
-      if (this.currentCamera !== 'Orbit') this.map.jumpTo({ center: this.coordinates(s.x, s.z), elevation: ground, zoom: this.reality ? 17.8 : 14.3, pitch: 60 });
+      if (this.currentCamera !== 'Orbit') this.map.jumpTo({ center: this.coordinates(s.x, s.z), elevation: ground, zoom: this.reality ? 17 : 14.3, pitch: 60 });
       else if (s.armed) this.map.setCenter(this.coordinates(s.x, s.z));
       // Center elevation must match terrain once DEM tiles become available.
       if (!s.armed && Math.abs(this.map.getCenterElevation() - ground) > 1) this.map.jumpTo({ elevation: ground });
