@@ -17,14 +17,14 @@ test('pause freezes all flight state', () => {
 test('soft landing disarms the motors', () => {
   const s = initialFlight(); takeoff(s); tick(s, 4); s.landing = true; tick(s, 5); assert.equal(s.armed, false); assert.equal(s.y, .65); assert.equal(s.crashed, false);
 });
-test('building collision stops flight and reset recovers', () => {
-  const s = initialFlight(); takeoff(s); s.x = 54; s.z = -65; s.y = 10; tick(s, .1); assert.equal(s.crashed, true); assert.equal(s.armed, false); takeoff(s); assert.equal(s.armed, false); assert.equal(initialFlight().crashed, false);
+test('hard landing stops flight and reset recovers', () => {
+  const s = initialFlight(); takeoff(s); s.y = .7; s.vy = -7; tick(s, .1, ['ShiftLeft']); assert.equal(s.crashed, true); assert.equal(s.armed, false); takeoff(s); assert.equal(s.armed, false); assert.equal(initialFlight().crashed, false);
 });
 test('ordered gate scoring requires passing through the opening', () => {
   const s = initialFlight(); takeoff(s); s.y = 7; s.z = -29; s.vz = -13; tick(s, .2, ['KeyW']); assert.equal(s.gates, 1);
   s.z = -64; s.x = 10; s.y = 10; tick(s, .2, ['KeyW']); assert.equal(s.gates, 1);
 });
-test('return home climbs over buildings then lands at origin', () => {
+test('return home climbs then lands at origin', () => {
   const s = initialFlight(); takeoff(s); s.x = 30; s.z = -40; s.y = 8; s.returning = true; tick(s, 50);
   assert.equal(s.crashed, false); assert.equal(s.armed, false); assert.ok(Math.hypot(s.x, s.z) < 1.5); assert.equal(s.y, .65);
 });

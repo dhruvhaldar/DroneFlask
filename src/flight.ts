@@ -11,13 +11,7 @@ export const gates = [
   { x: 20, y: 13, z: -100 }, { x: 48, y: 10, z: -130 },
   { x: 80, y: 16, z: -165 }, { x: 100, y: 12, z: -200 },
 ];
-export const obstacles = [
-  { x: -43, z: -70, w: 23, d: 30, h: 18 },
-  { x: -70, z: -120, w: 28, d: 24, h: 32 },
-  { x: 54, z: -65, w: 20, d: 24, h: 23 },
-  { x: 95, z: -110, w: 24, d: 26, h: 32 },
-  { x: -35, z: -180, w: 30, d: 35, h: 20 },
-];
+
 export const initialFlight = (): FlightState => ({
   x: 0, y: 0.65, z: 0, vx: 0, vy: 0, vz: 0, yaw: 0, pitch: 0, roll: 0,
   armed: false, landing: false, returning: false, paused: false, battery: 100,
@@ -56,11 +50,10 @@ export function stepFlight(s: FlightState, keys: Set<string>, dt: number, mode: 
   s.x += s.vx * dt; s.z += s.vz * dt; s.y += s.vy * dt;
   if (Math.abs(s.x) > 245 || Math.abs(s.z) > 245) {
     s.x = Math.max(-245, Math.min(245, s.x)); s.z = Math.max(-245, Math.min(245, s.z));
-    s.vx = 0; s.vz = 0; s.message = "Flight boundary reached. Turn back toward the airfield.";
+    s.vx = 0; s.vz = 0; s.message = "Flight boundary reached. Turn back toward the launch area.";
   }
   if (s.y > 100) { s.y = 100; s.vy = Math.min(0, s.vy); s.message = "Altitude ceiling: 100 m."; }
-  const obstacle = obstacles.some(o => Math.abs(s.x - o.x) < o.w / 2 + .8 && Math.abs(s.z - o.z) < o.d / 2 + .8 && s.y < o.h + .5);
-  if (obstacle || (s.y < .65 && s.vy < -4)) {
+  if (s.y < .65 && s.vy < -4) {
     s.crashed = true; s.armed = false; s.message = "Collision detected. Press R to reset your flight.";
     s.vx = s.vy = s.vz = 0; s.y = Math.max(.65, s.y); return;
   }

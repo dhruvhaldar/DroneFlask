@@ -8,13 +8,15 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/flight.test.ts",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
     "test:browser": "node tests/browser-check.cjs"
   },
   "dependencies": {
+    "3d-tiles-renderer": "^0.5.2",
     "@fontsource-variable/dm-sans": "^5.3.0",
     "@fontsource-variable/manrope": "^5.3.0",
     "lucide": "^0.577.0",
+    "maplibre-gl": "^6.9.0",
     "three": "^0.186.0"
   },
   "devDependencies": {
