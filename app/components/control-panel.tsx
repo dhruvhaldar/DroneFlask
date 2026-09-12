@@ -274,8 +274,9 @@ export function ControlPanel() {
                       setConfirmAction(null);
                       document.getElementById("arm-disarm-trigger")?.focus();
                     }}
+                    style={{ outlineColor: "#ff8c8c" }}
                   >
-                    Cancel
+                    <span aria-hidden="true">✖️</span> Cancel
                   </button>
                 </div>
               </div>
@@ -315,13 +316,13 @@ export function ControlPanel() {
                     type="button"
                     className="subtle"
                     aria-label="Retry connection"
-                    style={{ padding: "0.15rem 0.4rem", fontSize: "0.75rem", borderRadius: "6px" }}
+                    style={{ padding: "0.15rem 0.4rem", fontSize: "0.75rem", borderRadius: "6px", outlineColor: "#ff8c8c" }}
                     onClick={(e) => {
                       e.stopPropagation();
                       void pushState(state);
                     }}
                   >
-                    Retry
+                    <span aria-hidden="true">🔄</span> Retry
                   </button>
                 </div>
               ) : <span className="subtle"><span aria-hidden="true">✓</span> Synced</span>}
