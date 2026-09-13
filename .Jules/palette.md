@@ -244,3 +244,6 @@
 **Learning:** When displaying secondary action buttons (like 'Cancel' or 'Retry') inside dynamic danger/error states (e.g., inline warning boxes or offline statuses), their focus rings must be explicitly overridden inline (`outlineColor`) to match the danger/error border color (e.g., `#ff8c8c`). Otherwise, standard global active colors (like green) clash with the danger context, creating contradictory visual feedback for keyboard users. Adding a consistent `aria-hidden` icon helps anchor these secondary buttons visually.
 
 **Action:** Whenever a button appears within an error or danger context wrapper, verify that its `outlineColor` explicitly matches the context warning color, especially if the global CSS defaults to a "Go" or "Safe" color.
+## 2025-10-25 - Telemetry Status Screen Reader Announcement
+**Learning:** Dynamic telemetry status updates (like "Syncing..." vs "Synced") need to be announced to screen readers to ensure users are aware of the system state without having to manually focus the element.
+**Action:** Always apply `aria-live="polite"` to status indicator text that updates dynamically, so screen readers can automatically announce changes when they occur.
