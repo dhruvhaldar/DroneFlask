@@ -139,6 +139,16 @@ export function ControlPanel() {
 
       <section className="glass panel" aria-labelledby="mode-arm-title">
         <h2 id="mode-arm-title" className="section-title">Mode + Arm</h2>
+
+        {/* Visually hidden static descriptions for reliable screen reader targeting */}
+        <div style={{ position: "absolute", width: "1px", height: "1px", padding: 0, margin: "-1px", overflow: "hidden", clip: "rect(0, 0, 0, 0)", whiteSpace: "nowrap", borderWidth: 0 }}>
+          {modes.map(mode => (
+            <span key={mode} id={`desc-${mode.replace(/\s+/g, '-').toLowerCase()}`}>
+              {modeTooltips[mode]}
+            </span>
+          ))}
+        </div>
+
         <div className="btn-group" role="group" aria-label="Flight Modes" style={{ marginBottom: "0.7rem" }}>
           {modes.map((mode) => (
             <button
@@ -146,7 +156,7 @@ export function ControlPanel() {
               className={state.mode === mode ? "active" : ""}
               aria-pressed={state.mode === mode}
               aria-disabled={saving ? "true" : undefined}
-              aria-describedby="mode-description"
+              aria-describedby={`desc-${mode.replace(/\s+/g, '-').toLowerCase()}`}
               onMouseEnter={() => setHoveredMode(mode)}
               onMouseLeave={() => setHoveredMode(null)}
               onFocus={() => setFocusedMode(mode)}
@@ -164,7 +174,7 @@ export function ControlPanel() {
             </button>
           ))}
         </div>
-        <p id="mode-description" className="subtle" style={{ fontSize: "0.85rem", marginBottom: "1rem", minHeight: "2.5em" }}>
+        <p id="mode-description" aria-hidden="true" className="subtle" style={{ fontSize: "0.85rem", marginBottom: "1rem", minHeight: "2.5em" }}>
           {modeTooltips[hoveredMode || focusedMode || state.mode]}
         </p>
 

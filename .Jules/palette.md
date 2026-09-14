@@ -247,3 +247,7 @@
 ## 2025-10-25 - Telemetry Status Screen Reader Announcement
 **Learning:** Dynamic telemetry status updates (like "Syncing..." vs "Synced") need to be announced to screen readers to ensure users are aware of the system state without having to manually focus the element.
 **Action:** Always apply `aria-live="polite"` to status indicator text that updates dynamically, so screen readers can automatically announce changes when they occur.
+
+## 2026-10-25 - Prevent Screen Reader Race Conditions with Dynamic `aria-describedby` Text Content
+**Learning:** Pointing `aria-describedby` from multiple buttons to a single shared DOM element whose text content changes dynamically on hover/focus (e.g., `modeTooltips[hoveredMode || focusedMode || state.mode]`) causes a race condition in screen readers. Because the DOM text content update often resolves milliseconds after the screen reader has already captured the new element's `aria-describedby` target upon focus, it frequently reads the old/stale description text or drops it entirely.
+**Action:** Instead of dynamically changing the text of the targeted element, create a static, visually hidden container with separate description elements (each with a unique ID) for every possible state. Then, point the interactive element's `aria-describedby` attribute directly to the specific static element matching its state. Make the visually dynamic paragraph `aria-hidden="true"` so it acts purely as a visual aid for sighted users.
