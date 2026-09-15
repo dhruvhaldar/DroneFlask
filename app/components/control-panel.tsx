@@ -299,25 +299,25 @@ export function ControlPanel() {
         <h2 id="telemetry-title" className="section-title">Telemetry</h2>
         <dl className="grid" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", margin: 0 }} aria-busy={saving}>
           <div>
-            <dt className="subtle"><span aria-hidden="true">🔋</span> Battery</dt>
+            <dt className="subtle" title="Remaining drone battery power"><span aria-hidden="true">🔋</span> Battery</dt>
             <dd className="value" style={{ margin: 0 }}>
               {batteryPct}%
               <meter value={batteryPct} min="0" max="100" low={20} high={80} optimum={100} aria-hidden="true" style={{ width: "100%", display: "block", marginTop: "0.25rem" }} />
             </dd>
           </div>
           <div>
-            <dt className="subtle"><span aria-hidden="true">📶</span> Link Quality</dt>
+            <dt className="subtle" title="Signal strength based on drone orientation"><span aria-hidden="true">📶</span> Link Quality</dt>
             <dd className="value" style={{ margin: 0 }}>
               {Math.max(51, 100 - Math.abs(state.yaw))}%
               <meter value={Math.max(51, 100 - Math.abs(state.yaw))} min="0" max="100" low={30} high={70} optimum={100} aria-hidden="true" style={{ width: "100%", display: "block", marginTop: "0.25rem" }} />
             </dd>
           </div>
           <div>
-            <dt className="subtle"><span aria-hidden="true">↕️</span> Vertical Speed</dt>
+            <dt className="subtle" title="Rate of ascent or descent based on throttle"><span aria-hidden="true">↕️</span> Vertical Speed</dt>
             <dd className="value" style={{ margin: 0 }}>{(state.throttle / 10).toFixed(1)} <abbr title="meters per second" style={{ textDecoration: "none" }}>m/s</abbr></dd>
           </div>
           <div>
-            <dt className="subtle"><span aria-hidden="true">📡</span> Status</dt>
+            <dt className="subtle" title="Current telemetry connection status"><span aria-hidden="true">📡</span> Status</dt>
             <dd aria-live="polite" className="value" style={{ margin: 0, color: error ? "#ff8c8c" : undefined, transition: "color 0.15s ease" }} title={error ? "Failed to sync control state. Check connection." : undefined}>
               {saving ? <span className="subtle"><span aria-hidden="true" className="spin">🔄</span> Syncing...</span> : error ? (
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
