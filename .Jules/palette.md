@@ -251,3 +251,7 @@
 ## 2026-10-25 - Prevent Screen Reader Race Conditions with Dynamic `aria-describedby` Text Content
 **Learning:** Pointing `aria-describedby` from multiple buttons to a single shared DOM element whose text content changes dynamically on hover/focus (e.g., `modeTooltips[hoveredMode || focusedMode || state.mode]`) causes a race condition in screen readers. Because the DOM text content update often resolves milliseconds after the screen reader has already captured the new element's `aria-describedby` target upon focus, it frequently reads the old/stale description text or drops it entirely.
 **Action:** Instead of dynamically changing the text of the targeted element, create a static, visually hidden container with separate description elements (each with a unique ID) for every possible state. Then, point the interactive element's `aria-describedby` attribute directly to the specific static element matching its state. Make the visually dynamic paragraph `aria-hidden="true"` so it acts purely as a visual aid for sighted users.
+
+## 2025-04-18 - Demystifying Telemetry Jargon
+**Learning:** In specialized dashboards (like drone telemetry), labels like "Link Quality" or "Vertical Speed" can be obscure to newer users.
+**Action:** Provide explicit descriptive `title` tooltips on data labels (`<dt>`) to demystify domain-specific jargon for visual users without cluttering the UI.
