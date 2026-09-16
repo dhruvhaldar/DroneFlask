@@ -255,3 +255,7 @@
 ## 2025-04-18 - Demystifying Telemetry Jargon
 **Learning:** In specialized dashboards (like drone telemetry), labels like "Link Quality" or "Vertical Speed" can be obscure to newer users.
 **Action:** Provide explicit descriptive `title` tooltips on data labels (`<dt>`) to demystify domain-specific jargon for visual users without cluttering the UI.
+
+## 2024-05-24 - Telemetry Tooltip Discoverability and Accessibility
+**Learning:** Hidden tooltips on informational data (like `<dt>` definition terms) are often missed by sighted users because they lack visual cues (like an underline or cursor change) and are completely inaccessible to keyboard-only users if placed on non-focusable elements.
+**Action:** Added `tabIndex={0}`, `cursor: help`, and a subtle `textDecoration: underline dotted` to the Telemetry `<dt>` elements. This exposes the definitions to keyboard navigation and visually signals to all users that a tooltip is available.
