@@ -259,3 +259,7 @@
 ## 2024-05-24 - Telemetry Tooltip Discoverability and Accessibility
 **Learning:** Hidden tooltips on informational data (like `<dt>` definition terms) are often missed by sighted users because they lack visual cues (like an underline or cursor change) and are completely inaccessible to keyboard-only users if placed on non-focusable elements.
 **Action:** Added `tabIndex={0}`, `cursor: help`, and a subtle `textDecoration: underline dotted` to the Telemetry `<dt>` elements. This exposes the definitions to keyboard navigation and visually signals to all users that a tooltip is available.
+
+## 2024-11-20 - Manual Focus Management for Informational Tooltips
+**Learning:** Assigning `tabIndex={0}` to informational elements like `<dt>` makes them keyboard accessible, but native focus outlines are often removed globally for non-interactive elements or lack specific utility classes. Without a visual focus indicator, keyboard users tabbing through these informational tooltips get "lost" on the page, as focus silently jumps between elements without feedback.
+**Action:** When making informational text (like `<dt>`) focusable for tooltips, ensure explicit focus styling is applied, either through existing utility classes or by manually managing an `isFocused` state and applying inline `outline` and `outlineOffset` styles that match the global design system's accent colors.
