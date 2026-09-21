@@ -263,3 +263,6 @@
 ## 2024-11-20 - Manual Focus Management for Informational Tooltips
 **Learning:** Assigning `tabIndex={0}` to informational elements like `<dt>` makes them keyboard accessible, but native focus outlines are often removed globally for non-interactive elements or lack specific utility classes. Without a visual focus indicator, keyboard users tabbing through these informational tooltips get "lost" on the page, as focus silently jumps between elements without feedback.
 **Action:** When making informational text (like `<dt>`) focusable for tooltips, ensure explicit focus styling is applied, either through existing utility classes or by manually managing an `isFocused` state and applying inline `outline` and `outlineOffset` styles that match the global design system's accent colors.
+## 2026-10-25 - Hiding Decorative Punctuation from Screen Readers
+**Learning:** Purely decorative punctuation text characters, such as `/` or `·` used as separators in text or UI elements, are announced loudly by screen readers (e.g., "slash" or "dot"), adding unnecessary and confusing auditory noise to the interface.
+**Action:** Always wrap non-semantic visual punctuation characters in `<span aria-hidden="true">` to preserve the visual separation for sighted users while significantly cleaning up the auditory UI for accessibility users.

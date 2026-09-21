@@ -121,7 +121,7 @@ export function ControlPanel() {
                   {axis === "throttle" ? (
                     <>Double-click or <kbd><abbr title="Escape" style={{ textDecoration: "none" }}>Esc</abbr></kbd> to zero</>
                   ) : (
-                    <>Double-click or <kbd>0</kbd> / <kbd><abbr title="Center" style={{ textDecoration: "none" }}>C</abbr></kbd> to center</>
+                    <>Double-click or <kbd>0</kbd> <span aria-hidden="true">/</span> <kbd><abbr title="Center" style={{ textDecoration: "none" }}>C</abbr></kbd> to center</>
                   )}
                 </span>
               </span>
@@ -273,7 +273,7 @@ export function ControlPanel() {
               transition: "color 0.15s ease, border-color 0.15s ease",
             }}
           >
-            {error ? <><span aria-hidden="true">⚠️</span> Offline</> : state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>} · {state.mode}
+            {error ? <><span aria-hidden="true">⚠️</span> Offline</> : state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>}<span aria-hidden="true"> · </span>{state.mode}
           </span>
 
           <div id="confirm-alert" role="alert" style={{ minHeight: "4.25rem", marginTop: "0.75rem" }}>
