@@ -187,7 +187,7 @@ export function ControlPanel() {
               title={saving ? "Action unavailable while syncing" : undefined}
               style={{ borderColor: state.mode === mode && state.armed ? "#ff8c8c" : undefined, boxShadow: state.mode === mode && state.armed ? "0 0 0 1px #ff8c8c inset" : undefined, outlineColor: state.mode === mode && state.armed ? "#ff8c8c" : undefined }}
             >
-              <span aria-hidden="true">{modeIcons[mode]} </span>{mode}
+              <span aria-hidden="true">{modeIcons[mode]}</span> {mode}
             </button>
           ))}
         </div>
@@ -273,7 +273,7 @@ export function ControlPanel() {
               transition: "color 0.15s ease, border-color 0.15s ease",
             }}
           >
-            {error ? <><span aria-hidden="true">⚠️</span> Offline</> : state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>}<span aria-hidden="true"> · </span>{state.mode}
+            {error ? <><span aria-hidden="true">⚠️</span> Offline</> : state.armed ? <><span aria-hidden="true">🚨</span> Armed</> : <><span aria-hidden="true">🛡️</span> Safe</>} <span aria-hidden="true">·</span> {state.mode}
           </span>
 
           <div id="confirm-alert" role="alert" style={{ minHeight: "4.25rem", marginTop: "0.75rem" }}>
