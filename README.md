@@ -17,6 +17,7 @@ Open the URL printed by Vite (normally http://127.0.0.1:5173). Use a desktop bro
 
 - **Exton campus · 3D capture** is the default. This is a public, limited-area photogrammetry sample used by MapLibre's official 3D Tiles example. It is not worldwide Street View or Google's Photorealistic 3D Tiles. Geometry and texture detail refine as tiles stream; initial loading can take tens of seconds.
 - **Swiss Alps, Yosemite, and Manali** are alternate topographic views: OpenStreetMap-derived OpenFreeMap vector maps over real Mapzen/AWS elevation tiles. These do not have the campus's photographic building textures.
+- **Classic airfield** restores the original generated Three.js environment: runway, landing pad, buildings, trees, mountains, and numbered training gates. It uses a local minimap and needs no streamed scenery. Buildings have simple collision bounds.
 - Choose a location under **Environment**. Changing locations resets the flight. Map and capture attribution remain visible in the viewport; see [THIRD_PARTY.md](THIRD_PARTY.md).
 - **Orbit** begins with an overview. Drag to rotate/pitch and scroll to zoom. Takeoff automatically selects **Chase**; **FPV** provides the drone's forward view.
 
@@ -41,7 +42,7 @@ Stabilized and Sport modes provide different speed, momentum, and braking. Telem
 
 ## Simulation limits
 
-This is a recreational **surface-following** flight model. Altitude is relative to the sampled 3D surface, including roofs in the capture, or local terrain in topographic mode. It is not a calibrated aircraft or obstacle-avoidance model. Capture boundaries and unloaded surface areas stop horizontal motion; hard landings stop the aircraft. Sideways building collisions are not modeled. Training gates are simulated overlays, not geographic features. No physical drone is connected.
+This is a recreational **surface-following** flight model. Altitude is relative to the sampled 3D surface, including roofs in the capture, or local terrain in topographic mode. It is not a calibrated aircraft or obstacle-avoidance model. Capture boundaries and unloaded surface areas stop horizontal motion; hard landings stop the aircraft. Sideways building collisions are not modeled in the real-world scenes. Training gates are simulated overlays, not geographic features. No physical drone is connected.
 
 The 3D capture is finite and reflects the date and quality of its source photographs. The imagery is streamed from third-party services, whose availability is outside this app. For arbitrary cities with consistently photorealistic coverage, a licensed imagery/3D Tiles provider and its credentials would be needed.
 

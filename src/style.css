@@ -23,3 +23,11 @@ dialog{border:1px solid #e2e8de;border-radius:15px;width:min(560px,calc(100% - 3
 @media(max-width:650px){#geo-minimap{height:84px}.map-status.map-ready{top:58px;max-width:90%;width:max-content}.scene-label #location-name{font-size:7px}.scene-label #time-label{display:none}.scene-label{max-width:180px}.training-label{bottom:113px}#world .maplibregl-ctrl-attrib{font-size:7px;line-height:15px}.viewport-bottom{bottom:45px}}
 .hud-left{color:#345340;text-shadow:0 1px 2px #fff8;background:#ffffffa6;backdrop-filter:blur(5px);padding:10px 12px;border-radius:8px;left:15px}.hud-left .hud-scale{color:#718971;line-height:8px;font-size:9px;margin:9px 0}.hud-left b{font-size:22px}.training-label{color:#38543c;background:#faffeecc;padding:8px 10px;border-radius:7px;text-shadow:none;backdrop-filter:blur(5px)}.training-icon{border-color:#95ac8c66}.crosshair span{border-color:#3f6246}.overview-drone-marker{font:600 11px 'DM Sans Variable',sans-serif;color:#fff;background:#ed784e;border:2px solid white;border-radius:20px;padding:5px 10px;box-shadow:0 2px 12px #273c4933;white-space:nowrap}
 @media(max-width:650px){.hud-left{padding:8px;top:132px}.hud-left b{font-size:19px}.hud-left>div:last-child{margin-top:12px}.training-label{padding:5px 7px}.hud-left>div>span{font-size:6px}}
+
+/* Original standalone Three.js environment, selected alongside real maps. */
+#world.classic-scenery > .maplibregl-canvas-container,
+#world.classic-scenery > .maplibregl-control-container,
+#geo-minimap.classic-scenery > .maplibregl-canvas-container { display:none; }
+.classic-world { position:absolute; inset:0; }
+.classic-world canvas { display:block; width:100%; height:100%; }
+.classic-minimap, .classic-minimap svg { width:100%; height:100%; display:block; }

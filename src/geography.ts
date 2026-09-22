@@ -1,9 +1,10 @@
-export type GeoLocation = { name: string; lng: number; lat: number; tileset?: string };
+export type GeoLocation = { name: string; lng: number; lat: number; tileset?: string; classic?: boolean };
 export const locations: GeoLocation[] = [
   { name: 'Exton campus · 3D capture', lng: -75.59670696255716, lat: 40.03879587543085, tileset: 'https://pelican-public.s3.amazonaws.com/3dtiles/agi-hq/tileset.json' },
   { name: 'Lauterbrunnen · Swiss Alps', lng: 7.9087, lat: 46.5935 },
   { name: 'Yosemite Valley · California', lng: -119.5904, lat: 37.7459 },
   { name: 'Manali · Himalayas', lng: 77.1887, lat: 32.2432 },
+  { name: 'Classic airfield · Original 3D', lng: 0, lat: 0, classic: true },
 ];
 const R = 6378137;
 // Local Three.js coordinates: X east, Y up, Z south. Distances are ground meters.

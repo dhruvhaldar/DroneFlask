@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { RealityCapture } from './reality';
+import { ClassicWorld, obstacles } from './classic-world';
 import { Map as GeoMap, Marker, setWorkerUrl, MercatorCoordinate, LngLat, type CustomLayerInterface } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
@@ -39,10 +40,14 @@ export class FlightWorld {
   private frame = 0;
   private destroyed = false;
   private reality?: RealityCapture;
+  private classic?: ClassicWorld;
+  private classicHost?: HTMLDivElement;
+  private classicMap?: HTMLDivElement;
+  private night = false;
   private surfaceCache = new globalThis.Map<string, number>();
   private status: (message: string, ready: boolean) => void;
 
-  constructor(private host: HTMLElement, miniHost: HTMLElement, status: (message: string, ready: boolean) => void) {
+  constructor(private host: HTMLElement, private miniHost: HTMLElement, status: (message: string, ready: boolean) => void) {
     this.status = status;
     this.map = new GeoMap({
       container: host, style: mapStyle, center: [this.location.lng, this.location.lat],
@@ -74,6 +79,7 @@ export class FlightWorld {
       this.map.addLayer(this.flightLayer());
     });
     this.map.on('error', () => {
+      if (this.location.classic) return;
       this.status(this.ready ? 'Some map tiles could not load. Check your connection.' : 'Map data unavailable. Check your connection, then retry.', this.ready);
     });
     this.map.on('webglcontextlost', () => { this.ready = false; this.status('Graphics context lost. Reload to resume.', false); });
@@ -92,12 +98,14 @@ export class FlightWorld {
     });
     this.observer.observe(host); this.observer.observe(miniHost);
     this.onWheel = e => {
+      if (this.location.classic) return;
       e.preventDefault();
       if (this.cameraMode === 'Orbit') this.map.setZoom(THREE.MathUtils.clamp(this.map.getZoom() - e.deltaY * .002, 10, 20));
       else this.zoom = THREE.MathUtils.clamp(this.zoom + e.deltaY * .001, .5, 8);
     };
     host.addEventListener('wheel', this.onWheel, { passive: false, signal: this.abort.signal });
     host.addEventListener('pointerdown', e => {
+      if (this.location.classic) return;
       if (this.cameraMode !== 'Orbit' || (e.target as HTMLElement).closest('a,button')) return;
       this.orbitPointer = { x: e.clientX, y: e.clientY, bearing: this.map.getBearing(), pitch: this.map.getPitch() }; host.setPointerCapture(e.pointerId);
     }, { signal: this.abort.signal });
@@ -116,7 +124,7 @@ export class FlightWorld {
         this.renderer.toneMapping = THREE.NoToneMapping;
       },
       render: (_gl, args) => {
-        if (!this.renderer) return;
+        if (!this.renderer || this.location.classic) return;
         const origin = MercatorCoordinate.fromLngLat([this.location.lng, this.location.lat]);
         const scale = origin.meterInMercatorCoordinateUnits();
         const local = new THREE.Matrix4().makeTranslation(origin.x, origin.y, 0)
@@ -138,6 +146,11 @@ export class FlightWorld {
   }
   private configureScenery() {
     this.reality?.dispose(); this.reality = undefined; this.surfaceCache.clear();
+    if (this.location.classic) {
+      this.map.setTerrain(null);
+      this.map.setLayoutProperty('terrain-hillshade', 'visibility', 'none');
+      return;
+    }
     if (this.location.tileset) {
       this.map.setTerrain(null);
       this.map.setLayoutProperty('terrain-hillshade', 'visibility', 'none');
@@ -148,7 +161,29 @@ export class FlightWorld {
     }
   }
   setLocation(location: GeoLocation) {
+    this.classic?.dispose(); this.classic = undefined;
+    this.classicHost?.remove(); this.classicHost = undefined;
+    this.classicMap?.remove(); this.classicMap = undefined;
+    this.host.classList.toggle('classic-scenery', !!location.classic);
+    this.miniHost.classList.toggle('classic-scenery', !!location.classic);
+    this.orbitPointer = undefined;
     this.location = location; this.ready = false; this.groundElevation = 0; this.clearTrail();
+    if (location.classic) {
+      this.reality?.dispose(); this.reality = undefined; this.surfaceCache.clear();
+      this.classicHost = document.createElement('div'); this.classicHost.className = 'classic-world';
+      this.host.append(this.classicHost);
+      this.classic = new ClassicWorld(this.classicHost);
+      this.classic.setNight(this.night);
+      this.classicMap = document.createElement('div'); this.classicMap.className = 'classic-minimap';
+      this.classicMap.innerHTML = '<svg viewBox="-260 -260 520 520" aria-label="Classic airfield local map"><rect x="-260" y="-260" width="520" height="520" fill="#d9e3d1"/><path d="M0 45V-245" stroke="#99a79b" stroke-width="18"/>' +
+        obstacles.map(o => `<rect x="${o.x-o.w/2}" y="${o.z-o.d/2}" width="${o.w}" height="${o.d}" fill="#748c80"/>`).join('') +
+        gates.map(g => `<circle cx="${g.x}" cy="${g.z}" r="5" fill="#ed784e"/>`).join('') +
+        '<path id="classic-marker" d="M0 -10L7 8L0 4L-7 8Z" fill="#ed784e" stroke="white" stroke-width="2"/></svg>';
+      this.miniHost.append(this.classicMap);
+      this.cameraMode = this.currentCamera = 'Orbit'; this.ready = true;
+      clearTimeout(this.loadingTimer); this.status('Classic airfield ready · Original Three.js environment', true);
+      return;
+    }
     this.status(location.tileset ? 'Loading textured 3D capture…' : 'Loading map and elevation…', false);
     if (this.map.getLayer('terrain-hillshade')) this.configureScenery();
     this.map.jumpTo({ center: [location.lng, location.lat], elevation: location.tileset ? 265 : 0, zoom: location.tileset ? 17 : 14.3, pitch: 60, bearing: 20 });
@@ -156,6 +191,11 @@ export class FlightWorld {
     this.cameraMode = this.currentCamera = 'Orbit';
   }
   constrainFlight(s: FlightState, previous: {x: number; z: number}) {
+    if (this.classic && s.armed && obstacles.some(o => Math.abs(s.x-o.x) < o.w/2+1 && Math.abs(s.z-o.z) < o.d/2+1 && s.y < o.h+2)) {
+      s.x = previous.x; s.z = previous.z; s.vx = s.vy = s.vz = 0;
+      s.crashed = true; s.armed = false; s.message = 'Building collision. Press R to reset your flight.';
+      return;
+    }
     if (!this.reality || !s.armed) return;
     if (this.elevation(s.x, s.z) === null) {
       s.x = previous.x; s.z = previous.z; s.vx = s.vz = 0;
@@ -174,12 +214,19 @@ export class FlightWorld {
     return this.map.queryTerrainElevation(this.coordinates(x, z));
   }
   setNight(night: boolean) {
+    this.night = night; this.classic?.setNight(night);
     this.ambient.intensity = night ? .9 : 2.5; this.sun.intensity = night ? .7 : 3;
     if (this.map.isStyleLoaded()) this.map.setSky({ 'sky-color': night ? '#273e51' : '#b9d9ec', 'horizon-color': night ? '#546a78' : '#e4ead9', 'fog-color': night ? '#65737c' : '#d5dfce' });
     this.host.classList.toggle('blue-hour', night);
   }
-  clearTrail() { this.trailPoints = []; this.lastTrail = 0; this.trail.geometry.dispose(); this.trail.geometry = new THREE.BufferGeometry(); }
+  clearTrail() { this.classic?.clearTrail(); this.trailPoints = []; this.lastTrail = 0; this.trail.geometry.dispose(); this.trail.geometry = new THREE.BufferGeometry(); }
   update(s: FlightState, dt: number) {
+    if (this.classic) {
+      this.classic.cameraMode = this.cameraMode; this.classic.trailOn = this.trailOn;
+      this.classic.update(s, dt);
+      this.classicMap?.querySelector('#classic-marker')?.setAttribute('transform', `translate(${s.x} ${s.z}) rotate(${-s.yaw * 180 / Math.PI})`);
+      return;
+    }
     if (!this.map.getLayer('droneverse-flight')) return;
     if (!this.reality && !this.ready && !this.map.isSourceLoaded('elevation')) return;
     const ground = this.elevation(s.x, s.z);
@@ -227,9 +274,11 @@ export class FlightWorld {
     this.map.triggerRepaint();
   }
   screenshot() {
+    if (this.classic) { this.classic.screenshot(); return; }
     const a = document.createElement('a'); a.download = `droneverse-${Date.now()}.png`; a.href = this.map.getCanvas().toDataURL('image/png'); a.click();
   }
   dispose() {
+    this.classic?.dispose(); this.classicHost?.remove(); this.classicMap?.remove();
     this.destroyed = true; cancelAnimationFrame(this.frame); clearTimeout(this.loadingTimer); this.abort.abort(); this.observer.disconnect();
     this.reality?.dispose();
     this.scene.traverse(o => { const mesh = o as THREE.Mesh; mesh.geometry?.dispose();
