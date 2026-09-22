@@ -266,3 +266,7 @@
 ## 2026-10-25 - Hiding Decorative Punctuation from Screen Readers
 **Learning:** Purely decorative punctuation text characters, such as `/` or `·` used as separators in text or UI elements, are announced loudly by screen readers (e.g., "slash" or "dot"), adding unnecessary and confusing auditory noise to the interface.
 **Action:** Always wrap non-semantic visual punctuation characters in `<span aria-hidden="true">` to preserve the visual separation for sighted users while significantly cleaning up the auditory UI for accessibility users.
+
+## 2026-10-25 - Prevent Screen Reader Text Concatenation from `aria-hidden` Spans
+**Learning:** When separating visual elements with an `aria-hidden="true"` span that contains spacing (e.g., `<span aria-hidden="true"> · </span>`), screen readers remove the entire node from the accessibility tree, including the whitespace. This causes the adjacent text nodes on either side to be concatenated without spaces, resulting in garbled auditory output like "SafeManual" instead of "Safe Manual".
+**Action:** Always place the necessary whitespace *outside* the `aria-hidden` span in the JSX/HTML (e.g., `{" "} <span aria-hidden="true">·</span> {" "}` or directly as text nodes outside the tags) so that the screen reader correctly separates the adjacent words when reading the accessibility tree.
