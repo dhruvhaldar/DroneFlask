@@ -121,7 +121,8 @@ button.active {
 
 button:focus-visible,
 input[type="range"]:focus-visible,
-dt:focus-visible {
+dt:focus-visible,
+a:focus-visible {
   outline: 2px solid #72f0c4;
   outline-offset: 2px;
 }

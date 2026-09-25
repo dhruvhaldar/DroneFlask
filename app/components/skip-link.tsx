@@ -19,8 +19,6 @@ export function SkipLink() {
         fontWeight: 600,
         zIndex: 9999,
         transition: "top 0.2s ease-out",
-        outline: focused ? "2px solid #72f0c4" : "none",
-        outlineOffset: "2px",
       }}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
