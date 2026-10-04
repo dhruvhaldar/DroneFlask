@@ -277,3 +277,6 @@
 ## 2026-10-25 - Avoid Invalid ARIA on Non-Interactive Text Elements
 **Learning:** Adding `aria-label` to non-interactive inline text elements (like `<kbd>`) is an accessibility anti-pattern. While browsers may accept it, many screen readers completely ignore `aria-label` on non-focusable text nodes, leading to no real improvement.
 **Action:** Instead of applying `aria-label` to non-interactive tags like `<kbd>`, use semantic child elements (like `<abbr title="...">`) which natively provide visual tooltips and expanded text for screen readers, or use visually hidden text spans (`sr-only`) to explicitly provide auditory context.
+## 2024-10-04 - Screen Reader Spam from Rapidly Updating Status Indicators
+**Learning:** Adding `aria-live="polite"` to transient status indicators (like "Syncing..." / "Synced" badges) that toggle rapidly during continuous user interactions (e.g., dragging a slider) overwhelms screen readers with non-critical auditory spam, drowning out the actual interactive feedback (like the slider value).
+**Action:** Remove `aria-live` from high-frequency neutral state indicators. Rely on visually hidden, static `role="alert"` live regions exclusively for infrequent, critical state changes (like network disconnects).
