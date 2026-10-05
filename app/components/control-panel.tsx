@@ -335,7 +335,7 @@ export function ControlPanel() {
           </div>
           <div>
             <TooltipTerm title="Current telemetry connection status"><span aria-hidden="true">📡</span> Status</TooltipTerm>
-            <dd aria-live="polite" className="value" style={{ margin: 0, color: error ? "#ff8c8c" : undefined, transition: "color 0.15s ease" }} title={error ? "Failed to sync control state. Check connection." : undefined}>
+            <dd className="value" style={{ margin: 0, color: error ? "#ff8c8c" : undefined, transition: "color 0.15s ease" }} title={error ? "Failed to sync control state. Check connection." : undefined}>
               {saving ? <span className="subtle"><span aria-hidden="true" className="spin">🔄</span> Syncing...</span> : error ? (
                 <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                   <><span aria-hidden="true">⚠️</span> Offline</>
