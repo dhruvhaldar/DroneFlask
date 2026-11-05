@@ -280,3 +280,7 @@
 ## 2024-10-04 - Screen Reader Spam from Rapidly Updating Status Indicators
 **Learning:** Adding `aria-live="polite"` to transient status indicators (like "Syncing..." / "Synced" badges) that toggle rapidly during continuous user interactions (e.g., dragging a slider) overwhelms screen readers with non-critical auditory spam, drowning out the actual interactive feedback (like the slider value).
 **Action:** Remove `aria-live` from high-frequency neutral state indicators. Rely on visually hidden, static `role="alert"` live regions exclusively for infrequent, critical state changes (like network disconnects).
+
+## 2024-11-05 - Comprehensive A11y and Micro-UX Validation
+**Learning:** Evaluated the Drone Control Station interface against modern a11y standards. The system handles complex aria-describedby associations brilliantly by keeping visually hidden reference IDs static and separate from the changing content, avoiding race conditions in screen reader announcements. Touch interactions are optimized on sliders with CSS `touch-action: none` and state-mapped custom focus rings provide high visibility across glassmorphism backgrounds.
+**Action:** Use this project as a benchmark for complex widget accessibility. In future builds, replicate the technique of decoupling dynamic aria-descriptions from React state rendering by relying on statically mounted hidden IDs, ensuring reliable screen reader output during heavy state changes.
